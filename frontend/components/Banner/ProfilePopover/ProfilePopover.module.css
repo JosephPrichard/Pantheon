@@ -1,0 +1,36 @@
+.ProfilePopver {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+.PopoverBody {
+    border-style: solid;
+    border-color: rgb(60, 60, 60);
+    border-width: 1px;
+}
+
+.Button {
+    background-color: inherit;
+    border-style: solid;
+    border-color: rgb(60, 60, 60);
+    border-width: 1px;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+.Element {
+    padding-right: 10px;
+    vertical-align: middle;
+}
+
+.Name {
+    padding: 10px;
+}
+
+.Avatar {
+    border-radius: 25%;
+    background-color: rgb(26, 27, 30);
+    border-style: solid;
+    border-color: rgb(60, 60, 60);
+    border-width: 1px;
+}

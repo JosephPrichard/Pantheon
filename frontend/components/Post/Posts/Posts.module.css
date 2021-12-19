@@ -1,0 +1,23 @@
+.UserPosts {
+    float: left;
+    width: 100%;
+}
+
+.BigText {
+    margin-top: 20%;
+    text-align: center;
+    font-size: 30px;
+}
+
+.Pagination {
+    display: flex;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    float: left;
+    width: 100%;
+}
+
+.PaginationInner {
+    margin-left: auto;
+    margin-right: auto;
+}

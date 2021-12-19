@@ -1,0 +1,31 @@
+.Divider {
+    margin-bottom: 10px;
+}
+
+.Content {
+    float: left;
+    width: calc(100% - 12px - 22px);
+}
+
+.LinkWrapper {
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.Subtitle {
+    font-size: 13px;
+    color: rgb(129,131,132);
+}
+
+.NameLink:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.InnerContentContainer {
+    margin-right: 30px;
+}
+
+.Link:hover {
+    text-decoration: underline;
+}

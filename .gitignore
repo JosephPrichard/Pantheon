@@ -33,8 +33,11 @@ bower_components
 build/Release
 
 # Dependency directories
-node_modules/
-jspm_packages/
+**/node_modules
+**/jspm_packages
+
+# Dist
+**/dist
 
 # TypeScript v1 declaration files
 typings/
@@ -55,7 +58,7 @@ typings/
 .yarn-integrity
 
 # dotenv environment variables file
-.env
+*.env
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache

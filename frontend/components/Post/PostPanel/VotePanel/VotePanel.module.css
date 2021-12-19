@@ -1,0 +1,17 @@
+.VoteSymbol {
+    display: block;
+    color: rgb(129, 131, 132);
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.VoteSymbol:hover {
+    background-color: rgb(45, 45, 46);
+}
+
+.Vote {
+    margin-top: 3px;
+    float: left;
+    vertical-align: middle;
+    margin-right: 12px;
+}

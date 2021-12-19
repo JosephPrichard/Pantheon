@@ -1,0 +1,17 @@
+.Title {
+    color: whitesmoke;
+    width: 120px;
+    text-align: center;
+    display: inline-block;
+    margin-left: calc(12.5% - 60px);
+    margin-right: calc(12.5% - 60px);
+    border-radius: 3px;
+    padding: 3px;
+    padding-right: 8px;
+    padding-left: 8px;
+}
+
+.a {
+    text-decoration: none;
+    color: whitesmoke;
+}

@@ -1,0 +1,22 @@
+.LinkContainer {
+    margin-left: 10px;
+    margin-right: 10px;
+    width: 50px;
+    overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+    vertical-align: middle;
+    margin-bottom: 10px;
+}
+
+.Link {
+    color: rgb(88,147,196);
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.Icon {
+    margin-top: -3px;
+    margin-left: 3px;
+    vertical-align: middle;
+}

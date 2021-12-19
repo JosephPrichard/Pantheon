@@ -1,0 +1,101 @@
+.Title {
+    margin: 10px;
+}
+
+.Dropzone {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    outline: none;
+    transition: border .24s ease-in-out;
+    cursor: pointer;
+    background-color: rgb(44,46,51);
+    margin: 10px;
+    border-width: 2px;
+    border-style: dashed;
+}
+
+.DropzoneText {
+    margin-top: 100px;
+    margin-bottom: 100px;
+    color: rgb(93,95,102);
+    display: inline-flex;
+    align-items: center;
+}
+
+.InnerText {
+    padding-left: 10px;
+}
+
+.FileContainer {
+    align-items: left;
+    width: 100%;
+    white-space: nowrap;
+    overflow-x: auto;
+    padding-bottom: 15px;
+}
+
+.FileError {
+    color: #FA5252;
+    margin-left: 10px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.Files {
+    margin: 10px;
+    margin-top: 30px;
+}
+
+.File {
+    padding: 5px;
+    margin: 5px;
+
+    border-radius: 5px;
+    border-style: solid;
+    border-width: 2px;
+    border-color: rgb(93,95,102);
+    color: rgb(93,95,102);
+    font-weight: bold;
+
+    transition: height 0.5s;
+    -webkit-transition: height 0.5s;
+
+    font-size: 0;
+
+    display: inline-block;
+
+    position: relative;
+}
+
+.Img {
+    object-fit: cover;
+    width: 120px;
+    height: 120px;
+}
+
+.Button {
+    position: absolute;
+    border-radius: 100%;
+    background-color: black;
+    color: whitesmoke;
+    right: 10px;
+    top: 10px;
+}
+
+.FileTitle {
+    padding-left: 10px;
+}
+
+.SubmitButton {
+    margin: 10px;
+    margin-bottom: 15px;
+    float: right;
+    
+}
+
+.ButtonWrapper {
+    height: calc(36px + 10px + 15px);
+}

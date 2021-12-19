@@ -1,0 +1,47 @@
+.Markup {
+    font-size: 16px;
+}
+
+.Markup h1 {
+    font-size: 24px;
+    margin: 0px;
+    margin-bottom: 15.6px;
+}
+
+.Markup h2 {
+    font-size: 21px;
+    margin: 0px;
+    margin-bottom: 16.2px;
+}
+
+.Markup h3 {
+    font-size: 18px;
+    margin: 0px;
+    margin-bottom: 16.8px;
+}
+
+.Markup ul {
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+
+.Markup p {
+    margin-bottom: 12px;
+}
+
+.Markup li {
+    margin-top: 0px !important; /* !important is needed to override styles */
+    display: list-item;
+}
+
+.Markup blockquote {
+    font-size: 16px;
+    margin-top: 0;
+    margin-left: 0;
+    margin-bottom: 12px;
+    padding-bottom: 2px;
+    padding-top: 2px;
+    padding-left: 16px;
+    color: #909296;
+    border-left: 4px solid #373A40;
+}

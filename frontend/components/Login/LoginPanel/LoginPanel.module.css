@@ -1,0 +1,19 @@
+.LoginPanel {
+    padding: 25px;
+}
+
+.InputWrapper {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.Title {
+    width: 320px;
+    text-align: left;
+}
+
+.Text {
+    color: rgb(109, 111, 112);
+    text-align: left;
+}

@@ -1,0 +1,42 @@
+.PhotoGallery {
+    position: relative;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    user-select: none;
+}
+
+.ArrowLeft {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 10px;
+    cursor: pointer;
+    pointer-events: auto;
+    z-index: 2;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background-color: rgb(220,220,220);
+}
+
+.ArrowRight {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 10px;
+    cursor: pointer;
+    pointer-events: auto;
+    z-index: 2;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background-color: rgb(220,220,220);
+}
+
+.Arrow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
