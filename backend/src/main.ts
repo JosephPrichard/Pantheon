@@ -1,25 +1,37 @@
-import { ValidationPipe } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import cookieParser from 'cookie-parser';
 import { MikroORM } from 'mikro-orm';
 import { AppModule } from './app.module';
+import { InvalidInputException } from './exception/invalidInput.exception';
+import { EntityNotFoundExceptionFilter, InvalidInputExceptionFilter, InvalidSessionExceptionFilter, PermissionsExceptionFilter } from './interceptors/exception.interceptors';
 import { ormConfig } from './resource/config';
 
-async function bootstrap() {
-
+async function initSchema() {
     const orm = await MikroORM.init(ormConfig);    
 
     const generator = orm.getSchemaGenerator();
     // await generator.dropSchema();
     // await generator.createSchema();
-    // await generator.updateSchema();
+    await generator.updateSchema();
 
     await orm.close();
+}
+
+async function bootstrap() {
+
+    // await initSchema();
 
     const app = await NestFactory.create(AppModule);
 
+    app.useGlobalFilters(
+        new InvalidSessionExceptionFilter(),
+        new PermissionsExceptionFilter(),
+        new InvalidInputExceptionFilter(),
+        new EntityNotFoundExceptionFilter()
+    );
+
+    app.setGlobalPrefix("api");
     app.use(cookieParser());
-    app.useGlobalPipes(new ValidationPipe());
 
     await app.listen(5000);
 }

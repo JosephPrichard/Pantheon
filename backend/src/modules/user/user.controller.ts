@@ -1,9 +1,9 @@
-import { Body, Controller, Post, Put, Req, Res } from "@nestjs/common";
-import { Request, Response } from 'express';
-import { SESSION_ERROR } from "../../utils/global";
+import { BadRequestException, Body, Controller, NotFoundException, Post, Put, Req, Res } from "@nestjs/common";
+import { Request } from 'express';
 import { UpdateUserDto, CreateUserDto, SignInDto } from "./user.dto";
 import { UserService } from "./user.service";
 import { sanitize } from 'class-sanitizer';
+import { InvalidSessionException } from "src/exception/session.exception";
 
 @Controller("users")
 export class UserController {
@@ -12,94 +12,68 @@ export class UserController {
 
     @Post()
     async create(
-        @Body() body: CreateUserDto, 
-        @Res() res: Response
+        @Body() body: CreateUserDto
     ) {
-
         sanitize(body);
 
         const emailExists = await this.userService.findCredsByEmail(body.email) !== null;
-        const nameExists = await this.userService.findUserByName(body.name) !== null;
-
         if (emailExists) {
-            return emailAddrInUse();
+            throw new BadRequestException("Email address is already in use.");
         }
+
+        const nameExists = await this.userService.findUserByName(body.name) !== null;
         if (nameExists) {
-            return userNameInUse();
+            throw new BadRequestException("Username address is already in use.");
         }
 
         const id = await this.userService.create(body);
-        if(id) {
-            res.json({ id: id });
-        } else {
-            res.status(405).end();
-        } 
+        return { id };
     }
 
     @Put()
     async update(
         @Body() body: UpdateUserDto, 
-        @Req() req: Request, 
-        @Res() res: Response
+        @Req() req: Request
     ) {
 
         const user = req.session.user;
         if (!user) {
-            res.status(401).json({ msg: SESSION_ERROR });
-            return;
+            throw new InvalidSessionException();
         }
 
         const updatedUser = await this.userService.update(user, body);
         const id = updatedUser?.id;
-        res.json({ id: id });
+        return { id };
     }
 
     @Post("/signIn")
     async signIn(
         @Body() body: SignInDto, 
-        @Req() req: Request, 
-        @Res() res: Response
+        @Req() req: Request
     ) {
+        sanitize(body);
+
         const user = await this.userService.findByLogin(body.email, body.password);
-        if (user) {
-            req.session.user = { id: user.id };
-            res.json({ userId: user.id, name: user.name });
-        } else {
-            res.status(404).json({ msg: "Incorrect login information." });
+        if (!user) {
+            throw new NotFoundException("Incorrect login information.");
         }
+
+        req.session.user = { id: user.id };
+        return { 
+            userId: user.id, 
+            name: user.name 
+        };
     }
 
     @Post("/signOut")
     async signOut(
-        @Req() req: Request, 
-        @Res() res: Response
+        @Req() req: Request
     ) {
         req.session.user = undefined;
-        res.status(200).end();
+
+        return {
+            message: "Successfully logged out"
+        }
     }
 
-}
-
-function emailAddrInUse() {
-    return {
-        id: undefined,
-        errors: [
-            {
-                param: "email",
-                msg: "Email address is already in use"
-            }
-        ]
-    }
-}
-
-function userNameInUse() {
-    return {
-        id: undefined,
-        errors: [
-            {
-                param: "name",
-                msg: "User name is already in use"
-            }
-        ]
-    }
 }

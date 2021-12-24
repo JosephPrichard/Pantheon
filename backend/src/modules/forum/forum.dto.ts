@@ -1,17 +1,21 @@
 import { Trim } from "class-sanitizer";
 import { IsOptional, IsString, MaxLength, MinLength } from "class-validator";
-import { MAX_CIRCLE_DESC_LEN, MAX_CIRCLE_NAME_LEN, MAX_TITLE_LEN } from "../../utils/global";
+import { PreventSpaces } from "src/decorators/preventSpaces.decorator";
+import { PreventSpecialCharacters } from "src/decorators/preventSpecialCharacters.decorator";
+import { MAX_FORUM_DESC_LEN, MAX_FORUM_NAME_LEN, MAX_TITLE_LEN } from "../../utils/global";
 import { User } from "../user/user.dto";
 
-export class CreateCircleDto {
+export class CreateForumDto {
     @IsString()
     @Trim()
+    @PreventSpaces({ message: "Name doesn't allow spaces."})
+    @PreventSpecialCharacters({ message: "Name doesn't allow special characters."})
     @MinLength(3, { message: "Name must be at least 3 characters."})
-    @MaxLength(MAX_CIRCLE_NAME_LEN, { message: `Name cannot exceed ${MAX_CIRCLE_NAME_LEN} characters.`})
+    @MaxLength(MAX_FORUM_NAME_LEN, { message: `Name cannot exceed ${MAX_FORUM_NAME_LEN} characters.`})
     name!: string;
 }
 
-export class UpdateCircleDto {
+export class UpdateForumDto {
     @IsOptional()
     @IsString()
     @Trim()
@@ -23,15 +27,10 @@ export class UpdateCircleDto {
     @IsString()
     @Trim()
     @MinLength(1, { message: "Description cannot be empty."})
-    @MaxLength(MAX_CIRCLE_DESC_LEN, { message: `Description cannot exceed ${MAX_CIRCLE_DESC_LEN} characters.`})
+    @MaxLength(MAX_FORUM_DESC_LEN, { message: `Description cannot exceed ${MAX_FORUM_DESC_LEN} characters.`})
     description?: string;
 
     @IsOptional()
     @IsString()
     image?: string;
-}
-
-export interface IdAndUserQuery {
-    id: string;
-    user: User;
 }

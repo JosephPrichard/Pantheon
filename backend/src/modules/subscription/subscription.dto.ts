@@ -2,12 +2,12 @@ import { IsBoolean, IsString } from "class-validator";
 
 export class CreateSubDto {
     @IsString()
-    circle!: string;
+    forum!: string;
 }
 
 export class UpdateSubDto {
     @IsString()
-    circle!: string;
+    forum!: string;
 
     @IsBoolean()
     isFavorite!: boolean;
@@ -15,5 +15,5 @@ export class UpdateSubDto {
 
 export class DeleteSubDto {
     @IsString()
-    circle!: string;
+    forum!: string;
 }

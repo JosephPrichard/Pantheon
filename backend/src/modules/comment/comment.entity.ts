@@ -3,7 +3,7 @@ import { UserEntity } from "../user/user.entity";
 import { MAX_COMMENT_LEN, MAX_PATH_LEN } from "../../utils/global";
 import { uuid } from "../../utils/id";
 import { PostEntity } from "../post/post.entity";
-import { CircleEntity } from "../circle/circle.entity";
+import { ForumEntity } from "../forum/forum.entity";
 
 // uses the materialized paths way of storing a tree in a relational database
 

@@ -8,13 +8,11 @@ export const MAX_EMAIL_LEN = 320;
 export const MAX_PASSWORD_LEN = 100;
 export const MAX_PATH_LEN = 10_000;
 export const MAX_LINK_LEN = 500;
-export const MAX_CIRCLE_NAME_LEN = 25;
-export const MAX_CIRCLE_DESC_LEN = 500;
+export const MAX_FORUM_NAME_LEN = 25;
+export const MAX_FORUM_DESC_LEN = 500;
 
 export type SortType = "top" | "new";
 export type TimeType = "day" | "week" | "month" | "year" | "alltime";
 export const ALLTIME: TimeType = "alltime";
 
 export const PUBLIC_CLOUD_URL = "https://storage.googleapis.com/pantheon-forum-bucket";
-
-export const SESSION_ERROR = "Session is invalid or expired.";

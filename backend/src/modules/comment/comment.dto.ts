@@ -1,7 +1,6 @@
 import { Trim } from "class-sanitizer";
 import { IsIn, IsInt, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
 import { MAX_COMMENT_LEN, SortType } from "../../utils/global";
-import { User } from "../user/user.dto";
 
 export class CreateCommentNodeDto {
     @IsString()
@@ -27,33 +26,6 @@ export class CreateCommentRootDto {
     content!: string;
 }
 
-export class SearchCommentDto {
-    @IsInt()
-    page!: number;
-
-    @IsOptional()
-    @IsString()
-    commenter?: string;
-
-    @IsString()
-    @IsIn(["new", "top"])
-    sort!: SortType;
-}
-
-
-export class SearchCommentTreeDto {
-    @IsInt()
-    page!: number;
-
-    @IsOptional()
-    @IsString()
-    post?: string;
-
-    @IsString()
-    @IsIn(["new", "top"])
-    sort!: SortType;
-}
-
 export class UpdateCommentDto {
     @IsOptional()
     @IsString()
@@ -63,7 +35,15 @@ export class UpdateCommentDto {
     content!: string;
 }
 
-export interface IdAndCommenterQuery {
-    id: string;
-    commenter: User;
+export interface CommentFilter {
+    page: number;
+    commenter?: string;
+    sort: SortType;
+}
+
+
+export interface CommentTreeFilter {
+    page: number;
+    post: string;
+    sort: SortType;
 }

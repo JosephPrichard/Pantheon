@@ -1,12 +1,15 @@
 import { PostEntity } from "./post.entity";
-import { PostFilter, CreatePostDto, IdAndPosterQuery, UpdatePostDto } from "./post.dto";
+import { PostFilter, CreatePostDto, UpdatePostDto } from "./post.dto";
 import { QueryOrder } from "mikro-orm";
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { User } from "../user/user.dto";
 import { UserService } from "../user/user.service";
-import { CircleService } from "../circle/circle.service";
+import { ForumService } from "../forum/forum.service";
+import { PermissionsService } from "../permissions/permissions.service";
+import { ForumNotFoundException, PostNotFoundException } from "src/exception/entityNotFound.exception";
+import { BannedException, ResourcePermissionsException } from "src/exception/permissions.exception";
 
 @Injectable()
 export class PostService {
@@ -15,20 +18,27 @@ export class PostService {
         @InjectRepository(PostEntity) 
         private readonly postRepository: EntityRepository<PostEntity>,
 
-        private readonly circleService: CircleService,
+        private readonly permsService: PermissionsService,
+
+        private readonly forumService: ForumService,
 
         private readonly userService: UserService 
     ) {}
 
     async create(post: CreatePostDto, poster: User) {
+        const forum = await this.forumService.findById(post.forum);
+        if (!forum) {
+            throw new ForumNotFoundException();
+        }
+
+        const hasPerms = await this.permsService.isBanned(forum, poster);
+        if (!hasPerms) {
+            throw new BannedException();
+        }
+
         const postEntity = new PostEntity();
 
-        const circle = await this.circleService.findById(post.circle);
-        if (circle) {
-            postEntity.circle = circle;
-        } else {
-            return;
-        }
+        postEntity.forum = forum;
 
         postEntity.title = post.title;
         if (post.content) {
@@ -57,6 +67,9 @@ export class PostService {
         if (filter.poster) {
             where.poster = filter.poster;
         }
+        if (filter.forum) {
+            where.forum = filter.forum;
+        }
         if (filter.date) {
             where.createdAt = { 
                 $gte: filter.date, 
@@ -84,13 +97,18 @@ export class PostService {
         };
     }
 
-    async findByIdAndPoster(query: IdAndPosterQuery) {
-        return await this.postRepository.findOne({ id: query.id, poster: query.poster.id });
-    }
+    async update(update: UpdatePostDto, id: string, user: User) {
+        const post = await this.findById(id);
+        if (!post) {
+            throw new PostNotFoundException();
+        }
 
-    async update(query: IdAndPosterQuery, update: UpdatePostDto) {
-        const post = await this.findByIdAndPoster(query);
-        if (post) {
+        const userMatches = post.poster?.id === user.id;
+        if (!userMatches) {
+            throw new ResourcePermissionsException();
+        }
+
+        if (userMatches) {
             if (post.content && update.content) {
                 post.content = update.content;
             } else if (post.images.length > 1 && update.images) {
@@ -103,14 +121,23 @@ export class PostService {
         }
     }
 
-    async delete(query: IdAndPosterQuery) {
-        const post = await this.findByIdAndPoster(query);
-        if (post) {
-            post.poster = null;
-            post.title = "";
-            post.content = "";
-            post.images = [];
+    async delete(id: string, user: User) {
+        const post = await this.findById(id);
+        if (!post) {
+            throw new PostNotFoundException();
         }
+
+        const userMatches = post?.poster?.id === user.id;
+        const hasModPerms = await this.permsService.hasModPerms(post.forum, user);
+        if (!userMatches && !hasModPerms) {
+            throw new ResourcePermissionsException();
+        }
+
+        post.poster = null;
+        post.title = "";
+        post.content = "";
+        post.images = [];
+
         await this.postRepository.flush();
         return post;
     }

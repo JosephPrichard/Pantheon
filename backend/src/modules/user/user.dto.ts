@@ -10,18 +10,18 @@ export interface User {
 export class CreateUserDto {
     @IsEmail()
     @NormalizeEmail()
-    @MinLength(5, { message: "Should be at least 5 characters."})
-    @MaxLength(MAX_EMAIL_LEN, { message: `Should be less than ${MAX_EMAIL_LEN} characters.`})
+    @MinLength(5, { message: "Email should be at least 5 characters." })
+    @MaxLength(MAX_EMAIL_LEN, { message: `Email should be less than ${MAX_EMAIL_LEN} characters.`})
     email!: string;
     
     @IsString()
-    @MinLength(5, { message: "Should be at least 5 characters."})
-    @MaxLength(MAX_USER_NAME_LEN, { message: `Should be less than ${MAX_USER_NAME_LEN} characters.`})
+    @MinLength(5, { message: "Username should be at least 5 characters."})
+    @MaxLength(MAX_USER_NAME_LEN, { message: `Username should be less than ${MAX_USER_NAME_LEN} characters.`})
     name!: string;
 
     @IsString()
-    @MinLength(5, { message: "Should be at least 5 characters."})
-    @MaxLength(MAX_PASSWORD_LEN, { message: `Should be less than ${MAX_PASSWORD_LEN} characters.`})
+    @MinLength(5, { message: "Password sould be at least 5 characters."})
+    @MaxLength(MAX_PASSWORD_LEN, { message: `Password should be less than ${MAX_PASSWORD_LEN} characters.`})
     password!: string;
 }
 

@@ -44,6 +44,10 @@ export class UserService {
         return this.userRepository.getReference(id);
     }
 
+    getObject(id: string): User {
+        return { id };
+    }
+
     async findUserById(id: string) {
         return await this.userRepository.findOne({ id: id });
     }

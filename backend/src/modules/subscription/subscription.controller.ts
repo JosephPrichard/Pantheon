@@ -1,8 +1,8 @@
 import { Body, Controller, Delete, Get, Post, Put, Req, Res } from "@nestjs/common";
 import { CreateSubDto, DeleteSubDto, UpdateSubDto } from "./subscription.dto";
 import { SubscriptionService as SubscriptionService } from "./subscription.service";
-import { Request, Response } from "express";
-import { SESSION_ERROR } from "src/utils/global";
+import { Request } from "express";
+import { InvalidSessionException } from "src/exception/session.exception";
 
 @Controller("subscriptions")
 export class SubcriptionController {
@@ -12,75 +12,55 @@ export class SubcriptionController {
     @Post()
     async create(
         @Body() body: CreateSubDto,
-        @Req() req: Request,
-        @Res() res: Response
+        @Req() req: Request
     ) {
         const user = req.session.user;
         if (!user) {
-            res.status(401).json({ msg: SESSION_ERROR });
-            return;
+            throw new InvalidSessionException();
         }
 
         const id = await this.subService.create(body, user);
-        if (id) {
-            res.json({ id });
-        } else {
-            res.status(405).end();
-        }
+        return { id };
     }
 
     @Get()
     async findAll(
-        @Req() req: Request,
-        @Res() res: Response
+        @Req() req: Request
     ) {
         const user = req.session.user;
         if (!user) {
-            res.status(401).json({ msg: SESSION_ERROR });
-            return;
+            throw new InvalidSessionException();
         }
 
         const subscriptions = await this.subService.findByUser(user);
-        res.json({ subscriptions });
+        return { subscriptions };
     }
 
     @Put()
     async update(
         @Body() body: UpdateSubDto,
-        @Req() req: Request,
-        @Res() res: Response
+        @Req() req: Request
     ) {
         const user = req.session.user;
         if (!user) {
-            res.status(401).json({ msg: SESSION_ERROR });
-            return;
+            throw new InvalidSessionException();
         }
 
         const subscription = await this.subService.update(body, user);
-        if (subscription) {
-            res.json({ subscription });
-        } else {
-            res.status(405).end();
-        }
+        return { subscription };
     }
 
     @Delete()
     async delete(
         @Body() body: DeleteSubDto,
-        @Req() req: Request,
-        @Res() res: Response
+        @Req() req: Request
     ) {
         const user = req.session.user;
         if (!user) {
-            res.status(401).json({ msg: SESSION_ERROR });
-            return;
+            throw new InvalidSessionException();
         }
 
         const subscription = await this.subService.delete(body, user);
-        if (subscription) {
-            res.json({ subscription });
-        } else {
-            res.status(405).end();
-        }
+        return { subscription };
     }
 }

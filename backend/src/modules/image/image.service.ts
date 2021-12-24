@@ -1,12 +1,13 @@
 import { Injectable } from "@nestjs/common";
+import { Readable } from "stream";
 import { getBucket } from "../../resource/bucket";
 import { uuid } from "../../utils/id";
 
-interface File { 
+export interface Image { 
     id: string;
     path: string;
-    contentType: any; 
-    size: any;
+    contentType: string; 
+    size: number;
 }
 
 @Injectable()
@@ -15,7 +16,7 @@ export class ImageService {
     private bucket = getBucket();
 
     async uploadImages(files: Array<Express.Multer.File>, folder: string) {
-        const promises = []
+        const promises = [];
 
         for(const file of files) {
             const id = uuid();
@@ -29,31 +30,15 @@ export class ImageService {
         const path = folder + "/" + id;
 
         const fileBlob = this.bucket.file(path);
-        const uploadStream = fileBlob.createWriteStream();
 
-        return new Promise<File>((resolve, reject) => {
-            file.stream.pipe(uploadStream)
-                .on("error", () => reject())
-                .on("finish", () => {
-                    () => {
-                        resolve({
-                            id,
-                            path,
-                            contentType: fileBlob.metadata.contentType,
-                            size: fileBlob.metadata.size
-                        })
-                    }
-                });
+        return new Promise<Image>((resolve, reject) => {
+            fileBlob.save(file.buffer, { contentType: file.mimetype }, err => reject(err));
+            resolve({
+                id,
+                path,
+                contentType: file.mimetype,
+                size: file.size
+            });
         });
-    }
-
-    downloadImage(path: string) {
-        const file = this.bucket.file(path);
-        const downloadStream = file.createReadStream();
-
-        return {
-            downloadStream,
-            metadata: file.metadata
-        }
     }
 }

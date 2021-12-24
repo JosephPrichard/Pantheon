@@ -1,24 +1,27 @@
 import { Controller, Get, Query, Req, Res } from "@nestjs/common";
 import { PostService } from "../post/post.service";
 import { VoteService } from "../vote/vote.service";
-import { Request, Response } from "express";
+import { Request  } from "express";
 import { PostVoteEntity } from "../vote/vote.entity";
-import { FeedPostDto } from "./feed.dto";
+import { FeedCommentDto, FeedCommentTreeDto, FeedPostDto } from "./feed.dto";
 import { ALLTIME, TimeType } from "src/utils/global";
+import { CommentService } from "../comment/comment.service";
 
 @Controller("feed")
 export class FeedController {
 
     constructor(
         private readonly postService: PostService,
+
+        private readonly commentService: CommentService,
+
         private readonly voteService: VoteService
     ) {}
 
     @Get("/posts") 
-    async search(
+    async filterPosts(
         @Query() query: FeedPostDto,
-        @Req() req: Request,
-        @Res() res: Response
+        @Req() req: Request
     ) {
         const date = query.time && query.time !== ALLTIME ? calculateDate(query.time) : undefined;
 
@@ -28,6 +31,7 @@ export class FeedController {
 
         const filter = {
             poster: query.poster,
+            forum: query.forum,
             sort: query.sort,
             page: query.page,
             date
@@ -41,8 +45,25 @@ export class FeedController {
             postVotes = await this.voteService.findPostVotes(result.posts, user);
         }
         
-        res.json({ ...result, postVotes });
+        return { ...result, postVotes };
     }
+
+    @Get("/comments")
+    async filterComments(
+        @Query() query: FeedCommentDto
+    ) {
+        const comments = await this.commentService.findByFilter(query);
+        return { comments };
+    }
+
+    @Get("/post/comments")
+    async filterPostComments(
+        @Query() query: FeedCommentTreeDto
+    ) {
+        const comments = await this.commentService.findTreesByFilter(query);
+        return { comments };
+    }
+
 }
 
 function calculateDate(time: TimeType) {

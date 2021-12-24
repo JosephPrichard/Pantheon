@@ -1,8 +1,6 @@
-import { Escape, Trim } from "class-sanitizer";
-import { IsArray, IsIn, IsInt, IsOptional, IsString, IsUrl, MaxLength, MinLength, ValidateNested } from "class-validator";
-import { MAX_LINK_LEN, MAX_POST_LEN, MAX_TITLE_LEN, SortType, TimeType } from "../../utils/global";
-import { User } from "../user/user.dto";
-import { PostEntity } from "./post.entity";
+import { Trim } from "class-sanitizer";
+import { IsArray, IsOptional, IsString, IsUrl, MaxLength, MinLength } from "class-validator";
+import { MAX_LINK_LEN, MAX_POST_LEN, MAX_TITLE_LEN, SortType } from "../../utils/global";
 
 export class CreatePostDto {
     @IsString()
@@ -12,7 +10,7 @@ export class CreatePostDto {
     title!: string;
 
     @IsString()
-    circle!: string;
+    forum!: string;
 
     @IsOptional()
     @IsString()
@@ -29,7 +27,8 @@ export class CreatePostDto {
     link?: string;
 
     @IsOptional()
-    @IsString({each: true})
+    @IsArray()
+    @IsString({ each: true })
     images?: string[];
 }
 
@@ -55,17 +54,8 @@ export class UpdatePostDto {
 
 export interface PostFilter {
     poster?: string;
+    forum?: string;
     date?: Date;
     sort: SortType;
     page: number;
-}
-
-export interface IdAndPosterQuery {
-    id: string;
-    poster: User;
-}
-
-export type SearchRes = {
-    posts: PostEntity[];
-    pageCount: number;
 }

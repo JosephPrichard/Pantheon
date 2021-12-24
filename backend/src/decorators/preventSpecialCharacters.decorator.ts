@@ -1,23 +1,28 @@
 import { ValidatorConstraint, ValidatorConstraintInterface, ValidationOptions, registerDecorator } from "class-validator";
 
-export function PreventUnsafe(validationOptions?: ValidationOptions) {
+export function PreventSpecialCharacters(validationOptions?: ValidationOptions) {
     return (object: any, propertyName: string) => {
         registerDecorator({
             target: object.constructor,
             propertyName,
             options: validationOptions,
             constraints: [],
-            validator: PreventUnsafeClass,
+            validator: PreventSpecialCharactersClass,
         });
     };
 }
 
 
 @ValidatorConstraint({name: "Custom" })
-export class PreventUnsafeClass implements ValidatorConstraintInterface {
+export class PreventSpecialCharactersClass implements ValidatorConstraintInterface {
 
     async validate(value: any) {
-        return /[<>]/.test(value);
+        return !hasSpecialChars(value);
     }
     
+}
+
+function hasSpecialChars(str: string) {
+    const specialChars = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+    return specialChars.test(str);
 }

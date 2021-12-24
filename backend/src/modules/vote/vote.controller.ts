@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Param, Post, Req, Res } from "@nestjs/common";
 import { VoteDto } from "./vote.dto";
 import { VoteService } from "./vote.service";
-import { Request, Response } from "express";
-import { SESSION_ERROR } from "../../utils/global";
+import { Request } from "express";
+import { InvalidSessionException } from "src/exception/session.exception";
 
 @Controller("votes")
 export class VoteController {
@@ -12,58 +12,44 @@ export class VoteController {
     @Post("/post")
     async votePost(
         @Body() body: VoteDto,
-        @Req() req: Request,
-        @Res() res: Response
+        @Req() req: Request
     ) {
         const user = req.session.user;
         if (!user) {
-            res.status(401).json({ msg: SESSION_ERROR });
-            return;
+            throw new InvalidSessionException();
         }
 
         const vote = await this.voteService.votePost(body, user);
-        if (vote) {
-            res.json({ vote });
-        } else {
-            res.status(405).end();
-        }
+        return { vote };
     }
 
     @Post("/comment")
     async voteComment(
         @Body() body: VoteDto,
-        @Req() req: Request,
-        @Res() res: Response
+        @Req() req: Request
     ) {
         const user = req.session.user;
         if (!user) {
-            res.status(401).json({ msg: SESSION_ERROR });
-            return;
+            throw new InvalidSessionException();
         }
 
         const vote = await this.voteService.voteComment(body, user);
-        if (vote) {
-            res.json({ vote });
-        } else {
-            res.status(405).end();
-        }
+        return { vote };
     }
 
     @Get("/post/:id")
     async getPostVotes(
         @Param() idParam: string,
-        @Req() req: Request,
-        @Res() res: Response
+        @Req() req: Request
     ) {
         const user = req.session.user;
         if (!user) {
-            res.status(401).json({ msg: SESSION_ERROR });
-            return;
+            throw new InvalidSessionException();
         }
 
         const postVote = await this.voteService.findPostVote(idParam, user);
         const commentVotes = await this.voteService.findCommentVotes(idParam, user);
 
-        res.json({ postVote, commentVotes });
+        return { postVote, commentVotes };
     }
 }

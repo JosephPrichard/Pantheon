@@ -1,13 +1,13 @@
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { Module } from "@nestjs/common";
-import { CircleModule } from "../circle/circle.module";
+import { ForumModule } from "../forum/forum.module";
 import { UserModule } from "../user/user.module";
 import { SubcriptionController } from "./subscription.controller";
 import { SubscriptionEntity } from "./subscription.entity";
 import { SubscriptionService } from "./subscription.service";
 
 @Module({
-    imports: [MikroOrmModule.forFeature([SubscriptionEntity]), CircleModule, UserModule],
+    imports: [MikroOrmModule.forFeature([SubscriptionEntity]), ForumModule, UserModule],
     exports: [SubscriptionService],
     controllers: [SubcriptionController],
     providers: [SubscriptionService]

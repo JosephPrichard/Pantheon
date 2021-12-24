@@ -1,7 +1,9 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { Injectable } from "@nestjs/common";
 import { EntityRepository } from "mikro-orm";
-import { CircleService } from "../circle/circle.service";
+import { ForumNotFoundException, SubscriptionNotFoundException } from "src/exception/entityNotFound.exception";
+import { DuplicateResourceException } from "src/exception/invalidInput.exception";
+import { ForumService } from "../forum/forum.service";
 import { User } from "../user/user.dto";
 import { UserService } from "../user/user.service";
 import { CreateSubDto, DeleteSubDto, UpdateSubDto } from "./subscription.dto";
@@ -15,51 +17,54 @@ export class SubscriptionService {
 
         private readonly userService: UserService,
 
-        private readonly circleService: CircleService
+        private readonly forumService: ForumService
     ) {}
 
     async create(sub: CreateSubDto, user: User) {
-        const subEntity = await this.subRepository.findOne({ circle: sub.circle, user: user.id });
-
-        if (!subEntity) {
-            const subEntity = new SubscriptionEntity();
-
-            const circle = await this.circleService.findById(sub.circle);
-            if (circle) {
-                subEntity.circle = circle;
-                subEntity.user = this.userService.getEntityReference(user.id);
-
-                circle.subscriptions += 1;
-            } else {
-                return;
-            }
-
-            this.subRepository.persistAndFlush(circle);
-            return sub;
+        const oldSubEntity = await this.subRepository.findOne({ forum: sub.forum, user: user.id });
+        if (oldSubEntity) {
+            throw new DuplicateResourceException();
         }
+
+        const forum = await this.forumService.findById(sub.forum);
+        if (!forum) {
+            throw new ForumNotFoundException();
+        }
+
+        const subEntity = new SubscriptionEntity();
+
+        subEntity.forum = forum;
+        subEntity.user = this.userService.getEntityReference(user.id);
+
+        forum.subscriptions += 1;
+
+        this.subRepository.persistAndFlush(forum);
+        return sub;
     }
 
     async findByUser(user: User) {
-        return this.subRepository.find({ user: user.id }, ["circle"]);
+        return this.subRepository.find({ user: user.id }, ["forum"]);
     }
 
     async update(update: UpdateSubDto, user: User) {
-        const subEntity = await this.subRepository.findOne({ circle: update.circle, user: user.id });
-
-        if (subEntity) {
-            subEntity.isFavorite = update.isFavorite;
-            return subEntity;
+        const subEntity = await this.subRepository.findOne({ forum: update.forum, user: user.id });
+        if (!subEntity) {
+            throw new SubscriptionNotFoundException();
         }
+
+        subEntity.isFavorite = update.isFavorite;
+        return subEntity;
     }
 
     async delete(del: DeleteSubDto, user: User) {
-        const subEntity = await this.subRepository.findOne({ circle: del.circle, user: user.id }, ["circle"]);
-
-        if (subEntity) {
-            subEntity.circle.subscriptions -= 1;
-
-            this.subRepository.removeAndFlush(subEntity);
-            return subEntity;
+        const subEntity = await this.subRepository.findOne({ forum: del.forum, user: user.id }, ["forum"]);
+        if (!subEntity) {
+            throw new SubscriptionNotFoundException();
         }
+
+        subEntity.forum.subscriptions -= 1;
+
+        this.subRepository.removeAndFlush(subEntity);
+        return subEntity;
     }
 }

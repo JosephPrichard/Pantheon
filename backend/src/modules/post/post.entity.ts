@@ -2,7 +2,7 @@ import { ArrayType, Entity, Index, ManyToOne, PrimaryKey, Property } from "mikro
 import { UserEntity } from "../user/user.entity";
 import { MAX_LINK_LEN, MAX_POST_LEN, MAX_TITLE_LEN } from "../../utils/global";
 import { uuid } from "../../utils/id";
-import { CircleEntity } from "../circle/circle.entity";
+import { ForumEntity } from "../forum/forum.entity";
 
 @Entity()
 export class PostEntity {
@@ -13,9 +13,9 @@ export class PostEntity {
     @Index()
     poster: UserEntity | null = null;
 
-    @ManyToOne({ entity: () => CircleEntity, nullable: true })
+    @ManyToOne({ entity: () => ForumEntity, nullable: true })
     @Index()
-    circle: CircleEntity | null = null;
+    forum!: ForumEntity;
 
     @Property({ type: String, length: MAX_TITLE_LEN })
     title!: string;

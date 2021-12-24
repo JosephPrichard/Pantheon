@@ -1,8 +1,8 @@
 import { Body, Controller, Delete, Get, Param, Post, Req, Res } from "@nestjs/common";
-import { SESSION_ERROR } from "src/utils/global";
 import { CreateModeratorDto, DeleteModeratorDto } from "./moderator.dto";
 import { ModeratorService } from "./moderator.service";
-import { Request, Response } from "express";
+import { Request } from "express";
+import { InvalidSessionException } from "src/exception/session.exception";
 
 @Controller("moderators")
 export class ModeratorController {
@@ -12,64 +12,49 @@ export class ModeratorController {
     @Post()
     async create(
         @Body() body: CreateModeratorDto,
-        @Req() req: Request,
-        @Res() res: Response
+        @Req() req: Request
     ) {
         const user = req.session.user;
         if (!user) {
-            res.status(401).json({ msg: SESSION_ERROR });
-            return;
+            throw new InvalidSessionException();
         }
 
         const moderator = await this.modService.create(body, user);
-        if (moderator) {
-            res.json({ moderator });
-        } else {
-            res.status(405).end();
-        }
+        return { moderator };
     }
 
     @Get()
     async getByUser(
-        @Req() req: Request,
-        @Res() res: Response
+        @Req() req: Request
     ) {
         const user = req.session.user;
         if (!user) {
-            res.status(401).json({ msg: SESSION_ERROR });
-            return;
+            throw new InvalidSessionException();
         }
 
         const moderators = await this.modService.findByUser(user);
-        res.json({ moderators });
+        return { moderators };
     }
 
-    @Get("/:circle")
-    async getByCircle(
-        @Param("circle") circleParam: string,
-        @Res() res: Response
+    @Get("/:forum")
+    async getByForum(
+        @Param("forum") forumParam: string
     ) {
-        const moderators = await this.modService.findByCircle(circleParam);
-        res.json({ moderators });
+        const moderators = await this.modService.findByForum(forumParam);
+        return { moderators };
     }
 
     @Delete()
     async delete(
         @Body() body: DeleteModeratorDto,
-        @Req() req: Request,
-        @Res() res: Response
+        @Req() req: Request
     ) {
         const user = req.session.user;
         if (!user) {
-            res.status(401).json({ msg: SESSION_ERROR });
-            return;
+            throw new InvalidSessionException();
         }
 
         const moderator = await this.modService.delete(body, user);
-        if (moderator) {
-            res.json({ moderator });
-        } else {
-            res.status(404).end();
-        }
+        return { moderator };
     }
 }

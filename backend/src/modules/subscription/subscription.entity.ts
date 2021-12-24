@@ -1,5 +1,5 @@
 import { Entity, ManyToOne, Index, PrimaryKeyType, Property } from "mikro-orm";
-import { CircleEntity } from "../circle/circle.entity";
+import { ForumEntity } from "../forum/forum.entity";
 import { UserEntity } from "../user/user.entity";
 
 @Entity()
@@ -8,9 +8,9 @@ export class SubscriptionEntity {
     @Index()
     user!: UserEntity;
 
-    @ManyToOne({ entity: () => CircleEntity, primary: true })
+    @ManyToOne({ entity: () => ForumEntity, primary: true })
     @Index()
-    circle!: CircleEntity;
+    forum!: ForumEntity;
 
     @Property({ type: Boolean })
     isFavorite: boolean = false;

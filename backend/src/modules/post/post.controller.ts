@@ -1,11 +1,11 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, Req, Res } from "@nestjs/common";
+import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Req, Res } from "@nestjs/common";
 import { sanitize } from "class-sanitizer";
 import { CreatePostDto, UpdatePostDto } from "./post.dto";
 import { PostService } from "./post.service";
-import { Request, Response } from "express";
-import { SESSION_ERROR, TimeType } from "../../utils/global";
+import { Request } from "express";
 import { sanitizeString } from "../../utils/sanitize";
-import { PostVoteEntity } from "../vote/vote.entity";
+import { InvalidSessionException } from "src/exception/session.exception";
+import { PostNotFoundException } from "src/exception/entityNotFound.exception";
 
 @Controller("posts")
 export class PostController {
@@ -15,13 +15,11 @@ export class PostController {
     @Post()
     async create(
         @Body() body: CreatePostDto, 
-        @Req() req: Request,
-        @Res() res: Response
+        @Req() req: Request
     ) {
         const user = req.session.user;
         if (!user) {
-            res.status(401).json({ msg: SESSION_ERROR });
-            return;
+            throw new InvalidSessionException();
         }
 
         sanitize(body);
@@ -30,37 +28,29 @@ export class PostController {
         }
 
         const id = await this.postService.create(body, user);
-        if (id) {
-            res.json({ id });
-        } else {
-            res.status(405).end();
-        }
+        return { id };
     }
 
     @Get("/:id")
     async getById(
-        @Param("id") idParam: string,
-        @Res() res: Response
+        @Param("id") idParam: string
     ) {
         const post = await this.postService.findById(idParam);
-        if (post) {
-            res.json({ post });
-        } else {
-            res.status(404).end();
+        if (!post) {
+            throw new PostNotFoundException();
         }
+        return { post };
     }
 
     @Put("/:id")
     async update(
         @Body() body: UpdatePostDto, 
         @Param("id") idParam: string,
-        @Req() req: Request,
-        @Res() res: Response
+        @Req() req: Request
     ) {
         const user = req.session.user;
         if (!user) {
-            res.status(401).json({ msg: SESSION_ERROR });
-            return;
+            throw new InvalidSessionException();
         }
 
         sanitize(body);
@@ -68,31 +58,21 @@ export class PostController {
             body.content = sanitizeString(body.content);
         }
 
-        const post = await this.postService.update({id: idParam, poster: user }, body);
-        if (post) {
-            res.json({ post });
-        } else {
-            res.status(404).end();
-        }
+        const post = await this.postService.update(body, idParam, user);
+        return { post };
     }
 
     @Delete("/:id")
     async delete(
         @Param("id") idParam: string,
-        @Req() req: Request,
-        @Res() res: Response
+        @Req() req: Request
     ) {
         const user = req.session.user;
         if (!user) {
-            res.status(401).json({ msg: SESSION_ERROR });
-            return;
+            throw new InvalidSessionException();
         }
 
-        const post = await this.postService.delete({id: idParam, poster: user });
-        if (post) {
-            res.json({ post });
-        } else {
-            res.status(404).end();
-        }
+        const post = await this.postService.delete(idParam, user);
+        return { post };
     }
 }

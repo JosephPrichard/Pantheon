@@ -7,6 +7,8 @@ import { EntityRepository } from "mikro-orm";
 import { User } from "../user/user.dto";
 import { CreateFavoriteDto } from "./favorite.dto";
 import { UserService } from "../user/user.service";
+import { PostNotFoundException, FavoriteNotFoundException } from "src/exception/entityNotFound.exception";
+import { DuplicateResourceException } from "src/exception/invalidInput.exception";
 
 @Injectable()
 export class FavoriteService {
@@ -20,23 +22,23 @@ export class FavoriteService {
     ) {}
 
     async create(favorite: CreateFavoriteDto, user: User) {
-        const favoriteEntity = await this.favoriteRepository.findOne({ post: favorite.post, user: user });
+        const oldFavoriteEntity = await this.favoriteRepository.findOne({ post: favorite.post, user: user });
+        if (oldFavoriteEntity) {
+            throw new DuplicateResourceException();
+        }
 
-        if (!favoriteEntity) {
-            const favoriteEntity = new FavoriteEntity();
+        const post = await this.postService.findById(favorite.post);
+        if (!post) {
+            throw new PostNotFoundException();
+        }
 
-            const post = await this.postService.findById(favorite.post);
-            if (post) {
-                favoriteEntity.post = post;
-                favoriteEntity.user = this.userService.getEntityReference(user.id);
-            } else {
-                return;
-            }
+        const favoriteEntity = new FavoriteEntity();
 
-            this.favoriteRepository.persistAndFlush(favoriteEntity);
+        favoriteEntity.post = post;
+        favoriteEntity.user = this.userService.getEntityReference(user.id);
 
-            return favoriteEntity;
-        } 
+        this.favoriteRepository.persistAndFlush(favoriteEntity);
+        return favoriteEntity;
     }
 
     async findByUser(user: User) {
@@ -49,10 +51,11 @@ export class FavoriteService {
 
     async delete(post: string, user: User) {
         const favorite = await this.favoriteRepository.findOne({ post: post, user: user.id });
-
-        if(favorite) {
-            this.favoriteRepository.removeAndFlush(favorite);
-            return favorite;
+        if (!favorite) {
+            throw new FavoriteNotFoundException();
         }
+
+        this.favoriteRepository.removeAndFlush(favorite);
+        return favorite;
     }
 }

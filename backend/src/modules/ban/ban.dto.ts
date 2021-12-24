@@ -1,6 +1,6 @@
 import { IsString } from "class-validator";
 
-export class CreateModeratorDto {
+export class CreateBanDto {
     @IsString()
     forum!: string;
 
@@ -8,7 +8,7 @@ export class CreateModeratorDto {
     user!: string;
 }
 
-export class DeleteModeratorDto {
+export class DeleteBanDto {
     @IsString()
     forum!: string;
 

@@ -5,9 +5,10 @@ import { PostEntity } from "../modules/post/post.entity";
 import { UserEntity, UserCredsEntity } from "../modules/user/user.entity";
 import { PostVoteEntity, CommentVoteEntity } from "../modules/vote/vote.entity";
 import { CommentEntity } from "../modules/comment/comment.entity";
-import { CircleEntity } from "../modules/circle/circle.entity";
+import { ForumEntity } from "../modules/forum/forum.entity";
 import { SubscriptionEntity } from "src/modules/subscription/subscription.entity";
 import { ModeratorEntity } from "src/modules/moderator/moderator.entity";
+import { BanEntity } from "src/modules/ban/ban.entity";
 
 require("dotenv").config();
 
@@ -22,9 +23,10 @@ export const ormConfig: Options<PostgreSqlDriver> = {
     entities: [
         UserEntity, 
         UserCredsEntity, 
-        CircleEntity, 
+        ForumEntity, 
         SubscriptionEntity,
         ModeratorEntity,
+        BanEntity,
         PostEntity, 
         PostVoteEntity, 
         FavoriteEntity, 
@@ -35,5 +37,4 @@ export const ormConfig: Options<PostgreSqlDriver> = {
     pool: { min: 0, max: 15 }
 };
 
-export const redisHost = process.env.REDIS_HOST;
 export const sessionSecret = process.env.SESSION_SECRET ?? "";

@@ -1,9 +1,7 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
-import session from 'express-session';
-import { ormConfig, redisHost, sessionSecret } from './resource/config';
-import * as redis from "redis";
-import connectRedis from 'connect-redis';
+import { BadRequestException, MiddlewareConsumer, Module, RequestMethod, UseInterceptors, ValidationError, ValidationPipe } from '@nestjs/common';
+import { ormConfig, sessionSecret } from './resource/config';
+import session from "express-session";
 import { SESSION_EXPIRY } from './utils/global';
 import { CommentModule } from './modules/comment/comment.module';
 import { FavoriteModule } from './modules/favorite/favorite.module';
@@ -11,13 +9,26 @@ import { PostModule } from './modules/post/post.module';
 import { UserModule } from './modules/user/user.module';
 import { VoteModule } from './modules/vote/vote.module';
 import { ImageModule } from './modules/image/image.module';
-import { CircleModule } from './modules/circle/circle.module';
+import { ForumModule } from './modules/forum/forum.module';
 import { ModeratorModule } from './modules/moderator/moderator.module';
 import { SubscriptionModule } from './modules/subscription/subscription.module';
 import { FeedModule } from './modules/feed/feed.module';
+import { APP_PIPE } from '@nestjs/core';
 
-const RedisStore = connectRedis(session);
-const redisClient = redis.createClient();
+function getErrorArr(errs: ValidationError[]) {
+    const response = [];
+    for (const err of errs) {
+        const errors = [];
+        for (const k in err.constraints) {
+            errors.push(err.constraints[k]);
+        }
+        response.push({
+            property: err.property,
+            errors
+        });
+    }
+    return response;
+}
 
 @Module({
     imports: [
@@ -25,7 +36,7 @@ const redisClient = redis.createClient();
 
         UserModule,
         ModeratorModule,
-        CircleModule,
+        ForumModule,
         ImageModule,
 
         PostModule,
@@ -37,19 +48,22 @@ const redisClient = redis.createClient();
         VoteModule,
 
         FeedModule
-    ]
+    ],
+    providers: [{
+        provide: APP_PIPE,
+        useValue: new ValidationPipe({
+            transform: true,
+            exceptionFactory: (errs) => {
+                return new BadRequestException(getErrorArr(errs))
+            }
+        })
+    }],
 })
 export class AppModule {
     public configure(consumer: MiddlewareConsumer) {
         consumer
             .apply(
                 session({
-                    store: new RedisStore({
-                        host: redisHost,
-                        port: 6379,
-                        client: redisClient,
-                        ttl: SESSION_EXPIRY
-                    }),
                     secret: sessionSecret,
                     saveUninitialized: false,
                     resave: true,
