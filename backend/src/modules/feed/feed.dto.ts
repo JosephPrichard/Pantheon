@@ -46,9 +46,6 @@ export class FeedCommentTreeDto {
     page!: number;
 
     @IsString()
-    post!: string;
-
-    @IsString()
     @IsIn(["new", "top"])
     sort!: SortType;
 }

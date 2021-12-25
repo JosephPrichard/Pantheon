@@ -10,6 +10,7 @@ export const MAX_PATH_LEN = 10_000;
 export const MAX_LINK_LEN = 500;
 export const MAX_FORUM_NAME_LEN = 25;
 export const MAX_FORUM_DESC_LEN = 500;
+export const MAX_MESSAGE_LEN = 300;
 
 export type SortType = "top" | "new";
 export type TimeType = "day" | "week" | "month" | "year" | "alltime";

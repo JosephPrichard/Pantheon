@@ -9,18 +9,12 @@ export class TaskService {
     private readonly threadPool = new DynamicPool(4);
 
     // general method to execute any task with any param
-    async executeTask(task: Func<any>, param: any) {
-        return await this.threadPool.exec({
-            task,
-            param
-        });
+    async executeTask<FuncType extends Func>(task: FuncType, param: any) {
+        return await this.threadPool.exec({ task, param });
     }
 
     // executes the cpu-bounded deserialize tree task
     async executeDeserializeTreeTask(nodes: NodeObj[]) {
-        return await this.threadPool.exec({
-            task: deserializeTree,
-            param: nodes
-        });
+        return await this.executeTask(deserializeTree, nodes);
     }
 }

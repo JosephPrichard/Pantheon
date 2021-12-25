@@ -1,4 +1,4 @@
-import { Controller, Get, Query, Req, Res } from "@nestjs/common";
+import { Controller, Get, Param, Query, Req, Res } from "@nestjs/common";
 import { PostService } from "../post/post.service";
 import { VoteService } from "../vote/vote.service";
 import { Request  } from "express";
@@ -56,11 +56,17 @@ export class FeedController {
         return { comments };
     }
 
-    @Get("/post/comments")
+    @Get("/post/:id/comments")
     async filterPostComments(
-        @Query() query: FeedCommentTreeDto
+        @Query() query: FeedCommentTreeDto,
+        @Param("id") idParam: string
     ) {
-        const commentTree = await this.commentService.findTreesByFilter(query);
+        const filter = {
+            post: idParam,
+            page: query.page,
+            sort: query.sort
+        }
+        const commentTree = await this.commentService.findTreesByFilter(filter);
         return { commentTree };
     }
 
