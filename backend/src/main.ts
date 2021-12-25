@@ -1,8 +1,7 @@
-import { HttpAdapterHost, NestFactory } from '@nestjs/core';
+import { NestFactory } from '@nestjs/core';
 import cookieParser from 'cookie-parser';
 import { MikroORM } from 'mikro-orm';
 import { AppModule } from './app.module';
-import { InvalidInputException } from './exception/invalidInput.exception';
 import { EntityNotFoundExceptionFilter, InvalidInputExceptionFilter, InvalidSessionExceptionFilter, PermissionsExceptionFilter } from './interceptors/exception.interceptors';
 import { ormConfig } from './resource/config';
 

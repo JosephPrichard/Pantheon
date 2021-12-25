@@ -1,11 +1,11 @@
-import { UnauthorizedException, BadRequestException, NotFoundException, ExceptionFilter, InternalServerErrorException, ArgumentsHost } from "@nestjs/common";
+import { ExceptionFilter, ArgumentsHost } from "@nestjs/common";
 import { Catch } from "@nestjs/common/decorators/core/catch.decorator";
 import { EntityNotFoundException } from "../exception/entityNotFound.exception";
 import { InvalidInputException } from "../exception/invalidInput.exception";
-import { ModPermissionsException, PermissionsException } from "../exception/permissions.exception";
+import { PermissionsException } from "../exception/permissions.exception";
 import { InvalidSessionException } from "../exception/session.exception";
 import { Logger } from '@nestjs/common';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 
 @Catch(InvalidSessionException)
 export class InvalidSessionExceptionFilter implements ExceptionFilter {
@@ -14,7 +14,7 @@ export class InvalidSessionExceptionFilter implements ExceptionFilter {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse<Response>();
 
-        Logger.error("InvalidSessionExceptionFilter caught an exception");
+        Logger.error(exception.name, exception.message);
 
         response
             .status(401)
@@ -33,7 +33,7 @@ export class PermissionsExceptionFilter implements ExceptionFilter {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse<Response>();
 
-        Logger.error("PermissionsExceptionFilter caught an exception");
+        Logger.error(exception.name, exception.message);
 
         response
             .status(401)
@@ -52,7 +52,7 @@ export class InvalidInputExceptionFilter implements ExceptionFilter {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse<Response>();
 
-        Logger.error("InvalidInputExceptionFilter caught an exception");
+        Logger.error(exception.name, exception.message);
 
         response
             .status(400)
@@ -71,7 +71,7 @@ export class EntityNotFoundExceptionFilter implements ExceptionFilter {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse<Response>();
 
-        Logger.error("EntityNotFoundExceptionFilter caught an exception");
+        Logger.error(exception.name, exception.message);
 
         response
             .status(404)

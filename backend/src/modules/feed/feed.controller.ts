@@ -60,8 +60,8 @@ export class FeedController {
     async filterPostComments(
         @Query() query: FeedCommentTreeDto
     ) {
-        const comments = await this.commentService.findTreesByFilter(query);
-        return { comments };
+        const commentTree = await this.commentService.findTreesByFilter(query);
+        return { commentTree };
     }
 
 }

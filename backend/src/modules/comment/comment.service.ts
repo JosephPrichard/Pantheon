@@ -1,7 +1,6 @@
 import { CommentEntity } from "./comment.entity";
 import { CommentFilter, CommentTreeFilter, CreateCommentNodeDto, CreateCommentRootDto, UpdateCommentDto } from "./comment.dto";
 import { QueryOrder } from "mikro-orm";
-import { NodeSerializer } from "../../utils/serializer";
 import { Injectable } from "@nestjs/common";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { InjectRepository} from "@mikro-orm/nestjs";
@@ -11,6 +10,8 @@ import { UserService } from "../user/user.service";
 import { PermissionsService } from "../permissions/permissions.service";
 import { PostNotFoundException, CommentNotFoundException } from "src/exception/entityNotFound.exception";
 import { BannedException, ResourcePermissionsException } from "src/exception/permissions.exception";
+import { appendNode, serializePath } from "src/utils/node.serializer";
+import { TaskService } from "../task/task.service";
 
 @Injectable()
 export class CommentService {
@@ -23,7 +24,9 @@ export class CommentService {
 
         private readonly userService: UserService,
 
-        private readonly postService: PostService
+        private readonly postService: PostService,
+
+        private readonly taskService: TaskService
     ) {}
 
     async createRoot(root: CreateCommentRootDto, commenter: User) {
@@ -62,7 +65,7 @@ export class CommentService {
 
         commentEntity.content = node.content;
         commentEntity.commenter = this.userService.getEntityReference(commenter.id);
-        commentEntity.path = NodeSerializer.appendNode(parent.path, parent.id);
+        commentEntity.path = appendNode(parent.path, parent.id);
         commentEntity.post = parent.post;
         parent.post.comments += 1;
 
@@ -78,42 +81,8 @@ export class CommentService {
         return await this.commentRepository.findOne({ id: { $in: ids } });
     }
 
-    async findTreesByFilter(filter: CommentTreeFilter) {
-        const roots = await this.commentRepository.find({
-            post: filter.post,
-            path: ""
-        }, ["commenter"],
-            filter.sort === "top" ?
-                { votes: QueryOrder.DESC } :
-                { createdAt: QueryOrder.DESC }
-        );
-
-        if (roots.length <= 0) {
-            return [];
-        }
-
-        let rootPaths = "";
-        for(let i = 0; i < roots.length - 1; i++) {
-            const root = roots[i];
-            rootPaths += "'" + root.id + "%', ";
-        }
-        if(roots.length - 1 >= 0) {
-            rootPaths += "'" + roots[roots.length - 1].id + "%'";
-        }
-
-        const qb = this.commentRepository.createQueryBuilder("c");
-        const query = qb.select("*")
-            .leftJoinAndSelect("commenter", "u")
-            .where(`c.path like any (array[${rootPaths}])`)
-
-        const nodes = await query.execute();
-        console.log(nodes);
-
-        return [];
-    }
-
     async findTreeByPath(path: string[]) {
-        const compare = NodeSerializer.serializePath(path) + "%";
+        const compare = serializePath(path) + "%";
         return await this.commentRepository.find({ path: { $like: compare } }, ["commenter"]);
     }
 
@@ -136,6 +105,18 @@ export class CommentService {
         );
 
         return comments;
+    }
+
+    async findTreesByFilter(filter: CommentTreeFilter) {
+        const comments = await this.commentRepository.find({
+            post: filter.post,
+        }, ["commenter"],
+            filter.sort === "top" ?
+                { votes: QueryOrder.DESC } :
+                { createdAt: QueryOrder.DESC }
+        );
+
+        return await this.taskService.executeDeserializeTreeTask(comments);
     }
 
     async update(update: UpdateCommentDto, id: string, user: User) {
