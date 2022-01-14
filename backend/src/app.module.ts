@@ -1,7 +1,7 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { BadRequestException, MiddlewareConsumer, Module, RequestMethod, UseInterceptors, ValidationError, ValidationPipe } from '@nestjs/common';
-import { ormConfig, sessionSecret } from './resource/config';
-import session from "express-session";
+import { BadRequestException, MiddlewareConsumer, Module, RequestMethod, ValidationPipe } from '@nestjs/common';
+import { ormConfig } from './resource/orm';
+import { SESSION_SECRET } from './resource/session';
 import { SESSION_EXPIRY } from './utils/global';
 import { CommentModule } from './modules/comment/comment.module';
 import { FavoriteModule } from './modules/favorite/favorite.module';
@@ -14,21 +14,12 @@ import { ModeratorModule } from './modules/moderator/moderator.module';
 import { SubscriptionModule } from './modules/subscription/subscription.module';
 import { FeedModule } from './modules/feed/feed.module';
 import { APP_PIPE } from '@nestjs/core';
+import { SearchModule } from './modules/search/search.module';
+import { getErrorArr } from './utils/errors';
+import session from "express-session";
+import connectPgSimple from 'connect-pg-simple';
 
-function getErrorArr(errs: ValidationError[]) {
-    const response = [];
-    for (const err of errs) {
-        const errors = [];
-        for (const k in err.constraints) {
-            errors.push(err.constraints[k]);
-        }
-        response.push({
-            property: err.property,
-            errors
-        });
-    }
-    return response;
-}
+const PgSession = connectPgSimple(session);
 
 @Module({
     imports: [
@@ -47,7 +38,8 @@ function getErrorArr(errs: ValidationError[]) {
 
         VoteModule,
 
-        FeedModule
+        FeedModule,
+        SearchModule
     ],
     providers: [{
         provide: APP_PIPE,
@@ -64,7 +56,11 @@ export class AppModule {
         consumer
             .apply(
                 session({
-                    secret: sessionSecret,
+                    // store: new PgSession({
+                    //     conString: "",
+                    //     tableName: "sessions"
+                    // }),
+                    secret: SESSION_SECRET,
                     saveUninitialized: false,
                     resave: true,
                     rolling: true,

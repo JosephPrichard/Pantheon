@@ -2,13 +2,12 @@ import { Entity, Index, ManyToOne, PrimaryKey, Property } from "mikro-orm";
 import { MAX_FORUM_DESC_LEN, MAX_FORUM_NAME_LEN, MAX_TITLE_LEN } from "../../utils/global";
 import { UserEntity } from "../user/user.entity";
 
-@Entity()
+@Entity({ tableName: "forums" })
 export class ForumEntity {
     @PrimaryKey({ type: String, length: MAX_FORUM_NAME_LEN })
     id!: string;
 
     @ManyToOne({ entity: () => UserEntity })
-    @Index()
     owner!: UserEntity;
 
     @Property({ type: Number })
@@ -19,7 +18,4 @@ export class ForumEntity {
 
     @Property({ type: String, length: MAX_FORUM_DESC_LEN })
     description: string = "";
-
-    @Property({ type: String, nullable: true })
-    image: string | null = null;
 }

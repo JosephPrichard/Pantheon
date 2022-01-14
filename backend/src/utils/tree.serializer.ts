@@ -1,5 +1,3 @@
-import { StaticPool } from "node-worker-threads-pool";
-
 export interface NodeObj {
     id: string;
     path: string;

@@ -1,8 +1,8 @@
 import { Type } from "class-transformer";
-import { IsOptional, IsString, IsIn, IsInt } from "class-validator";
-import { SortType, TimeType } from "src/utils/global";
+import { IsOptional, IsString, IsIn, IsInt, Max } from "class-validator";
+import { MAX_PAGE, SortType, TimeType } from "src/utils/global";
 
-export class FeedPostDto {
+export class FeedDto {
     @IsOptional()
     @IsString()
     @IsIn(["day", "week", "month", "year", "alltime"])
@@ -10,42 +10,16 @@ export class FeedPostDto {
 
     @IsInt()
     @Type(() => Number)
+    @Max(MAX_PAGE, { message: `Page number cannot exceed ${MAX_PAGE}`})
     page!: number;
 
-    @IsOptional()
     @IsString()
-    poster?: string;
-
-    @IsOptional()
-    @IsString()
-    forum?: string;
-
-    @IsString()
-    @IsIn(["new", "top"])
+    @IsIn(["new", "top", "hot"])
     sort!: SortType;
 }
 
-export class FeedCommentDto {
+export class PageDto {
     @IsInt()
     @Type(() => Number)
     page!: number;
-
-    @IsOptional()
-    @IsString()
-    commenter?: string;
-
-    @IsString()
-    @IsIn(["new", "top"])
-    sort!: SortType;
-}
-
-
-export class FeedCommentTreeDto {
-    @IsInt()
-    @Type(() => Number)
-    page!: number;
-
-    @IsString()
-    @IsIn(["new", "top"])
-    sort!: SortType;
 }

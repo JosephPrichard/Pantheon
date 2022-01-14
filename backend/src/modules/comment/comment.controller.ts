@@ -5,6 +5,7 @@ import { sanitize } from "class-sanitizer";
 import { sanitizeString } from "../../utils/sanitize";
 import { CreateCommentNodeDto, CreateCommentRootDto, UpdateCommentDto } from "./comment.dto";
 import { InvalidSessionException } from "src/exception/session.exception";
+import { CommentNotFoundException } from "src/exception/entityNotFound.exception";
 
 @Controller("comments")
 export class CommentController {
@@ -49,7 +50,7 @@ export class CommentController {
     ) {
         const comment = await this.commentService.findById(idParam);
         if (!comment) {
-            throw new NotFoundException("Comment not found.");
+            throw new CommentNotFoundException();
         }
         return { comment };
     }

@@ -4,6 +4,7 @@ import { EntityRepository } from "mikro-orm";
 import { ForumNotFoundException, BanNotFoundException } from "src/exception/entityNotFound.exception";
 import { DuplicateResourceException } from "src/exception/invalidInput.exception";
 import { ModPermissionsException } from "src/exception/permissions.exception";
+import { AppLogger } from "src/loggers/applogger";
 import { ForumService } from "../forum/forum.service";
 import { PermissionsService } from "../permissions/permissions.service";
 import { User } from "../user/user.dto";
@@ -13,6 +14,8 @@ import { BanEntity } from "./ban.entity";
 
 @Injectable()
 export class BanService {
+
+    private readonly logger = new AppLogger(BanService.name);
     
     constructor(
         @InjectRepository(BanEntity) 
@@ -47,7 +50,9 @@ export class BanService {
         banEntity.bannedUser = this.userService.getEntityReference(ban.user);
         banEntity.banningUser = this.userService.getEntityReference(banning.id);
 
-        this.banRepository.persistAndFlush(banEntity);
+        await this.banRepository.persistAndFlush(banEntity);
+
+        this.logger.log(`User ${ban.user} was banned on forum ${forum.id} by ${banning.id}`);
         return banEntity;
     }
 
@@ -77,7 +82,9 @@ export class BanService {
             throw new BanNotFoundException();
         }
 
-        this.banRepository.removeAndFlush(ban);
+        await this.banRepository.removeAndFlush(ban);
+        
+        this.logger.log(`User ${ban.bannedUser.id} was unbanned on forum ${forum.id} by ${unbanning.id}`);
         return ban;
     }
 }

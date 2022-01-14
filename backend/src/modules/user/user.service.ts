@@ -1,15 +1,19 @@
-import * as bcrypt from "bcrypt";
-import { UserEntity, UserCredsEntity } from "./user.entity";
-import { CreateUserDto, UpdateUserDto, User } from "./user.dto";
-import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@mikro-orm/nestjs/mikro-orm.common";
-import { EntityRepository, expr } from "mikro-orm";
 import { EntityManager } from "@mikro-orm/postgresql";
+import { Injectable } from "@nestjs/common";
+import * as bcrypt from "bcrypt";
+import { EntityRepository, expr } from "mikro-orm";
+import { AppLogger } from "src/loggers/applogger";
+import { CreateUserDto, UpdateUserDto, User } from "./user.dto";
+import { UserCredsEntity, UserEntity } from "./user.entity";
 
 const SALT_ROUNDS = 12;
 
 @Injectable()
 export class UserService {
+
+    private readonly logger = new AppLogger(UserService.name);
+
     constructor(
         private readonly em: EntityManager,
 
@@ -36,7 +40,8 @@ export class UserService {
         this.userCredsRepository.persist(userCredsEntity);
         this.userRepository.persist(userEntity);
         await this.em.flush();
-
+        
+        this.logger.log(`Created a new user ${userEntity.id} with name ${user.name} and email ${user.email}`);
         return userEntity.id;
     }
 
@@ -72,14 +77,16 @@ export class UserService {
         }      
     }
 
-    async update(user: User, userUpdate: UpdateUserDto) {
-
+    async update(userUpdate: UpdateUserDto, user: User) {
         const userEntity = await this.findUserById(user.id);
 
         if (userEntity && userUpdate.description) {
             userEntity.description = userUpdate.description;
         }
-        this.userRepository.flush();
+        
+        await this.userRepository.flush();
+
+        this.logger.log(`User ${user.id} updated their profile`, userEntity);
         return user;
     }
 }

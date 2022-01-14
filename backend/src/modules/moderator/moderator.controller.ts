@@ -19,7 +19,7 @@ export class ModeratorController {
             throw new InvalidSessionException();
         }
 
-        const moderator = await this.modService.create(body, user);
+        const moderator = await this.modService.appointMod(body, user);
         return { moderator };
     }
 
@@ -54,7 +54,7 @@ export class ModeratorController {
             throw new InvalidSessionException();
         }
 
-        const moderator = await this.modService.delete(body, user);
+        const moderator = await this.modService.removeMod(body, user);
         return { moderator };
     }
 }

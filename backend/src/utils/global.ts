@@ -11,8 +11,10 @@ export const MAX_LINK_LEN = 500;
 export const MAX_FORUM_NAME_LEN = 25;
 export const MAX_FORUM_DESC_LEN = 500;
 export const MAX_MESSAGE_LEN = 300;
+export const MAX_PAGE = 100;
+export const MAX_ST_LEN = 100;
 
-export type SortType = "top" | "new";
+export type SortType = "top" | "new" | "hot";
 export type TimeType = "day" | "week" | "month" | "year" | "alltime";
 export const ALLTIME: TimeType = "alltime";
 

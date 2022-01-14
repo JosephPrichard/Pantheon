@@ -1,7 +1,7 @@
 import { PostEntity } from "./post.entity";
 import { PostFilter, CreatePostDto, UpdatePostDto } from "./post.dto";
-import { QueryOrder } from "mikro-orm";
-import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import { QueryOrder, QueryOrderMap } from "mikro-orm";
+import { Injectable } from "@nestjs/common";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { User } from "../user/user.dto";
@@ -10,9 +10,13 @@ import { ForumService } from "../forum/forum.service";
 import { PermissionsService } from "../permissions/permissions.service";
 import { ForumNotFoundException, PostNotFoundException } from "src/exception/entityNotFound.exception";
 import { BannedException, ResourcePermissionsException } from "src/exception/permissions.exception";
+import { AppLogger } from "src/loggers/applogger";
+import { countPages, pageOffset, PER_PAGE } from "src/utils/paginator";
 
 @Injectable()
 export class PostService {
+
+    private readonly logger = new AppLogger(PostService.name);
 
     constructor(
         @InjectRepository(PostEntity) 
@@ -50,7 +54,9 @@ export class PostService {
         }
         postEntity.poster = this.userService.getEntityReference(poster.id);
 
-        this.postRepository.persistAndFlush(postEntity);
+        await this.postRepository.persistAndFlush(postEntity);
+
+        this.logger.log(`User ${poster.id} created a post ${postEntity.id}`);
         return postEntity.id;
     }
 
@@ -67,33 +73,39 @@ export class PostService {
         if (filter.poster) {
             where.poster = filter.poster;
         }
-        if (filter.forum) {
-            where.forum = filter.forum;
+        if (filter.forums) {
+           if (filter.forums.length === 1) {
+                where.forum = filter.forums[0];
+           } else {
+                where.forum = { $in: filter.forums };
+           }
         }
         if (filter.date) {
             where.createdAt = { 
-                $gte: filter.date, 
-                $lte: new Date()
+                $gte: filter.date
             }
         }
 
-        const perPage = 15;
+        let sort: QueryOrderMap;
+        if (filter.sort === "hot") {
+            sort = { hotRank: QueryOrder.DESC };
+        } else if (filter.sort === "top") {
+            sort = { votes: QueryOrder.DESC };
+        } else {
+            sort = { createdAt: QueryOrder.DESC };
+        }
 
-        const posts = await this.postRepository.find(
+        const [posts, count] = await this.postRepository.findAndCount(
             where,
             ["poster"],
-            filter.sort === "top" ?
-                { votes: QueryOrder.DESC } :
-                { createdAt: QueryOrder.DESC },
-            perPage,
-            (filter.page - 1) * perPage
+            sort,
+            PER_PAGE,
+            pageOffset(filter.page)
         );
-
-        const pageCount = Math.ceil((await this.postRepository.count(where)) / perPage);
 
         return { 
             posts, 
-            pageCount
+            pageCount: countPages(count)
         };
     }
 
@@ -108,17 +120,18 @@ export class PostService {
             throw new ResourcePermissionsException();
         }
 
-        if (userMatches) {
-            if (post.content && update.content) {
-                post.content = update.content;
-            } else if (post.images.length > 1 && update.images) {
-                post.images = update.images;
-            } else if (post.link && update.link) {
-                post.link = update.link;
-            }
-            await this.postRepository.flush();
-            return post;
+        if (post.content && update.content) {
+            post.content = update.content;
+        } else if (post.images.length > 1 && update.images) {
+            post.images = update.images;
+        } else if (post.link && update.link) {
+            post.link = update.link;
         }
+
+        await this.postRepository.flush();
+
+        this.logger.log(`User ${user.id} updated post ${post.id}`);
+        return post;
     }
 
     async delete(id: string, user: User) {
@@ -139,6 +152,8 @@ export class PostService {
         post.images = [];
 
         await this.postRepository.flush();
+
+        this.logger.log(`User ${user.id} deleted post ${post.id}`);
         return post;
     }
 

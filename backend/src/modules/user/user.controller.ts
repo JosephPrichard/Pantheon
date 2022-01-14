@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, NotFoundException, Post, Put, Req, Res } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Logger, NotFoundException, Post, Put, Req, Res } from "@nestjs/common";
 import { Request } from 'express';
 import { UpdateUserDto, CreateUserDto, SignInDto } from "./user.dto";
 import { UserService } from "./user.service";
@@ -7,6 +7,8 @@ import { InvalidSessionException } from "src/exception/session.exception";
 
 @Controller("users")
 export class UserController {
+
+    private readonly logger = new Logger(UserController.name);
 
     constructor(private readonly userService: UserService) {}
 
@@ -41,7 +43,7 @@ export class UserController {
             throw new InvalidSessionException();
         }
 
-        const updatedUser = await this.userService.update(user, body);
+        const updatedUser = await this.userService.update(body, user);
         const id = updatedUser?.id;
         return { id };
     }
@@ -59,6 +61,7 @@ export class UserController {
         }
 
         req.session.user = { id: user.id };
+        this.logger.log(`User ${user.id} signed in`);
         return { 
             userId: user.id, 
             name: user.name 
@@ -69,7 +72,12 @@ export class UserController {
     async signOut(
         @Req() req: Request
     ) {
+        const id = req.session.user?.id;
         req.session.user = undefined;
+
+        if (id) {
+            this.logger.log(`User ${id} signed out`);
+        }
 
         return {
             message: "Successfully logged out"

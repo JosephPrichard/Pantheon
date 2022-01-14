@@ -1,20 +1,24 @@
-import { CommentEntity } from "./comment.entity";
-import { CommentFilter, CommentTreeFilter, CreateCommentNodeDto, CreateCommentRootDto, UpdateCommentDto } from "./comment.dto";
-import { QueryOrder } from "mikro-orm";
-import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
-import { InjectRepository} from "@mikro-orm/nestjs";
+import { Injectable } from "@nestjs/common";
+import { QueryOrder } from "mikro-orm";
+import { CommentNotFoundException, PostNotFoundException } from "src/exception/entityNotFound.exception";
+import { BannedException, ResourcePermissionsException } from "src/exception/permissions.exception";
+import { AppLogger } from "src/loggers/applogger";
+import { appendNode, serializePath } from "src/utils/node.serializer";
+import { countPages, pageOffset, PER_PAGE } from "src/utils/paginator";
+import { PermissionsService } from "../permissions/permissions.service";
 import { PostService } from "../post/post.service";
+import { TaskService } from "../task/task.service";
 import { User } from "../user/user.dto";
 import { UserService } from "../user/user.service";
-import { PermissionsService } from "../permissions/permissions.service";
-import { PostNotFoundException, CommentNotFoundException } from "src/exception/entityNotFound.exception";
-import { BannedException, ResourcePermissionsException } from "src/exception/permissions.exception";
-import { appendNode, serializePath } from "src/utils/node.serializer";
-import { TaskService } from "../task/task.service";
+import { CommentFilter, CommentTreeFilter, CreateCommentNodeDto, CreateCommentRootDto, UpdateCommentDto } from "./comment.dto";
+import { CommentEntity } from "./comment.entity";
 
 @Injectable()
 export class CommentService {
+
+    private readonly logger = new AppLogger(CommentService.name);
     
     constructor(
         @InjectRepository(CommentEntity) 
@@ -46,7 +50,9 @@ export class CommentService {
         commentEntity.post = post;
         post.comments += 1;
 
-        this.commentRepository.persistAndFlush(commentEntity);
+        await this.commentRepository.persistAndFlush(commentEntity);
+
+        this.logger.log(`User ${commenter.id} created comment root ${commentEntity.id}`);
         return commentEntity.id;
     }
 
@@ -69,12 +75,14 @@ export class CommentService {
         commentEntity.post = parent.post;
         parent.post.comments += 1;
 
-        this.commentRepository.persistAndFlush(commentEntity);
+        await this.commentRepository.persistAndFlush(commentEntity);
+
+        this.logger.log(`User ${commenter.id} created a comment node ${commentEntity.id}`);
         return commentEntity.id;
     }
 
     async findById(id: string) {
-        return await this.commentRepository.findOne({ id: id }, ["commenter"]);
+        return await this.commentRepository.findOne({ id: id }, ["commenter", "post"]);
     }
 
     async findManyByIds(ids: string[]) {
@@ -92,30 +100,24 @@ export class CommentService {
             where.commenter = filter.commenter;
         }
 
-        const perPage = 15;
-
-        const comments = await this.commentRepository.find(
+        const [comments, count] = await this.commentRepository.findAndCount(
             where,
             ["commenter"],
             filter.sort === "top" ?
                 { votes: QueryOrder.DESC } :
                 { createdAt: QueryOrder.DESC },
-            perPage,
-            (filter.page - 1) * perPage
+            PER_PAGE,
+            pageOffset(filter.page)
         );
 
-        return comments;
+        return {
+            comments,
+            pageCount: countPages(count)
+        };
     }
 
     async findTreesByFilter(filter: CommentTreeFilter) {
-        const comments = await this.commentRepository.find({
-            post: filter.post,
-        }, ["commenter"],
-            filter.sort === "top" ?
-                { votes: QueryOrder.DESC } :
-                { createdAt: QueryOrder.DESC }
-        );
-
+        const comments = await this.commentRepository.find({ post: filter.post }, ["commenter"]);
         return await this.taskService.executeDeserializeTreeTask(comments);
     }
 
@@ -134,7 +136,9 @@ export class CommentService {
             comment.content = update.content;
         }
 
-        this.commentRepository.flush();
+        await this.commentRepository.flush();
+
+        this.logger.log(`User ${user.id} updated comment ${comment.id}`);
         return comment;
         
     }
@@ -154,7 +158,9 @@ export class CommentService {
         comment.commenter = null;
         comment.content = "";
         
-        this.commentRepository.flush();
+        await this.commentRepository.flush();
+
+        this.logger.log(`User ${user.id} deleted comment ${comment.id}`);
         return comment;
     }
 

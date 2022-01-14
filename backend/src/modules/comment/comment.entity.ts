@@ -6,14 +6,12 @@ import { PostEntity } from "../post/post.entity";
 
 // uses the materialized paths way of storing a tree in a relational database
 
-@Entity()
-@Index({ properties: ["post", "path"] })
+@Entity({ tableName: "comments" })
 export class CommentEntity {
     @PrimaryKey({ type: String })
     id: string = uuid();
 
     @ManyToOne({ entity: () => UserEntity, nullable: true })
-    @Index()
     commenter: UserEntity | null = null;
     
     @ManyToOne({ entity: () => PostEntity })

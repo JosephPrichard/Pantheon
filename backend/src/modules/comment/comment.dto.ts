@@ -41,9 +41,7 @@ export interface CommentFilter {
     sort: SortType;
 }
 
-
 export interface CommentTreeFilter {
     page: number;
     post: string;
-    sort: SortType;
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post, Put, Req, Res } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Post, Put, Req } from "@nestjs/common";
 import { CreateSubDto, DeleteSubDto, UpdateSubDto } from "./subscription.dto";
 import { SubscriptionService as SubscriptionService } from "./subscription.service";
 import { Request } from "express";
@@ -19,8 +19,8 @@ export class SubcriptionController {
             throw new InvalidSessionException();
         }
 
-        const id = await this.subService.create(body, user);
-        return { id };
+        const subscription = await this.subService.create(body, user);
+        return { subscription };
     }
 
     @Get()

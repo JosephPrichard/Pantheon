@@ -1,5 +1,4 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { Injectable } from "@nestjs/common";
 import { EntityRepository } from "mikro-orm";
 import { BanEntity } from "../ban/ban.entity";
 import { ForumEntity } from "../forum/forum.entity";
@@ -17,12 +16,14 @@ export class PermissionsService {
     ) {}
 
     async isModerator(forum: ForumEntity, user: User) {
-        return await this.modRepository.findOne({ forum: forum, user: user.id }) !== undefined;
+        const mod = await this.modRepository.findOne({ forum: forum, user: user.id });
+        return mod !== null;
     }
 
     async hasModPerms(forum: ForumEntity, user: User) {
         const isMod = await this.isModerator(forum, user);
-        return isMod || this.isOwner(forum, user);
+        const isOwner = this.isOwner(forum, user);
+        return isOwner || isMod;
     }
 
     async isOwner(forum: ForumEntity, user: User) {

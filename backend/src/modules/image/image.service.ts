@@ -1,9 +1,8 @@
-import { Injectable } from "@nestjs/common";
-import { Readable } from "stream";
+import { Injectable, Logger } from "@nestjs/common";
 import { getBucket } from "../../resource/bucket";
 import { uuid } from "../../utils/id";
 
-export interface Image { 
+export interface FileMetaData { 
     id: string;
     path: string;
     contentType: string; 
@@ -12,6 +11,8 @@ export interface Image {
 
 @Injectable()
 export class ImageService {
+
+    private readonly logger = new Logger(ImageService.name);
 
     private bucket = getBucket();
 
@@ -31,14 +32,19 @@ export class ImageService {
 
         const fileBlob = this.bucket.file(path);
 
-        return new Promise<Image>((resolve, reject) => {
+        return new Promise<FileMetaData>((resolve, reject) => {
             fileBlob.save(file.buffer, { contentType: file.mimetype }, err => reject(err));
-            resolve({
+
+            const fileMetaData = {
                 id,
                 path,
                 contentType: file.mimetype,
                 size: file.size
-            });
+            }
+
+            this.logger.log(`Uploaded a file to GCP bucket ${JSON.stringify(fileMetaData)}`);
+
+            resolve(fileMetaData);
         });
     }
 }

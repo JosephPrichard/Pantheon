@@ -19,7 +19,7 @@ export class FavoriteController {
             throw new InvalidSessionException();
         }
 
-        const favorite = await this.favoriteService.create(body, user);
+        const favorite = await this.favoriteService.favorite(body, user);
         return { favorite };
     }
 
@@ -36,9 +36,9 @@ export class FavoriteController {
         return { favorites };
     }
 
-    @Delete("/:id")
+    @Delete("/:post")
     async delete(
-        @Param() idParam: string,
+        @Param("post") postParam: string,
         @Req() req: Request
     ) {
         const user = req.session.user;
@@ -46,7 +46,7 @@ export class FavoriteController {
             throw new InvalidSessionException();
         }
 
-        const favorite = await this.favoriteService.delete(idParam, user)
+        const favorite = await this.favoriteService.unfavorite(postParam, user)
         return { favorite };
     }
 }

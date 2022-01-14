@@ -1,20 +1,41 @@
-import { ExceptionFilter, ArgumentsHost } from "@nestjs/common";
+import { ExceptionFilter, ArgumentsHost, HttpException } from "@nestjs/common";
 import { Catch } from "@nestjs/common/decorators/core/catch.decorator";
 import { EntityNotFoundException } from "../exception/entityNotFound.exception";
 import { InvalidInputException } from "../exception/invalidInput.exception";
 import { PermissionsException } from "../exception/permissions.exception";
 import { InvalidSessionException } from "../exception/session.exception";
-import { Logger } from '@nestjs/common';
-import { Response } from 'express';
+import { Request, Response } from 'express';
+import { AppLogger } from "src/loggers/applogger";
+
+@Catch(HttpException)
+export class HttpExceptionFilter implements ExceptionFilter {
+
+    private readonly logger = new AppLogger();
+
+    catch(exception: HttpException, host: ArgumentsHost) {
+        const ctx = host.switchToHttp();
+        const request = ctx.getRequest<Request>();
+        const response = ctx.getResponse<Response>();
+
+        this.logger.exception(request, exception, request.session.user);
+
+        response
+            .status(exception.getStatus())
+            .json(exception.getResponse());
+    }
+}
 
 @Catch(InvalidSessionException)
 export class InvalidSessionExceptionFilter implements ExceptionFilter {
 
+    private readonly logger = new AppLogger();
+
     catch(exception: InvalidSessionException, host: ArgumentsHost) {
         const ctx = host.switchToHttp();
+        const request = ctx.getRequest<Request>();
         const response = ctx.getResponse<Response>();
 
-        Logger.error(exception.name, exception.message);
+        this.logger.exception(request, exception, request.session.user);
 
         response
             .status(401)
@@ -29,11 +50,14 @@ export class InvalidSessionExceptionFilter implements ExceptionFilter {
 @Catch(PermissionsException)
 export class PermissionsExceptionFilter implements ExceptionFilter {
 
+    private readonly logger = new AppLogger();
+
     catch(exception: PermissionsException, host: ArgumentsHost) {
         const ctx = host.switchToHttp();
+        const request = ctx.getRequest<Request>();
         const response = ctx.getResponse<Response>();
 
-        Logger.error(exception.name, exception.message);
+        this.logger.exception(request, exception, request.session.user);
 
         response
             .status(401)
@@ -48,11 +72,14 @@ export class PermissionsExceptionFilter implements ExceptionFilter {
 @Catch(InvalidInputException)
 export class InvalidInputExceptionFilter implements ExceptionFilter {
 
+    private readonly logger = new AppLogger();
+
     catch(exception: InvalidInputException, host: ArgumentsHost) {
         const ctx = host.switchToHttp();
+        const request = ctx.getRequest<Request>();
         const response = ctx.getResponse<Response>();
 
-        Logger.error(exception.name, exception.message);
+        this.logger.exception(request, exception, request.session.user);
 
         response
             .status(400)
@@ -67,11 +94,14 @@ export class InvalidInputExceptionFilter implements ExceptionFilter {
 @Catch(EntityNotFoundException)
 export class EntityNotFoundExceptionFilter implements ExceptionFilter {
 
+    private readonly logger = new AppLogger();
+
     catch(exception: EntityNotFoundException, host: ArgumentsHost) {
         const ctx = host.switchToHttp();
+        const request = ctx.getRequest<Request>();
         const response = ctx.getResponse<Response>();
 
-        Logger.error(exception.name, exception.message);
+        this.logger.exception(request, exception, request.session.user);
 
         response
             .status(404)

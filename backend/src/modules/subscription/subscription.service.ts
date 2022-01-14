@@ -1,8 +1,10 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
+import { EntityManager } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import { EntityRepository } from "mikro-orm";
 import { ForumNotFoundException, SubscriptionNotFoundException } from "src/exception/entityNotFound.exception";
 import { DuplicateResourceException } from "src/exception/invalidInput.exception";
+import { AppLogger } from "src/loggers/applogger";
 import { ForumService } from "../forum/forum.service";
 import { User } from "../user/user.dto";
 import { UserService } from "../user/user.service";
@@ -11,7 +13,12 @@ import { SubscriptionEntity } from "./subscription.entity";
 
 @Injectable()
 export class SubscriptionService {
+
+    private readonly logger = new AppLogger(SubscriptionService.name);
+
     constructor(
+        private readonly em: EntityManager,
+
         @InjectRepository(SubscriptionEntity) 
         private readonly subRepository: EntityRepository<SubscriptionEntity>,
 
@@ -38,7 +45,9 @@ export class SubscriptionService {
 
         forum.subscriptions += 1;
 
-        this.subRepository.persistAndFlush(forum);
+        await this.subRepository.persistAndFlush(subEntity);
+
+        this.logger.log(`User ${user.id} created a subscription to forum ${forum.id}`);
         return sub;
     }
 
@@ -46,25 +55,41 @@ export class SubscriptionService {
         return this.subRepository.find({ user: user.id }, ["forum"]);
     }
 
+    async findByUserRandom(user: User, amount: number) {
+        const qb = this.em.createQueryBuilder(SubscriptionEntity);
+        qb.select("*").where({ user: user.id })
+
+        const knex = qb.getKnex();
+        const subs = await knex.orderByRaw("random()").limit(amount);
+        
+        return subs.map((sub: any) => this.subRepository.map(sub)) as SubscriptionEntity[];
+    }
+
     async update(update: UpdateSubDto, user: User) {
-        const subEntity = await this.subRepository.findOne({ forum: update.forum, user: user.id });
-        if (!subEntity) {
+        const sub = await this.subRepository.findOne({ forum: update.forum, user: user.id });
+        if (!sub) {
             throw new SubscriptionNotFoundException();
         }
 
-        subEntity.isFavorite = update.isFavorite;
-        return subEntity;
+        sub.isFavorite = update.isFavorite;
+
+        await this.subRepository.flush();
+
+        this.logger.log(`User ${user.id} updated their subscription to forum ${sub.forum.id}`);
+        return sub;
     }
 
     async delete(del: DeleteSubDto, user: User) {
-        const subEntity = await this.subRepository.findOne({ forum: del.forum, user: user.id }, ["forum"]);
-        if (!subEntity) {
+        const sub = await this.subRepository.findOne({ forum: del.forum, user: user.id }, ["forum"]);
+        if (!sub) {
             throw new SubscriptionNotFoundException();
         }
 
-        subEntity.forum.subscriptions -= 1;
+        sub.forum.subscriptions -= 1;
 
-        this.subRepository.removeAndFlush(subEntity);
-        return subEntity;
+        await this.subRepository.removeAndFlush(sub);
+
+        this.logger.log(`User ${user.id} deleted their subscription to forum ${sub.forum.id}`);
+        return sub;
     }
 }

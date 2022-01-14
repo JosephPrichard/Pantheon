@@ -48,14 +48,14 @@ export class UpdatePostDto {
     link?: string;
 
     @IsOptional()
-    @IsString({each: true})
+    @IsString({ each: true })
     images?: string[];
 }
 
 export interface PostFilter {
     poster?: string;
-    forum?: string;
+    forums?: string[];
     date?: Date;
-    sort: SortType;
     page: number;
+    sort: SortType;
 }

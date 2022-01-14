@@ -3,7 +3,7 @@ import { CommentEntity } from "../comment/comment.entity";
 import { PostEntity } from "../post/post.entity";
 import { UserEntity } from "../user/user.entity";
 
-@Entity()
+@Entity({ tableName: "comment_votes" })
 export class CommentVoteEntity {
     @ManyToOne({ entity: () => CommentEntity, primary: true })
     comment!: CommentEntity;
@@ -20,7 +20,7 @@ export class CommentVoteEntity {
     [PrimaryKeyType]: [string, string];
 }
 
-@Entity()
+@Entity({ tableName: "post_votes" })
 export class PostVoteEntity {
     @ManyToOne({ entity: () => PostEntity, primary: true })
     post!: PostEntity;
