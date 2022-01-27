@@ -1,2 +1,2 @@
 # Pantheon
- Forum/news aggregation website similar to Reddit.
+News aggregation forum website similar to Reddit.
