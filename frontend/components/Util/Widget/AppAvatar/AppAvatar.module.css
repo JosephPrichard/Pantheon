@@ -1,8 +1,0 @@
-.Avatar {
-    /* !important tags are required to style next/image */
-    border-radius: 20%;
-    background-color: rgb(26, 27, 30);
-    border-style: solid !important;
-    border-color: rgb(60, 60, 60) !important;
-    border-width: 1px !important;
-}

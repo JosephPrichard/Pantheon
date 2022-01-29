@@ -1,5 +1,5 @@
-import { PostEntity } from "./post.entity";
-import { PostFilter, CreatePostDto, UpdatePostDto } from "./post.dto";
+import { PostEntity} from "./post.entity";
+import { CreatePostDto, PostFilter,UpdatePostDto } from "./post.dto";
 import { QueryOrder, QueryOrderMap } from "mikro-orm";
 import { Injectable } from "@nestjs/common";
 import { EntityRepository } from "@mikro-orm/postgresql";
@@ -11,7 +11,8 @@ import { PermissionsService } from "../permissions/permissions.service";
 import { ForumNotFoundException, PostNotFoundException } from "src/exception/entityNotFound.exception";
 import { BannedException, ResourcePermissionsException } from "src/exception/permissions.exception";
 import { AppLogger } from "src/loggers/applogger";
-import { countPages, pageOffset, PER_PAGE } from "src/utils/paginator";
+import { countPages, pageOffset, PER_PAGE } from "src/utils/paginator.util";
+import { InvalidInputException } from "src/exception/invalidInput.exception";
 
 @Injectable()
 export class PostService {
@@ -26,7 +27,7 @@ export class PostService {
 
         private readonly forumService: ForumService,
 
-        private readonly userService: UserService 
+        private readonly userService: UserService
     ) {}
 
     async create(post: CreatePostDto, poster: User) {
@@ -51,20 +52,22 @@ export class PostService {
             postEntity.images = post.images;
         } else if (post.link) {
             postEntity.link = post.link;
+        } else {
+            throw new InvalidInputException("Needs to contain images, link, or content");
         }
         postEntity.poster = this.userService.getEntityReference(poster.id);
 
         await this.postRepository.persistAndFlush(postEntity);
 
         this.logger.log(`User ${poster.id} created a post ${postEntity.id}`);
-        return postEntity.id;
+        return postEntity;
     }
 
-    async findById(id: string) {
-        return await this.postRepository.findOne({ id: id }, ["poster"]);
+    async findById(id: number) {
+        return await this.postRepository.findOne({ id: id }, ["poster", "forum"]);
     }
 
-    async findManyByIds(ids: string[]) {
+    async findManyByIds(ids: number[]) {
         return await this.postRepository.find({ id: { $in: ids } });
     }
 
@@ -97,7 +100,7 @@ export class PostService {
 
         const [posts, count] = await this.postRepository.findAndCount(
             where,
-            ["poster"],
+            ["poster", "forum"],
             sort,
             PER_PAGE,
             pageOffset(filter.page)
@@ -109,7 +112,7 @@ export class PostService {
         };
     }
 
-    async update(update: UpdatePostDto, id: string, user: User) {
+    async update(update: UpdatePostDto, id: number, user: User) {
         const post = await this.findById(id);
         if (!post) {
             throw new PostNotFoundException();
@@ -134,7 +137,7 @@ export class PostService {
         return post;
     }
 
-    async delete(id: string, user: User) {
+    async delete(id: number, user: User) {
         const post = await this.findById(id);
         if (!post) {
             throw new PostNotFoundException();

@@ -1,0 +1,14 @@
+.FeedPanel {
+    background-color: rgb(26, 27, 30);
+    height: 100%;
+}
+
+.Button {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    width: 100%;
+}
+
+.Title {
+    margin-bottom: 10px;
+}

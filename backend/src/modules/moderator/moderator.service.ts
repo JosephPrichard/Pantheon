@@ -39,8 +39,8 @@ export class ModeratorService {
             throw new ForumNotFoundException();
         }
 
-        const hasPerms = await this.permsService.hasOwnerPerms(forum, modifier);
-        if (hasPerms) {
+        const hasPerms = await this.permsService.hasModPerms(forum, modifier);
+        if (!hasPerms) {
             throw new OwnerPermissionsException();
         }
 
@@ -56,11 +56,11 @@ export class ModeratorService {
     }
 
     async findByForum(forum: string) {
-        return await this.modRepository.find({ forum: forum });
+        return await this.modRepository.find({ forum: forum }, ["user"]);
     }
 
     async findByUser(user: User) {
-        return await this.modRepository.find({ user: user.id });
+        return await this.modRepository.find({ user: user.id }, ["user"]);
     }
 
     async removeMod(del: DeleteModeratorDto, modifier: User) {
@@ -69,7 +69,7 @@ export class ModeratorService {
             throw new ModeratorNotFoundException();
         }
 
-        const hasPerms = await this.permsService.hasOwnerPerms(mod.forum, modifier);
+        const hasPerms = await this.permsService.hasHigherModPerms(mod.forum, modifier.id, del.user);
         if (!hasPerms) {
             throw new OwnerPermissionsException();
         }

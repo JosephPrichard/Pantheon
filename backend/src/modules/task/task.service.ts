@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { DynamicPool } from "node-worker-threads-pool";
 import { Func } from "node-worker-threads-pool/dist/types";
-import { deserializeTree, NodeObj } from "src/utils/tree.serializer";
+import { deserializeTree, NodeObj } from "src/utils/treeSerializer.util";
 
 @Injectable()
 export class TaskService {

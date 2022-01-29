@@ -1,6 +1,9 @@
 export class InvalidInputException extends Error {
-    constructor(m: string) {
+    param?: string;
+
+    constructor(m: string, param?: string) {
         super(m);
+        this.param = param;
         this.name = InvalidInputException.name;
     }
 }
@@ -14,7 +17,7 @@ export class DuplicateResourceException extends InvalidInputException {
 
 export class DuplicateForumException extends InvalidInputException {
     constructor(name: string) {
-        super(`A forum with the name "${name}" already exists.`);
+        super(`A forum with the name "${name}" already exists.`, "name");
         this.name = DuplicateForumException.name;
     }
 }

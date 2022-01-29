@@ -10,7 +10,7 @@ import { User } from "../user/user.dto";
 import { UserService } from "../user/user.service";
 import { CommentNotFoundException, PostNotFoundException } from "src/exception/entityNotFound.exception";
 import { AppLogger } from "src/loggers/applogger";
-import { calcHotRank } from "src/utils/hotrank";
+import { calcHotRank } from "src/utils/hotrank.util";
 
 @Injectable()
 export class VoteService {
@@ -110,7 +110,7 @@ export class VoteService {
         }
     }
 
-    async findPostVote(postId: string, voter: User) {
+    async findPostVote(postId: number, voter: User) {
         return await this.postVoteRepository.find({ voter: voter.id, post: postId });
     }
 
@@ -118,7 +118,7 @@ export class VoteService {
         return await this.postVoteRepository.find({ voter: voter.id, post: { $in: posts } });
     }
 
-    async findCommentVotes(postId: string, voter: User) {
+    async findCommentVotes(postId: number, voter: User) {
         return await this.commentVoteRepository.find({ voter: voter.id, post: postId });
     }
 }

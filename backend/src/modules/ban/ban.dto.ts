@@ -1,17 +1,17 @@
-import { IsString } from "class-validator";
+import { IsNumber, IsString } from "class-validator";
 
 export class CreateBanDto {
     @IsString()
     forum!: string;
 
-    @IsString()
-    user!: string;
+    @IsNumber()
+    user!: number;
 }
 
 export class DeleteBanDto {
     @IsString()
     forum!: string;
 
-    @IsString()
-    user!: string;
+    @IsNumber()
+    user!: number;
 }

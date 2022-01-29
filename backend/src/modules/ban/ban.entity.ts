@@ -13,5 +13,5 @@ export class BanEntity {
     @ManyToOne({ entity: () => UserEntity })
     banningUser!: UserEntity;
 
-    [PrimaryKeyType]: [string, string];
+    [PrimaryKeyType]: [Number, String];
 }

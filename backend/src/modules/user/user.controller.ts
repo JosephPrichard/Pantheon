@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Logger, NotFoundException, Post, Put, Req, Res } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Get, Logger, NotFoundException, Post, Put, Query, Req } from "@nestjs/common";
 import { Request } from 'express';
 import { UpdateUserDto, CreateUserDto, SignInDto } from "./user.dto";
 import { UserService } from "./user.service";
@@ -32,6 +32,23 @@ export class UserController {
         return { id };
     }
 
+    @Get("/whoami")
+    async getSignedIn(@Req() req: Request) {
+       return { user: req.session?.user };
+    }
+
+    @Get()
+    async findByUser(
+        @Query("name") name: string
+    ) {
+        const user = await this.userService.findUserByName(name);
+        if (!user) {
+            throw new NotFoundException("User not found.");
+        }
+
+        return { user };
+    }
+
     @Put()
     async update(
         @Body() body: UpdateUserDto, 
@@ -60,7 +77,10 @@ export class UserController {
             throw new NotFoundException("Incorrect login information.");
         }
 
-        req.session.user = { id: user.id };
+        req.session.user = { 
+            id: user.id, 
+            name: user.name
+        };
         this.logger.log(`User ${user.id} signed in`);
         return { 
             userId: user.id, 

@@ -6,9 +6,8 @@ import { PostVoteEntity } from "../vote/vote.entity";
 import { PageDto, FeedDto } from "./feed.dto";
 import { CommentService } from "../comment/comment.service";
 import { HighlightService } from "../highlight/highlight.service";
-import { InvalidSessionException } from "src/exception/session.exception";
 import { PostFilter } from "../post/post.dto";
-import { timeTypeToDate } from "src/utils/time";
+import { timeTypeToDate } from "src/utils/time.util";
 
 @Controller("feed")
 export class FeedController {
@@ -23,8 +22,8 @@ export class FeedController {
         private readonly highlightService: HighlightService
     ) {}
 
-    @Get("/popular/posts") 
-    async filterHomePosts(
+    @Get("/popular") 
+    async filterPopularPosts(
         @Query() query: FeedDto,
         @Req() req: Request
     ) {
@@ -51,8 +50,8 @@ export class FeedController {
         return { ...result, postVotes };
     }
 
-    @Get("/home/posts") 
-    async filterPopularPosts(
+    @Get("/home") 
+    async filterHomePosts(
         @Query() query: FeedDto,
         @Req() req: Request
     ) {
@@ -62,19 +61,19 @@ export class FeedController {
             query.page = 1;
         }
 
-        const user = req.session.user;  
-        if (!user) {
-            throw new InvalidSessionException();
-        }
-
-        const subbedForums = await this.highlightService.refreshThenGet(user);
-
         const filter: PostFilter = {
-            forums: subbedForums,
             sort: query.sort,
             page: query.page,
             date
         };
+
+        const user = req.session.user;  
+        if (user) {
+            const subbedForums = await this.highlightService.refreshThenGet(user);
+            if (subbedForums.length >= 3) {
+                filter.forums = subbedForums;
+            }
+        }
 
         const result = await this.postService.findByFilter(filter);
 
@@ -86,7 +85,7 @@ export class FeedController {
         return { ...result, postVotes };
     }
 
-    @Get("/forum/:forum/posts") 
+    @Get("/forums/:forum/posts") 
     async filterForumPosts(
         @Query() query: FeedDto,
         @Param("forum") forumParam: string,
@@ -116,7 +115,7 @@ export class FeedController {
         return { ...result, postVotes };
     }
 
-    @Get("/user/:user/posts") 
+    @Get("/users/:user/posts") 
     async filterUserPosts(
         @Query() query: FeedDto,
         @Param("user") posterParam: string,
@@ -146,7 +145,7 @@ export class FeedController {
         return { ...result, postVotes };
     }
 
-    @Get("/user/:user/comments")
+    @Get("/users/:user/comments")
     async filterComments(
         @Query() query: FeedDto,
         @Param("user") commenterParam: string
@@ -164,10 +163,10 @@ export class FeedController {
         return { result };
     }
 
-    @Get("/post/:id/comments")
+    @Get("/posts/:id/comments")
     async filterPostComments(
         @Query() query: PageDto,
-        @Param("id") idParam: string
+        @Param("id") idParam: number
     ) {
         const filter = {
             post: idParam,

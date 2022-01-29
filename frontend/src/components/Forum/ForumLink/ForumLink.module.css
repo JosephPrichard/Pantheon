@@ -1,0 +1,9 @@
+.Link {
+    /* color: #268bd2; */
+    padding: 2px;
+}
+
+.Link:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}

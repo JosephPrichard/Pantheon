@@ -1,0 +1,7 @@
+.Rte {
+    margin-top: 20px;
+}
+
+.Rte:first-child {
+    min-height: 180px;
+}

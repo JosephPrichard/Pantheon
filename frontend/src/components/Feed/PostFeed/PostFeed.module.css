@@ -1,0 +1,7 @@
+.PostFeed {
+    background-color: rgb(26, 27, 30);
+    height: 100%;
+    min-height: calc(100vh - 80px);
+    padding: 0px;
+    margin-bottom: 5px;
+}

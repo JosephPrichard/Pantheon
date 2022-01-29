@@ -1,0 +1,12 @@
+.Mods {
+    margin-left: 5px;
+}
+
+.Mod {
+    padding: 2px;
+}
+
+.Mod:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}

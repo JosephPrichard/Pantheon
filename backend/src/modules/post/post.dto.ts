@@ -1,6 +1,6 @@
 import { Trim } from "class-sanitizer";
 import { IsArray, IsOptional, IsString, IsUrl, MaxLength, MinLength } from "class-validator";
-import { MAX_LINK_LEN, MAX_POST_LEN, MAX_TITLE_LEN, SortType } from "../../utils/global";
+import { MAX_LINK_LEN, MAX_POST_LEN, MAX_TITLE_LEN, SortType } from "../../global";
 
 export class CreatePostDto {
     @IsString()

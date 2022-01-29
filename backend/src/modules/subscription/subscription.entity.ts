@@ -13,5 +13,5 @@ export class SubscriptionEntity {
     @Property({ type: Boolean })
     isFavorite: boolean = false;
 
-    [PrimaryKeyType]: [string, string];
+    [PrimaryKeyType]: [Number, String];
 }

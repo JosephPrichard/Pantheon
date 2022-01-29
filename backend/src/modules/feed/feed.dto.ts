@@ -1,6 +1,6 @@
 import { Type } from "class-transformer";
 import { IsOptional, IsString, IsIn, IsInt, Max } from "class-validator";
-import { MAX_PAGE, SortType, TimeType } from "src/utils/global";
+import { MAX_PAGE, SortType, TimeType } from "src/global";
 
 export class FeedDto {
     @IsOptional()

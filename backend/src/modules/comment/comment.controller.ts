@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Req
 import { CommentService } from "./comment.service";
 import { Request } from "express";
 import { sanitize } from "class-sanitizer";
-import { sanitizeString } from "../../utils/sanitize";
+import { sanitizeString } from "../../utils/sanitize.util";
 import { CreateCommentNodeDto, CreateCommentRootDto, UpdateCommentDto } from "./comment.dto";
 import { InvalidSessionException } from "src/exception/session.exception";
 import { CommentNotFoundException } from "src/exception/entityNotFound.exception";
@@ -46,7 +46,7 @@ export class CommentController {
 
     @Get("/:id")
     async getById(
-        @Param("id") idParam: string
+        @Param("id") idParam: number
     ) {
         const comment = await this.commentService.findById(idParam);
         if (!comment) {
@@ -58,7 +58,7 @@ export class CommentController {
     @Put("/:id")
     async update(
         @Body() body: UpdateCommentDto, 
-        @Param("id") idParam: string,
+        @Param("id") idParam: number,
         @Req() req: Request
     ) {
         sanitize(body);
@@ -75,7 +75,7 @@ export class CommentController {
 
     @Delete("/:id")
     async delete(
-        @Param("id") idParam: string,
+        @Param("id") idParam: number,
         @Req() req: Request
     ) {
         const user = req.session.user;

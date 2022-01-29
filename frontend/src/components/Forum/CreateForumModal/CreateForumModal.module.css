@@ -1,0 +1,24 @@
+.NameSubtitle {
+    font-size: 13px;
+}
+
+.TextBoxSubtitle {
+    padding-left: 2px;
+    padding-right: 2px;
+    font-size: 13px;
+    color: rgb(73,75,81);
+}
+
+.Modal {
+    position: absolute;
+    display: inline-block;
+    top: 45%;
+    left: 50%;
+    /* Mantine isn't playing nice so we need an important tag to center the dev */
+    transform: translate(-50%, -50%) !important;
+}
+
+.CreateButton {
+    margin: 10px 10px 15px;
+    float: right;
+}

@@ -14,14 +14,14 @@ export class PostNotFoundException extends EntityNotFoundException {
 
 export class CommentNotFoundException extends EntityNotFoundException {
     constructor() {
-        super("Forum not found.");
+        super("Comment not found.");
         this.name = CommentNotFoundException.name;
     }
 }
 
 export class ForumNotFoundException extends EntityNotFoundException {
     constructor() {
-        super("Post not found.");
+        super("Forum not found.");
         this.name = ForumNotFoundException.name;
     }
 }

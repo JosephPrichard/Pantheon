@@ -1,34 +1,52 @@
 import type { GetServerSideProps, NextPage } from "next";
-import User, { UserData } from "../../components/User/User";
-import Banner from "../../components/Banner/Banner";
+import Banner from "../../src/components/Banner/Banner";
 import React from "react";
-import UserService from "../../model/services/user.service";
-import Body from "../../components/Util/Layout/Body/Body";
-import { SortType, TimeType } from "../../model/global";
+import Body from "../../src/components/Util/Layout/Body/Body";
+import { SortType, sortTypes, TimeType, timeTypes } from "../../src/global";
+import axios from "axios";
+import { UserEntity } from "../../src/client/models/user";
+import { configNoCreds } from "../../src/client/config";
+import { PageProps } from "../../src/utils/next/PageProps";
+import ErrorPage from "../../src/components/Error/ErrorPage";
+import DoubleColumn from "../../src/components/Util/Layout/DoubleColumn/DoubleColumn";
+import UserPanel from "../../src/components/User/UserPanel";
+import UserFeed from "../../src/components/Feed/PostFeed/UserFeed.tsx/UserFeed";
 
 interface Props {
-    userData: UserData;
+    user: UserEntity;
     sort: SortType;
     time: TimeType;
     page: number;
 }
 
-const UserPage: NextPage<Props> = ({ userData, sort, time, page }: Props) => (
+const UserPage: NextPage<PageProps<Props>> = ({ componentProps }: PageProps<Props>) => (
     <>
-        <Banner />
-        <Body width={"70%"} minWidth={1100}>
-            <User 
-                userData={userData}
-                sort={sort}
-                time={time}
-                page={page}
-            />
-        </Body>
+        {componentProps ? 
+            <>
+                <Banner username={componentProps.user.name}/>
+                <UserFeed
+                    user={componentProps.user}
+                    sort={componentProps.sort} 
+                    time={componentProps.time}
+                    page={componentProps.page}
+                />
+            </>
+            :
+            <ErrorPage/>
+        }
+        
     </>
 );
 
+interface UserRes {
+    user: UserEntity;
+}
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+async function fetchUserByName(name: string) {
+    return await axios.get<UserRes>(`/api/users?name=${name}`, configNoCreds);
+}
+
+export const getServerSideProps: GetServerSideProps<PageProps<Props>> = async ({ query }) => {
     const slugs = query.slug as string[];
 
     const pageStr = query.p as string | undefined;
@@ -38,57 +56,61 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     }
     if (isNaN(page) || page <= 0) {
         return {
-            redirect: {
-                destination: "/404"
-            },
             props: {}
         };
     }
 
-    let sort = slugs[1];
-    if (!sort) {
-        sort = "new";
+    let sortslug = slugs[1] as string | undefined;
+
+    let sort: SortType;
+    if (!sortslug) {
+        sort = "hot";
+    } else if(sortTypes.includes(sortslug)) {
+        sort = sortslug as SortType;
+    } else {
+        return {
+            props: {}
+        };
     }
 
-    let time = query.t as string | undefined;
-    if (!time) {
-        time = "day";
+    let timequery = query.t as string | undefined;
+
+    let time: TimeType;
+    if (!timequery) {
+        time = "alltime";
+    } else if(timeTypes.includes(timequery)) {
+        time = timequery as TimeType;
+    } else {
+        return {
+            props: {}
+        };
     }
 
     const name = slugs[0];
     if (!name) {
         return {
-            redirect: {
-                destination: "/404"
-            },
             props: {}
         };
     }
-
-    const user = await UserService.findUserByName(name);
-
-    if (!user) {
+    
+    try {
+        const res = await fetchUserByName(name);
+        const user = res.data.user;
         return {
-            redirect: {
-                destination: "/404"
-            },
+            props: {
+                componentProps: {
+                    user,
+                    sort,
+                    time,
+                    page
+                }
+            }
+        };
+    } catch(err) {
+        return {
             props: {}
         };
     }
-
-    return {
-        props: {
-            userData: {
-                name: user.name,
-                userId: user.id,
-                description: user.description,
-                joined: user.createdAt.toLocaleDateString()
-            },
-            sort,
-            time,
-            page
-        }
-    };
 };
 
 export default UserPage;

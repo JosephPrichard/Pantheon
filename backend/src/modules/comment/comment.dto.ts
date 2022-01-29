@@ -1,10 +1,10 @@
 import { Trim } from "class-sanitizer";
-import { IsIn, IsInt, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
-import { MAX_COMMENT_LEN, SortType } from "../../utils/global";
+import { IsNumber, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
+import { MAX_COMMENT_LEN, SortType } from "../../global";
 
 export class CreateCommentNodeDto {
-    @IsString()
-    parentComment!: string;
+    @IsNumber()
+    parentComment!: number;
 
     @IsOptional()
     @IsString()
@@ -15,8 +15,8 @@ export class CreateCommentNodeDto {
 }
 
 export class CreateCommentRootDto {
-    @IsString()
-    post!: string;
+    @IsNumber()
+    post!: number;
 
     @IsOptional()
     @IsString()
@@ -43,5 +43,5 @@ export interface CommentFilter {
 
 export interface CommentTreeFilter {
     page: number;
-    post: string;
+    post: number;
 }

@@ -3,7 +3,7 @@ import { CreateForumDto, UpdateForumDto } from "./forum.dto";
 import { ForumService } from "./forum.service";
 import { Request } from "express";
 import { sanitize } from "class-sanitizer";
-import { sanitizeString } from "src/utils/sanitize";
+import { sanitizeString } from "src/utils/sanitize.util";
 import { InvalidSessionException } from "src/exception/session.exception";
 import { ForumNotFoundException } from "src/exception/entityNotFound.exception";
 
@@ -26,6 +26,12 @@ export class ForumController {
 
         const id = await this.forumService.create(body, user);
         return { id };
+    }
+
+    @Get("/top")
+    async getTopForums() {
+        const forums = await this.forumService.findTopForums();
+        return { forums };
     }
 
     @Get("/:id")

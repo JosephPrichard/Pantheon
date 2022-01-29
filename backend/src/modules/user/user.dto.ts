@@ -1,12 +1,13 @@
 import { IsEmail, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
-import { MAX_EMAIL_LEN, MAX_PASSWORD_LEN, MAX_USER_NAME_LEN } from "../../utils/global";
+import { MAX_EMAIL_LEN, MAX_PASSWORD_LEN, MAX_USER_NAME_LEN } from "../../global";
 import { PreventUnsafe } from "../../decorators/preventUnsafe.decorator";
 import { NormalizeEmail } from "class-sanitizer";
 import { PreventSpaces } from "src/decorators/preventSpaces.decorator";
 import { PreventSpecialCharacters } from "src/decorators/preventSpecialCharacters.decorator";
 
 export interface User {
-    id: string;
+    id: number;
+    name: string;
 }
 
 export class CreateUserDto {

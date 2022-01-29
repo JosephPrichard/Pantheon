@@ -7,7 +7,7 @@ import { User } from "../user/user.dto";
 import { UserService } from "../user/user.service";
 import { HighlightEntity } from "./highlight.entity";
 
-const REFRESH_THRESHOLD = 1000 * 60 * 60; // 1 hour in milliseconds
+const REFRESH_THRESHOLD = 1000 * 60 * 60 * 4; // 4 hours in milliseconds
 
 @Injectable()
 export class HighlightService {

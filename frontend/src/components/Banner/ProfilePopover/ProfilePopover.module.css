@@ -1,0 +1,25 @@
+.ProfilePopover {
+    display: inline-block;
+}
+
+.PopoverBody {
+    border-style: solid;
+    border-color: rgb(60, 60, 60);
+    border-width: 1px;
+}
+
+.Button {
+    all: unset
+}
+
+.Element {
+    vertical-align: middle;
+}
+
+.Name {
+    cursor: pointer;
+}
+
+.Name:hover {
+    text-decoration: underline;
+}

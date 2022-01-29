@@ -1,0 +1,17 @@
+.AppLink {
+    display: block;
+    width: 130px;
+    padding: 4px 15px;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+.AppLink:hover {
+    background-color: rgb(193, 194, 197);
+    color: rgb(37, 38, 43);
+}
+
+.Element {
+    vertical-align: middle;
+}

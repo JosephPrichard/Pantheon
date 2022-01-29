@@ -1,9 +1,13 @@
-import type { GetServerSideProps, NextPage } from "next";
+import type { NextPage } from "next";
 import React from "react";
-import Banner from "../components/Banner/Banner";
-import Feed from "../components/Feed/Feed";
-import Body from "../components/Util/Layout/Body/Body";
-import { SortType, TimeType } from "../model/global";
+import Banner from "../src/components/Banner/Banner";
+import ErrorPage from "../src/components/Error/ErrorPage";
+import HomeFeed from "../src/components/Feed/PostFeed/HomeFeed/HomeFeed";
+import PopularFeed from "../src/components/Feed/PostFeed/PopularFeed/PopularFeed";
+import { SortType, TimeType } from "../src/global";
+import { useUserName } from "../src/hooks/useUserCreds";
+import { PageProps } from "../src/utils/next/PageProps";
+import { getServerSidePropsWithSlug } from "../src/utils/next/postFeedServerSideProps";
 
 interface Props {
     sort: SortType;
@@ -11,47 +15,36 @@ interface Props {
     page: number;
 }
 
-const FeedPage: NextPage<Props> = ({ sort, time, page }: Props) => {
+const FeedPage: NextPage<PageProps<Props>> = ({ componentProps }: PageProps<Props>) => {
+
+    const name = useUserName();
+
     return (
         <>
-            <Banner/>
-            <Feed 
-                sort={sort} 
-                time={time}
-                page={page}
-            />
+            {componentProps ? 
+                <>
+                    <Banner/>
+                    {name ?
+                        <HomeFeed 
+                            sort={componentProps.sort} 
+                            time={componentProps.time}
+                            page={componentProps.page}
+                        />
+                        :
+                        <PopularFeed 
+                            sort={componentProps.sort} 
+                            time={componentProps.time}
+                            page={componentProps.page}
+                        />
+                    }
+                </>
+                :
+                <ErrorPage/>
+            }
         </>
     );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-
-    const pageStr = query.p as string | undefined;
-    let page = Number(pageStr);
-    if (!page) {
-        page = 1;
-    }
-    if (isNaN(page) || page <= 0) {
-        return {
-            redirect: {
-                destination: "/404"
-            },
-            props: {}
-        };
-    }
-
-    let time = query.t as string | undefined;
-    if (!time) {
-        time = "day";
-    }
-
-    return {
-        props: {
-            sort: "new",
-            time,
-            page
-        }
-    };
-};
+export const getServerSideProps = getServerSidePropsWithSlug;
 
 export default FeedPage;

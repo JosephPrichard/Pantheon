@@ -1,14 +1,13 @@
-import { ArrayType, Entity, Index, ManyToOne, PrimaryKey, Property } from "mikro-orm";
+import { ArrayType, Entity, ManyToOne, PrimaryKey, PrimaryKeyType, Property } from "mikro-orm";
 import { UserEntity } from "../user/user.entity";
-import { MAX_LINK_LEN, MAX_POST_LEN, MAX_TITLE_LEN } from "../../utils/global";
-import { uuid } from "../../utils/id";
+import { MAX_LINK_LEN, MAX_POST_LEN, MAX_TITLE_LEN } from "../../global";
 import { ForumEntity } from "../forum/forum.entity";
-import { calcHotRank } from "src/utils/hotrank";
+import { calcHotRank } from "src/utils/hotrank.util";
 
 @Entity({ tableName: "posts" })
 export class PostEntity {
-    @PrimaryKey({ type: String })
-    id: string = uuid();
+    @PrimaryKey({ type: Number })
+    id!: number;
 
     @ManyToOne({ entity: () => UserEntity, nullable: true })
     poster!: UserEntity | null;

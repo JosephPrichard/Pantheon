@@ -1,9 +1,9 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Req, Res } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, Req } from "@nestjs/common";
 import { sanitize } from "class-sanitizer";
 import { CreatePostDto, UpdatePostDto } from "./post.dto";
 import { PostService } from "./post.service";
 import { Request } from "express";
-import { sanitizeString } from "../../utils/sanitize";
+import { sanitizeString } from "../../utils/sanitize.util";
 import { InvalidSessionException } from "src/exception/session.exception";
 import { PostNotFoundException } from "src/exception/entityNotFound.exception";
 
@@ -27,13 +27,13 @@ export class PostController {
             body.content = sanitizeString(body.content);
         }
 
-        const id = await this.postService.create(body, user);
-        return { id };
+        const post = await this.postService.create(body, user);
+        return { post };
     }
 
     @Get("/:id")
     async getById(
-        @Param("id") idParam: string
+        @Param("id") idParam: number
     ) {
         const post = await this.postService.findById(idParam);
         if (!post) {
@@ -45,7 +45,7 @@ export class PostController {
     @Put("/:id")
     async update(
         @Body() body: UpdatePostDto, 
-        @Param("id") idParam: string,
+        @Param("id") idParam: number,
         @Req() req: Request
     ) {
         const user = req.session.user;
@@ -64,7 +64,7 @@ export class PostController {
 
     @Delete("/:id")
     async delete(
-        @Param("id") idParam: string,
+        @Param("id") idParam: number,
         @Req() req: Request
     ) {
         const user = req.session.user;

@@ -1,0 +1,19 @@
+.AppLink {
+    display: inline-block;
+    padding-right: 10px;
+    margin-right: 10%;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    font-size: 13px;
+    border-radius: 3px;
+}
+
+.AppLink:hover {
+    text-decoration: underline;
+}
+
+.Element {
+    padding-right: 4px;
+    vertical-align: middle;
+}

@@ -10,5 +10,5 @@ export class FavoriteEntity {
     @ManyToOne({ entity: () => PostEntity, primary: true })
     post!: PostEntity;
 
-    [PrimaryKeyType]: [string, string];
+    [PrimaryKeyType]: [String, Number];
 }

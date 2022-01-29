@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post, Put, Req } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Post, Put, Query, Req } from "@nestjs/common";
 import { CreateSubDto, DeleteSubDto, UpdateSubDto } from "./subscription.dto";
 import { SubscriptionService as SubscriptionService } from "./subscription.service";
 import { Request } from "express";
@@ -34,6 +34,20 @@ export class SubcriptionController {
 
         const subscriptions = await this.subService.findByUser(user);
         return { subscriptions };
+    }
+
+    @Get("/isSubbed")
+    async isSubbed(
+        @Query("forum") forum: string,
+        @Req() req: Request
+    ) {
+        const user = req.session.user;
+        if (!user) {
+            return new InvalidSessionException();
+        }
+
+        const isSubbed = await this.subService.isSubbed(user, forum);
+        return { isSubbed };
     }
 
     @Put()

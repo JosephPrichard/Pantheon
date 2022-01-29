@@ -1,6 +1,6 @@
 import { Type } from "class-transformer";
 import { IsInt, Max, IsString, IsIn, MaxLength, IsOptional } from "class-validator";
-import { MAX_PAGE, MAX_ST_LEN, TimeType } from "src/utils/global";
+import { MAX_PAGE, MAX_ST_LEN, TimeType } from "src/global";
 
 export class SearchPostsDto {
     @IsInt()

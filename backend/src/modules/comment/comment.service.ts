@@ -5,8 +5,8 @@ import { QueryOrder } from "mikro-orm";
 import { CommentNotFoundException, PostNotFoundException } from "src/exception/entityNotFound.exception";
 import { BannedException, ResourcePermissionsException } from "src/exception/permissions.exception";
 import { AppLogger } from "src/loggers/applogger";
-import { appendNode, serializePath } from "src/utils/node.serializer";
-import { countPages, pageOffset, PER_PAGE } from "src/utils/paginator";
+import { appendNode, serializePath } from "src/utils/nodeSerializer.util";
+import { countPages, pageOffset, PER_PAGE } from "src/utils/paginator.util";
 import { PermissionsService } from "../permissions/permissions.service";
 import { PostService } from "../post/post.service";
 import { TaskService } from "../task/task.service";
@@ -81,15 +81,15 @@ export class CommentService {
         return commentEntity.id;
     }
 
-    async findById(id: string) {
+    async findById(id: number) {
         return await this.commentRepository.findOne({ id: id }, ["commenter", "post"]);
     }
 
-    async findManyByIds(ids: string[]) {
+    async findManyByIds(ids: number[]) {
         return await this.commentRepository.findOne({ id: { $in: ids } });
     }
 
-    async findTreeByPath(path: string[]) {
+    async findTreeByPath(path: number[]) {
         const compare = serializePath(path) + "%";
         return await this.commentRepository.find({ path: { $like: compare } }, ["commenter"]);
     }
@@ -121,7 +121,7 @@ export class CommentService {
         return await this.taskService.executeDeserializeTreeTask(comments);
     }
 
-    async update(update: UpdateCommentDto, id: string, user: User) {
+    async update(update: UpdateCommentDto, id: number, user: User) {
         const comment = await this.findById(id);
         if (!comment) {
             throw new CommentNotFoundException();
@@ -143,7 +143,7 @@ export class CommentService {
         
     }
 
-    async delete(id: string, user: User) {
+    async delete(id: number, user: User) {
         const comment = await this.commentRepository.findOne({ id: id }, ["commenter", "post"]);
         if (!comment) {
             throw new CommentNotFoundException();

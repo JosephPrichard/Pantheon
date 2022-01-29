@@ -45,15 +45,11 @@ export class UserService {
         return userEntity.id;
     }
 
-    getEntityReference(id: string) {
+    getEntityReference(id: number) {
         return this.userRepository.getReference(id);
     }
 
-    getObject(id: string): User {
-        return { id };
-    }
-
-    async findUserById(id: string) {
+    async findUserById(id: number) {
         return await this.userRepository.findOne({ id: id });
     }
 

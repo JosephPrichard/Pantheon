@@ -1,0 +1,33 @@
+.SubmitPost {
+    margin: 0 auto;
+    margin-right: 20px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.SubmitTitle {
+    padding-left: 20px;
+    padding-right: 20px;
+    flex-direction: row;
+}
+
+.SubmitPanel {
+    background-color: rgb(26, 27, 30);
+    padding-top: 4px;
+    flex-grow: 1;
+    flex-direction: row;
+}
+
+.Tab {
+    width: 33.3%;
+    font-size: 15px;
+}
+
+.Hr {
+    margin-top: 12px;
+    margin-bottom: 18px;
+    background-color: rgb(36, 37, 40);
+    width: 100%;
+    height: 2px;
+}

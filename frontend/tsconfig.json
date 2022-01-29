@@ -26,18 +26,9 @@
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx",
-    "node_modules/utils/validation.ts"
+    "**/*.tsx"
   ],
   "exclude": [
     "node_modules"
-  ],
-  "plugins": [
-    [
-      "@babel/plugin-proposal-decorators",
-      {
-        "decoratorsBeforeExport": true
-      }
-    ]
   ]
 }

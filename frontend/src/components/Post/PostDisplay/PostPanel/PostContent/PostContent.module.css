@@ -1,0 +1,4 @@
+.Content {
+    float: left;
+    width: calc(100% - 12px - 22px);
+}

@@ -1,4 +1,4 @@
-import { Entity, ManyToOne, PrimaryKeyType } from "mikro-orm";
+import { Entity, ManyToOne, PrimaryKeyType, Property } from "mikro-orm";
 import { ForumEntity } from "../forum/forum.entity";
 import { UserEntity } from "../user/user.entity";
 
@@ -10,5 +10,8 @@ export class ModeratorEntity {
     @ManyToOne({ entity: () => ForumEntity, primary: true })
     forum!: ForumEntity;
 
-    [PrimaryKeyType]: [string, string];
+    @Property({ type: Date })
+    createdAt: Date = new Date();
+
+    [PrimaryKeyType]: [Number, String];
 }

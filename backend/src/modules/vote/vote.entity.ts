@@ -17,7 +17,7 @@ export class CommentVoteEntity {
     @Property({ type: Number })
     value!: number; // -1, 0, or 1
 
-    [PrimaryKeyType]: [string, string];
+    [PrimaryKeyType]: [Number, Number];
 }
 
 @Entity({ tableName: "post_votes" })
@@ -31,5 +31,5 @@ export class PostVoteEntity {
     @Property({ type: Number })
     value!: number; // -1, 0, or 1
 
-    [PrimaryKeyType]: [string, string];
+    [PrimaryKeyType]: [Number, Number];
 }

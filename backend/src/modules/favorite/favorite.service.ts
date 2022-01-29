@@ -55,7 +55,7 @@ export class FavoriteService {
         return favorites;
     }
 
-    async unfavorite(post: string, user: User) {
+    async unfavorite(post: number, user: User) {
         const favorite = await this.favoriteRepository.findOne({ post: post, user: user.id });
         if (!favorite) {
             throw new FavoriteNotFoundException();

@@ -1,13 +1,13 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { Injectable } from "@nestjs/common";
-import { EntityRepository } from "mikro-orm";
+import { EntityRepository, expr, QueryOrder } from "mikro-orm";
+import { EntityManager } from "@mikro-orm/postgresql";
 import { ForumNotFoundException } from "src/exception/entityNotFound.exception";
 import { DuplicateForumException } from "src/exception/invalidInput.exception";
 import { ModPermissionsException } from "src/exception/permissions.exception";
 import { AppLogger } from "src/loggers/applogger";
 import { PermissionsService } from "../permissions/permissions.service";
 import { User } from "../user/user.dto";
-import { UserService } from "../user/user.service";
 import { CreateForumDto, UpdateForumDto } from "./forum.dto";
 import { ForumEntity } from "./forum.entity";
 
@@ -17,24 +17,26 @@ export class ForumService {
     private readonly logger = new AppLogger(ForumService.name);
 
     constructor(
+        private readonly em: EntityManager,
+
         @InjectRepository(ForumEntity) 
         private readonly forumRepository: EntityRepository<ForumEntity>,
 
-        private readonly permsService: PermissionsService,
-
-        private readonly userService: UserService
+        private readonly permsService: PermissionsService
     ) {}
 
     async create(forum: CreateForumDto, owner: User) {
-        const oldForumEntity = await this.findById(forum.name);
+        const oldForumEntity = await this.findByIdCase(forum.name);
         if (oldForumEntity) {
-            throw new DuplicateForumException(forum.name.toLowerCase());
+            throw new DuplicateForumException(forum.name);
         }
 
         const forumEntity = new ForumEntity();
 
-        forumEntity.id = forum.name.toLowerCase();
-        forumEntity.owner = this.userService.getEntityReference(owner.id);
+        forumEntity.id = forum.name;
+        if (forum.description) {
+            forumEntity.description = forum.description;
+        }
 
         await this.forumRepository.persistAndFlush(forumEntity);
 
@@ -43,7 +45,23 @@ export class ForumService {
     }
 
     async findById(id: string) {
-        return await this.forumRepository.findOne({ id: id.toLowerCase() });
+        return await this.forumRepository.findOne({ id: id });
+    }
+
+    async findByIdCase(id: string) {
+        return await this.forumRepository.findOne({ 
+            [expr("upper(id)")]: this.em.getKnex().raw("upper(?)", id)
+        });
+    }
+
+    async findTopForums() {
+        return await this.forumRepository.find(
+            {},
+            [],
+            { subscriptions: QueryOrder.DESC },
+            25,
+            0
+        );
     }
 
     async update(update: UpdateForumDto, id: string, user: User) {

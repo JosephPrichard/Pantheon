@@ -21,17 +21,18 @@ export class PermissionsService {
     }
 
     async hasModPerms(forum: ForumEntity, user: User) {
-        const isMod = await this.isModerator(forum, user);
-        const isOwner = this.isOwner(forum, user);
-        return isOwner || isMod;
+        return await this.isModerator(forum, user);
     }
 
-    async isOwner(forum: ForumEntity, user: User) {
-        return forum.owner.id === user.id;
-    }
+    async hasHigherModPerms(forum: ForumEntity, user1: number, user2: number) {
+        const mod1 = await this.modRepository.findOne({ forum: forum, user: user1 });
+        const mod2 = await this.modRepository.findOne({ forum: forum, user: user2 });
 
-    async hasOwnerPerms(forum: ForumEntity, user: User) {
-        return this.isOwner(forum, user);
+        if (!mod1 || !mod2) {
+            return false;
+        }
+
+        return mod1?.createdAt <= mod2?.createdAt;
     }
 
     async isBanned(forum: ForumEntity, user: User) {

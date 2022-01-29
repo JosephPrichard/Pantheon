@@ -39,7 +39,7 @@ export class VoteController {
 
     @Get("/post/:id")
     async getPostVotes(
-        @Param() idParam: string,
+        @Param() idParam: number,
         @Req() req: Request
     ) {
         const user = req.session.user;

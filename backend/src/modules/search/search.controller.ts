@@ -1,5 +1,5 @@
 import { Controller, Get, Query } from "@nestjs/common";
-import { timeTypeToDate } from "src/utils/time";
+import { timeTypeToDate } from "src/utils/time.util";
 import { SearchDto, SearchPostsDto } from "./search.dto";
 import { SearchService } from "./search.service";
 

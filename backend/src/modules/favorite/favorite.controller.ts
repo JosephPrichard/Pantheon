@@ -38,7 +38,7 @@ export class FavoriteController {
 
     @Delete("/:post")
     async delete(
-        @Param("post") postParam: string,
+        @Param("post") postParam: number,
         @Req() req: Request
     ) {
         const user = req.session.user;

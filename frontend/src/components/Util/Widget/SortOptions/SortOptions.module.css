@@ -1,0 +1,43 @@
+.Sort {
+    margin-bottom: 5px;
+    margin-top: 15px;
+    margin-right: 5px;
+    margin-left: 15px;
+    background-color: rgb(26, 27, 30);
+    display: flex;
+    align-items: center;
+    padding: 5px;
+}
+
+.From {
+    margin-left: 20px;
+    margin-right: 10px;
+}
+
+.DateOptions {
+    border-radius: 0;
+}
+
+.DateOption {
+    display: block;
+    padding-left: 10px;     
+    padding-right: 10px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    cursor: pointer;
+}
+
+.DateOption:hover {
+    background-color: rgb(67,67,67);
+}
+
+.Select {
+    border-style: solid;
+    border-width: 0;
+    border-bottom-width: 1px;
+    padding-left: 8px;
+    padding-right: 8px;
+    border-color: rgb(67, 67, 67);
+    cursor: pointer;
+    user-select: none;
+}

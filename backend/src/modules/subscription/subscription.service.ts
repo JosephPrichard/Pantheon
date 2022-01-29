@@ -52,7 +52,11 @@ export class SubscriptionService {
     }
 
     async findByUser(user: User) {
-        return this.subRepository.find({ user: user.id }, ["forum"]);
+        return await this.subRepository.find({ user: user.id }, ["forum"]);
+    }
+
+    async isSubbed(user: User, forum: string) {
+        return (await this.subRepository.find({ forum: forum })).length !== 0;
     }
 
     async findByUserRandom(user: User, amount: number) {

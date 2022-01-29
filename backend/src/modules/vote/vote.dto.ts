@@ -1,8 +1,8 @@
-import { IsIn, IsInt, IsString } from "class-validator";
+import { IsIn, IsInt, IsNumber } from "class-validator";
 
 export class VoteDto {
-    @IsString()
-    resource!: string;
+    @IsNumber()
+    resource!: number;
 
     @IsInt()
     @IsIn([-1, 0, 1])

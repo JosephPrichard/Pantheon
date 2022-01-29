@@ -2,7 +2,7 @@ import { Trim } from "class-sanitizer";
 import { IsOptional, IsString, MaxLength, MinLength } from "class-validator";
 import { PreventSpaces } from "src/decorators/preventSpaces.decorator";
 import { PreventSpecialCharacters } from "src/decorators/preventSpecialCharacters.decorator";
-import { MAX_FORUM_DESC_LEN, MAX_FORUM_NAME_LEN, MAX_TITLE_LEN } from "../../utils/global";
+import { MAX_FORUM_DESC_LEN, MAX_FORUM_NAME_LEN, MAX_TITLE_LEN } from "../../global";
 
 export class CreateForumDto {
     @IsString()
@@ -12,6 +12,13 @@ export class CreateForumDto {
     @MinLength(3, { message: "Name must be at least 3 characters."})
     @MaxLength(MAX_FORUM_NAME_LEN, { message: `Name cannot exceed ${MAX_FORUM_NAME_LEN} characters.`})
     name!: string;
+
+    @IsOptional()
+    @IsString()
+    @Trim()
+    @MinLength(1, { message: "Description cannot be empty."})
+    @MaxLength(MAX_FORUM_DESC_LEN, { message: `Description cannot exceed ${MAX_FORUM_DESC_LEN} characters.` })
+    description?: string;
 }
 
 export class UpdateForumDto {
