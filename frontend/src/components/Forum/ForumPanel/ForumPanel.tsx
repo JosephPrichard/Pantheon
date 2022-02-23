@@ -3,9 +3,10 @@ import { FunctionComponent } from "react";
 import { Calendar } from "react-feather";
 import { ForumEntity } from "../../../client/models/forum";
 import { formatCreatedAt } from "../../../utils/date";
-import ModList from "../ModList/ModList";
+import ModList from "../../Moderator/ModList/ModList";
 import styles from "./ForumPanel.module.css";
 import SubmitButton from "../../Submit/SubmitButton/SubmitButton";
+import SubscriptionButton from "../../Subscription/SubscriptionButton";
 
 interface Props {
     forum: ForumEntity;
@@ -25,9 +26,6 @@ const ForumPanel: FunctionComponent<Props> = ({ forum }: Props) => {
 
     return (
         <Card className={styles.ForumPanel}>
-            <Title order={6} className={styles.TitleAbout}>
-                About Forum
-            </Title>
             <Space h={5}/>
             <Title order={4} className={styles.Title}>
                 { forum.id }
@@ -41,7 +39,7 @@ const ForumPanel: FunctionComponent<Props> = ({ forum }: Props) => {
                 </>
             }
             <Space h={20}/>
-            <div className={styles.Content}>
+            <div>
                 { formatSubscribers(forum.subscriptions) } subscribers
             </div>
             <Space h={5}/>
@@ -53,6 +51,7 @@ const ForumPanel: FunctionComponent<Props> = ({ forum }: Props) => {
             </div>
             <Space h={20}/>
             <SubmitButton forumId={forum.id}/>
+            <SubscriptionButton forumId={forum.id}/>
             <Space h={20}/>
             <ModList forumId={forum.id}/>
         </Card>

@@ -1,0 +1,20 @@
+.CommentRootPanel {
+    width: 100%;
+    float: left;
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+.NoRoots {
+    margin-top: 12%;
+    margin-bottom: 12%;
+    text-align: center;
+    font-size: 20px;
+    color: rgb(129,131,132);
+}
+
+.Tabs {
+    margin-bottom: 10px;
+    width: fit-content;
+    block-size: fit-content
+}

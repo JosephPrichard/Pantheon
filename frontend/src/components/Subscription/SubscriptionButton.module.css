@@ -1,5 +1,10 @@
-.Button {
+.SubButton {
     margin-top: 8px;
     margin-bottom: 8px;
     width: 100%;
+    background-color: rgb(205,205,205);
+    color: black;
+    mix-blend-mode: lighten;
+    border-width: 1px;
+    border-style: solid;
 }

@@ -5,14 +5,27 @@ import FormButton from "../../Util/Widget/FormButton/FormButton";
 import styles from "./LoginPanel.module.css";
 import { login } from "../Login.client";
 import { isValidError } from "../../../client/util";
+import ErrorMessage from "../../Util/ErrorMessage/ErrorMessage";
+import { useRouter } from "next/router";
 
 const LoginPanel = () => {
+    const router = useRouter();
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
     const [loading, setLoading] = useState(false);
 
-    const [error, setError] = useState("");
+    const [error, setError] = useState(false);
+    const [message, setMessage] = useState("");
+
+    const clearError = useCallback(
+        () => {
+            setError(false);
+            setMessage("");
+        },
+        []
+    );
 
     const submit = useCallback(
         (e) => {
@@ -24,12 +37,13 @@ const LoginPanel = () => {
                 password: password
             })
                 .then(() => {
-                    document.location.href = "/";
+                    router.push("/")
                 })
                 .catch((err) => {
                     if (isValidError(err)) {
                         const errData = err.response.data as ErrorRes;
-                        setError(errData.message);
+                        setError(true);
+                        setMessage(errData.message);
                     }
                     setLoading(false);
                 });
@@ -50,7 +64,7 @@ const LoginPanel = () => {
                         value={email}
                         onChange={(event) => {
                             setEmail(event.currentTarget.value);
-                            setError("");
+                            clearError();
                         }}
                         error={error}
                         autoComplete="email"
@@ -62,11 +76,13 @@ const LoginPanel = () => {
                         value={password}
                         onChange={(event) => {
                             setPassword(event.currentTarget.value);
-                            setError("");
+                            clearError();
                         }}
+                        error={error}
                         autoComplete="current-password"
                     />
                 </InputWrapper>
+                <ErrorMessage message={message} />
                 <FormButton text="Log In" loading={loading} />
             </form>
         </div>

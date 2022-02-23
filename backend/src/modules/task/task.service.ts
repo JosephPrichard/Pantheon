@@ -1,7 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { DynamicPool } from "node-worker-threads-pool";
 import { Func } from "node-worker-threads-pool/dist/types";
-import { deserializeTree, NodeObj } from "src/utils/treeSerializer.util";
+import { deserializeTree } from "src/utils/treeSerializer.util";
+import { CommentEntity } from "../comment/comment.entity";
 
 @Injectable()
 export class TaskService {
@@ -10,11 +11,11 @@ export class TaskService {
 
     // general method to execute any task with any param
     async executeTask<FuncType extends Func>(task: FuncType, param: any) {
-        return await this.threadPool.exec({ task, param });
+        return this.threadPool.exec({ task, param });
     }
 
     // executes the cpu-bounded deserialize tree task
-    async executeDeserializeTreeTask(nodes: NodeObj[]) {
+    async executeDeserializeTreeTask(nodes: CommentEntity[]) {
         return await this.executeTask(deserializeTree, nodes);
     }
 }

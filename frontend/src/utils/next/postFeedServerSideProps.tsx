@@ -11,7 +11,6 @@ export interface PostFeedProps {
 
 export const getServerSidePropsWithSlug: GetServerSideProps<PageProps<PostFeedProps>> = async (ctx) => {
     const query = ctx.query;
-    const cookie = ctx.req.cookies["connect.sid"];
 
     const pageStr = query.p as string | undefined;
     let page = Number(pageStr);

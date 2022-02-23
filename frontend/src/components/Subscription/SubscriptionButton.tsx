@@ -1,61 +1,55 @@
 import { Button } from "@mantine/core";
-import Link from "next/link";
 import useSWR from "swr";
-import { ForumEntity } from "../../client/models/forum";
 import { fetcher } from "../../utils/fetcher";
-import { ORANGE } from "../colors";
-import { IsSubbedRes } from "./Subscription.client";
+import { createSubscription, deleteSubscription, IsSubbedRes } from "./Subscription.client";
 import styles from "./SubscriptionButton.module.css";
+import { useState } from "react";
 
 interface Props {
-    forum: ForumEntity;
+    forumId: string;
 }
 
-const SubscriptionButton = ({ forum }: Props) => {
+const SubscriptionButton = ({ forumId }: Props) => {
+    const { data } = useSWR<IsSubbedRes>(`/api/subscriptions/isSubbed?forum=${forumId}`, fetcher);
 
-    // const { data } = useSWR<IsSubbedRes>(`/api/subscriptions/isSubbed?forum=${forum.id}`, fetcher);
+    const [justSubbed, setJustSubbed] = useState<boolean | undefined>();
 
-    // return (
-    //     <>
-    //         {data !== undefined ? 
-    //             <Button 
-    //                 className={styles.Button}
-    //                 style={{
-    //                     backgroundColor: ORANGE
-    //                 }}
-    //                 onClick={() => {
+    const [isHovering, setHovering] = useState(false);
 
-    //                 }}
-    //             >
-    //                 { data.isSubbed ? "Subscribed" : "Subscribe" }
-    //             </Button>
-    //             :
-    //             <Link href="/login"> 
-    //                 <Button 
-    //                     className={styles.Button}
-    //                     style={{
-    //                         backgroundColor: ORANGE
-    //                     }}
-    //                 >
-    //                     Subscribe
-    //                 </Button>
-    //             </Link>
-    //         }
-    //     </>
-    // );
+    function isSubbed() {
+        return justSubbed !== undefined ? justSubbed : data?.isSubbed;
+    }
 
     return (
         <>
-            <Link href="/login"> 
-                <Button 
-                    className={styles.Button}
+            {!data ||
+                <Button
+                    className={styles.SubButton}
                     style={{
-                        backgroundColor: ORANGE
+                        backgroundColor: !isSubbed() ? "rgb(205,205,205)" : "black",
+                        color: !isSubbed() ? "black" : "rgb(205,205,205)",
+                        borderColor: !isSubbed() ? undefined : "rgb(205,205,205)"
+                    }}
+                    onMouseOver={() => setHovering(true)}
+                    onMouseLeave={() => setHovering(false)}
+                    onClick={() => {
+                        const body = { forum: forumId };
+                        if (isSubbed()) {
+                            deleteSubscription(body)
+                                .then(() => {
+                                    setJustSubbed(false);
+                                });
+                        } else {
+                            createSubscription(body)
+                                .then(() => {
+                                    setJustSubbed(true);
+                                });
+                        }
                     }}
                 >
-                    Subscribe
+                    { isSubbed() ? (!isHovering ? "Subscribed" : "Unsubscribe") : "Subscribe" }
                 </Button>
-            </Link>
+            }
         </>
     );
 }

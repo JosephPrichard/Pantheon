@@ -41,6 +41,10 @@ export class PostService {
             throw new BannedException();
         }
 
+        if (post.images && post.images.length < 1) {
+            throw new InvalidInputException("Need to upload at least 1 image.");
+        }
+
         const postEntity = new PostEntity();
 
         postEntity.forum = forum;

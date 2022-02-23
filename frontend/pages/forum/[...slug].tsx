@@ -3,7 +3,7 @@ import { GetServerSideProps, NextPage } from "next";
 import { configNoCreds } from "../../src/client/config";
 import { ForumEntity } from "../../src/client/models/forum";
 import Banner from "../../src/components/Banner/Banner";
-import ErrorPage from "../../src/components/Error/ErrorPage";
+import ErrorPage from "../../src/components/ErrorPage/ErrorPage";
 import ForumFeed from "../../src/components/Feed/PostFeed/ForumFeed/ForumFeed";
 import { SortType, sortTypes, TimeType, timeTypes } from "../../src/global";
 import { PageProps } from "../../src/utils/next/PageProps";
@@ -19,7 +19,10 @@ const ForumPage: NextPage<PageProps<Props>> = ({ componentProps }: PageProps<Pro
     <>
         {componentProps ?
             <>
-                <Banner forumId={componentProps.forum.id}/>
+                <Banner
+                    title={componentProps.forum.id}
+                    href={`/forum/${componentProps.forum.id}`}
+                />
                 <ForumFeed 
                     forum={componentProps.forum}
                     sort={componentProps.sort} 

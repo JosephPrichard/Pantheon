@@ -4,7 +4,9 @@ import styles from "./CreateForumModal.module.css"
 import { ORANGE } from "../../colors";
 import { createForum } from "../Forum.client";
 import { isValidError } from "../../../client/util";
-import { ErrorRes, findError, PropertyErrorRes } from "../../../client/response";
+import { ErrorRes } from "../../../client/response";
+import ErrorMessage from "../../Util/ErrorMessage/ErrorMessage";
+import { useRouter } from "next/router";
 
 interface Props {
     open: boolean;
@@ -15,18 +17,20 @@ const MAX_FORUM_NAME_LEN = 25;
 
 const CreateForumModal = ({ open, onClose }: Props) => {
 
+    const router = useRouter();
+
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
 
-    const [nameError, setNameError] = useState("");
-    const [descError, setDescError] = useState("");
-
     const [loading, setLoading] = useState(false);
 
-    const clearErrors = useCallback(
+    const [error, setError] = useState(false);
+    const [message, setMessage] = useState("");
+
+    const clearError = useCallback(
         () => {
-            setNameError("");
-            setDescError("");
+            setError(false);
+            setMessage("");
         },
         []
     );
@@ -40,14 +44,13 @@ const CreateForumModal = ({ open, onClose }: Props) => {
                 description
             })
                 .then((r) => {
-                    setLoading(false);
-                    document.location.href = `/forum/${r.data.id}`
+                    router.push(`/forum/${r.data.id}`);
                 })
                 .catch((err) => {
                     if (isValidError(err)) {
-                        const errData = err.response.data as PropertyErrorRes;
-                        setNameError(findError(errData, "name"));
-                        setDescError(findError(errData, "description"));
+                        const errData = err.response.data as ErrorRes
+                        setError(true);
+                        setMessage(errData.message);
                     }
                     setLoading(false);
                 });
@@ -87,10 +90,10 @@ const CreateForumModal = ({ open, onClose }: Props) => {
                     const newName = event.currentTarget.value;
                     if (newName.length <= MAX_FORUM_NAME_LEN) {
                         setName(newName);
-                        clearErrors();
+                        clearError();
                     }
                 }}
-                error={nameError}
+                error={error}
             />
             <Space h={10}/>
             <Text className={styles.TextBoxSubtitle}>
@@ -109,11 +112,13 @@ const CreateForumModal = ({ open, onClose }: Props) => {
                 value={description}
                 onChange={(event) => {
                     setDescription(event.currentTarget.value);
-                    clearErrors();
+                    clearError();
                 }}
-                error={descError}
+                error={error}
             />
-            <Space h={20}/>
+            <Space h={10}/>
+            <ErrorMessage message={message} />
+            <Space h={10}/>
             <Button
                 className={styles.CreateButton}
                 style={{

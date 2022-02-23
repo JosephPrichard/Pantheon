@@ -1,7 +1,7 @@
 import DOMPurify from "isomorphic-dompurify";
 
 export const options: DOMPurify.Config = {
-    ALLOWED_TAGS: ["p", "ul", "li", "u", "strong", "em", "s", "a", "h1", "h2", "h3", "sup", "sub", "blockquote"],
+    ALLOWED_TAGS: ["p", "ol", "ul", "li", "u", "strong", "em", "s", "a", "h1", "h2", "h3", "sup", "sub", "blockquote"],
     ALLOWED_ATTR: ["href"]
 };
 
@@ -16,13 +16,6 @@ export function sanitizeString(dirty: string) {
     );
 }
 
-export const removeAllHTML = (dirty: string) => ({
-    __html: removeAllHTMLFromString(dirty) as string
-})
-
-export function removeAllHTMLFromString(dirty: string) {
-    return DOMPurify.sanitize(
-        dirty, 
-        { ALLOWED_TAGS: [], ALLOWED_ATTR: [] }
-    );
+export function removeAllHTMLFromString(text: string) {
+    return text.replace(/(<([^>]+)>)/g, " ");
 }

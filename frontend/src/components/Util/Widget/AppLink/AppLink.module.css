@@ -1,0 +1,26 @@
+.IconWrapper:hover {
+    text-decoration: underline;
+}
+
+.IconWrapper {
+    font-size: 13px;
+
+    display: inline-flex;
+    flex-direction: row;
+    gap: 5px;
+    align-items: center;
+}
+
+.Icon {
+    margin-top: 6px;
+}
+
+.AlignedText {
+    display: inline-block;
+    text-align: center;
+    cursor: pointer;
+}
+
+.AlignedText:hover {
+    text-decoration: underline;
+}

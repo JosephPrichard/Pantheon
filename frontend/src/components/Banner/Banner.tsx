@@ -4,21 +4,22 @@ import ProfilePopover from "./ProfilePopover/ProfilePopover";
 import styles from "./Banner.module.css";
 import axios from "axios";
 import { config } from "../../client/config";
-import ForumTitle from "./ForumTitle/ForumTitle";
 import Link from "next/link";
-import UserTitle from "./UserTitle/UserTitle";
+import BannerTitle from "./BannerTitle/BannerTitle";
 import { useUserName } from "../../hooks/useUserCreds";
+import SearchBar from "../Search/SearchBar/SearchBar";
+import { useRouter } from "next/router";
 
 function signOut() {
     return axios.post("/api/users/signOut", {}, config);
 }
 
 interface Props {
-    forumId?: string;
-    username?: string;
+    title?: string;
+    href?: string;
 }
 
-const Banner = ({ forumId, username }: Props) => {
+const Banner = ({ title, href }: Props) => {
 
     const name = useUserName();
 
@@ -30,8 +31,14 @@ const Banner = ({ forumId, username }: Props) => {
         <div className={styles.Banner}>
             <AppLogo />
 
-            <ForumTitle forumId={forumId}/>
-            <UserTitle username={username}/>
+            <BannerTitle
+                text={title}
+                href={href}
+            />
+
+            <div className={styles.SearchBar}>
+                <SearchBar/>
+            </div>
 
             <div className={styles.LoginWrapper}>
                 {name === undefined ?

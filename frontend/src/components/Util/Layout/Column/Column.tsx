@@ -7,9 +7,14 @@ interface Props {
     minWidth?: number | string;
     marginLeft?: number | string;
     marginRight?: number | string;
+    space?: boolean;
 }
 
-const Column = ({ children, width, minWidth, marginLeft, marginRight }: Props) => {
+const Column = ({ children, width, minWidth, marginLeft, marginRight, space }: Props) => {
+    if (space === undefined) {
+        space = true;
+    }
+
     return (
         <div 
             className={styles.Column}
@@ -17,7 +22,9 @@ const Column = ({ children, width, minWidth, marginLeft, marginRight }: Props) =
                 minWidth,
                 width,
                 marginLeft,
-                marginRight
+                marginRight,
+                paddingLeft: space ? 4 : undefined,
+                paddingRight: space ? 4 : undefined
             }}
         >
             { children }

@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import React, { useState } from "react";
+import React from "react";
 import Markup from "../../Layout/Markup/Markup";
 import styles from "./TextEditor.module.css";
 
@@ -11,18 +11,26 @@ const Rte = dynamic(() => import("@mantine/rte"), {
 interface Props {
     value: string;
     onChange: (value: string) => void;
+    error?: boolean;
 }
 
-const TextEditor = ({ value, onChange }: Props) => {
+const TextEditor = ({ value, onChange, error }: Props) => {
     return (
         <Markup>
             <Rte
-                className={styles.Rte}
+                styles={{
+                    root: {
+                        borderColor: error ? "#fa5252" : undefined,
+                        minWidth: 0,
+                        minHeight: 180
+                    }
+                }}
+                className={`${styles.Rte} ${error ? styles.RedBorder : ""}`}
                 value={value}
                 onChange={onChange}
                 controls={[
-                    ["bold", "italic", "underline", "strike", "sup", "sub", "link"], 
-                    ["h1", "h2", "h3", "unorderedList", "orderedList", "blockquote"],
+                    ["bold", "italic", "underline", "strike", "sup", "sub", "link"],
+                    ["unorderedList", "orderedList", "blockquote"],
                     ["clean"]
                 ]}
             />

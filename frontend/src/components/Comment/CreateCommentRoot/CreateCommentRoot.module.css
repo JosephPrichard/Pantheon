@@ -1,0 +1,12 @@
+.CreateCommentRoot {
+    width: 60%;
+    min-width: 500px;
+    overflow: hidden;
+}
+
+.SubmitButton {
+    margin: 10px 0 0;
+    background-color: rgb(210,210,210);
+    color: black;
+    float: left;
+}

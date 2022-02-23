@@ -1,25 +1,18 @@
-export interface UpdateBody {
-    update: {
-        content: string;
-    };
-}
+import { PostEntity } from "./post";
+import { UserEntity } from "./user";
 
-export interface GetTreeBody {
-    path: string[];
-}
-
-export interface CreateNodeBody {
-    parentComment: string;
+export interface CommentEntity {
+    id: number;
+    commenter: UserEntity | null;
+    post: PostEntity;
+    path: string;
+    votes: number;
     content: string;
+    createdAt: string;
 }
 
-export interface GetRootsBody {
-    post: string;
-    skip: number;
-    limit: number;
-}
-
-export interface CreateRootBody {
-    post: string;
-    content: string;
+export interface CommentTreeEntity {
+    node: CommentEntity;
+    children: CommentTreeEntity[];
+    id: number;
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Req, Res } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Req } from "@nestjs/common";
 import { VoteDto } from "./vote.dto";
 import { VoteService } from "./vote.service";
 import { Request } from "express";

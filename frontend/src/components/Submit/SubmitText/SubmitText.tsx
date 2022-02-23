@@ -1,13 +1,15 @@
-import { Button, InputWrapper, Textarea } from "@mantine/core";
+import { Button, InputWrapper, Space, Textarea } from "@mantine/core";
 import React, { useCallback, useState } from "react";
 import { ORANGE } from "../../colors";
 import TextEditor from "../../Util/Widget/TextEditor/TextEditor";
 import styles from "./SubmitText.module.css";
-import { PropertyErrorRes, findError } from "../../../client/response";
+import { ErrorRes } from "../../../client/response";
 import { submitPost } from "../Submit.client";
 import { isValidError } from "../../../client/util";
 import { ForumEntity } from "../../../client/models/forum";
-import { postUrl } from "../../../utils/url";
+import { createdPostUrl } from "../../../utils/url";
+import ErrorMessage from "../../Util/ErrorMessage/ErrorMessage";
+import { useRouter } from "next/router";
 
 interface Props {
     forum?: ForumEntity;
@@ -16,18 +18,20 @@ interface Props {
 
 const SubmitPost = ({ forum, show }: Props) => {
 
+    const router = useRouter();
+
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
 
-    const [titleError, setTitleError] = useState("");
-    const [contentError, setContentError] = useState("");
-
     const [loading, setLoading] = useState(false);
 
-    const clearErrors = useCallback(
+    const [error, setError] = useState(false);
+    const [message, setMessage] = useState("");
+
+    const clearError = useCallback(
         () => {
-            setTitleError("");
-            setContentError("");
+            setError(false);
+            setMessage("");
         },
         []
     );
@@ -46,13 +50,13 @@ const SubmitPost = ({ forum, show }: Props) => {
             })
                 .then((r) => {
                     setLoading(false);
-                    document.location.href = postUrl(r.data.post);
+                    router.push(createdPostUrl(r.data.post));
                 })
                 .catch((err) => {
                     if (isValidError(err)) {
-                        const errData = err.response.data as PropertyErrorRes;
-                        setTitleError(findError(errData, "title"));
-                        setContentError(findError(errData, "content"));
+                        const errData = err.response.data as ErrorRes;
+                        setError(true);
+                        setMessage(errData.message);
                     }
                     setLoading(false);
                 });
@@ -66,7 +70,7 @@ const SubmitPost = ({ forum, show }: Props) => {
                 display: show ? "block" : "none"
             }}
         >
-           <Textarea
+            <Textarea
                 className={styles.Title}
                 placeholder={"Title"}
                 minRows={1}
@@ -75,24 +79,24 @@ const SubmitPost = ({ forum, show }: Props) => {
                 value={title}
                 onChange={(event) => {
                     setTitle(event.currentTarget.value);
-                    clearErrors();
+                    clearError();
                 }}
-                error={titleError}
+                error={error}
             />
-            <InputWrapper
-                className={styles.Editor}
-                error={contentError}
-            >
+            <div className={styles.Editor}>
                 <TextEditor
-                    value={content} 
+                    value={content}
                     onChange={(value) => {
                         setContent(value);
-                        clearErrors();
+                        clearError();
                     }}
+                    error={error}
                 />
-            </InputWrapper>
+            </div>
+            <ErrorMessage message={message} textAlign="right" sidePaddings={10}/>
+            <Space h={20}/>
             <div className={styles.ButtonWrapper}>
-                <Button 
+                <Button
                     className={styles.SubmitButton}
                     style={{
                         backgroundColor: ORANGE

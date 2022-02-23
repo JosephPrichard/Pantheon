@@ -1,5 +1,7 @@
 export const SESSION_EXPIRY = 86_400; //in seconds
+export const MIN_COMMENT_LEN = 25;
 export const MAX_COMMENT_LEN = 2_500;
+export const MIN_POST_LEN = 200;
 export const MAX_POST_LEN = 10_000;
 export const MAX_TITLE_LEN = 100;
 export const MAX_USER_DESC_LEN = 500;
@@ -10,7 +12,6 @@ export const MAX_PATH_LEN = 10_000;
 export const MAX_LINK_LEN = 500;
 export const MAX_FORUM_NAME_LEN = 25;
 export const MAX_FORUM_DESC_LEN = 500;
-export const MAX_MESSAGE_LEN = 300;
 export const MAX_PAGE = 100;
 export const MAX_ST_LEN = 100;
 

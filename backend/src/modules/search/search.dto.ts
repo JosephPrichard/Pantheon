@@ -67,3 +67,25 @@ export interface PostSearchRow {
     contentHeadline: string;
     searchRank: string;
 }
+
+export interface SearchedPost {
+    id: number;
+    poster: null | {
+        id: number;
+        name: string;
+    }
+    forum: {
+        id: string;
+    }
+    title: string;
+    votes: number;
+    comments: number;
+    content: string | null;
+    images: string[];
+    link: string | null;
+    createdAt: string;
+
+    titleHeadline: string;
+    contentHeadline: string;
+    searchRank: number;
+}

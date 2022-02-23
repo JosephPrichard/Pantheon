@@ -70,7 +70,7 @@ export class FeedController {
         const user = req.session.user;  
         if (user) {
             const subbedForums = await this.highlightService.refreshThenGet(user);
-            if (subbedForums.length >= 3) {
+            if (subbedForums.length >= 2) {
                 filter.forums = subbedForums;
             }
         }
@@ -165,12 +165,10 @@ export class FeedController {
 
     @Get("/posts/:id/comments")
     async filterPostComments(
-        @Query() query: PageDto,
         @Param("id") idParam: number
     ) {
         const filter = {
-            post: idParam,
-            page: query.page
+            post: idParam
         };
 
         const commentTree = await this.commentService.findTreesByFilter(filter);

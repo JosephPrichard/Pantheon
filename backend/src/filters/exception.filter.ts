@@ -19,8 +19,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
         this.logger.exception(request, exception, request.session.user);
 
-        console.log(exception.getResponse())
-
         response
             .status(exception.getStatus())
             .json(exception.getResponse());
@@ -83,21 +81,11 @@ export class InvalidInputExceptionFilter implements ExceptionFilter {
 
         this.logger.exception(request, exception, request.session.user);
 
-        let message;
-        if (!exception.param) {
-            message = exception.message;
-        } else {
-            message = [{
-                property: exception.param,
-                errors: [exception.message]
-            }]
-        }
-
         response
             .status(400)
             .json({
                 statusCode: 400,
-                message: message,
+                message: exception.message,
                 error: "Bad Request"
             });
     }

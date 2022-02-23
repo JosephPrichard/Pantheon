@@ -1,0 +1,31 @@
+.UserPanel {
+    background-color: rgb(26, 27, 30);
+    height: 100%;
+}
+
+.DataBox {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.DataText {
+    color: rgb(129, 131, 132);
+    margin-left: 5px;
+    display: inline-block;
+    text-align: center;
+}
+
+.IconWrapper {
+    display: inline-block;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+.IconWrapper {
+    display: flex;
+    align-items: center;
+}
+
+.UserTitle {
+    font-size: 20px;
+}

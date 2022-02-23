@@ -25,7 +25,7 @@ export class UserController {
 
         const nameExists = await this.userService.findUserByName(body.name) !== null;
         if (nameExists) {
-            throw new BadRequestException("Username address is already in use.");
+            throw new BadRequestException("Username is already in use.");
         }
 
         const id = await this.userService.create(body);

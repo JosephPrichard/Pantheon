@@ -1,8 +1,8 @@
-import { Entity, ManyToOne, Index, PrimaryKeyType, Property } from "mikro-orm";
+import { Entity, ManyToOne, PrimaryKeyType, Property } from "mikro-orm";
 import { ForumEntity } from "../forum/forum.entity";
 import { UserEntity } from "../user/user.entity";
 
-@Entity({ tableName: "subcriptions" })
+@Entity({ tableName: "subscriptions" })
 export class SubscriptionEntity {
     @ManyToOne({ entity: () => UserEntity, primary: true })
     user!: UserEntity;

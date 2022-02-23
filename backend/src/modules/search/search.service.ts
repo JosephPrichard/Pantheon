@@ -7,7 +7,8 @@ import { countPages, pageOffset, PER_PAGE } from "src/utils/paginator.util";
 import { sql } from "src/utils/sql.util";
 import { ForumEntity } from "../forum/forum.entity";
 import { UserEntity } from "../user/user.entity";
-import { PostSearchRow, SearchFilter, SearchPostFilter } from "./search.dto";
+import { PostSearchRow, SearchedPost, SearchFilter, SearchPostFilter } from "./search.dto";
+import { PostEntity } from "../post/post.entity";
 
 @Injectable()
 export class SearchService {
@@ -99,8 +100,33 @@ export class SearchService {
             .limit(PER_PAGE)
             .offset(pageOffset(search.page));
 
+        const mappedPosts: SearchedPost[] = [];
+        for (const result of results) {
+            mappedPosts.push({
+                id: Number(result.id),
+                poster: {
+                    id: Number(result.id),
+                    name: result.posterName
+                },
+                forum: {
+                    id: result.forumId
+                },
+                title: result.title,
+                votes: Number(result.votes),
+                comments: Number(result.comments),
+                content: result.content,
+                link: result.link,
+                images: result.images,
+                createdAt: result.createdAt,
+
+                titleHeadline: result.titleHeadline,
+                contentHeadline: result.contentHeadline,
+                searchRank: Number(result.searchRank)
+            });
+        }
+
         return { 
-            search: results,
+            posts: mappedPosts,
             pageCount: results[0] ? countPages(results[0].count) : 0
         } ;
     }

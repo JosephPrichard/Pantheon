@@ -1,0 +1,13 @@
+.CreateCommentNode {
+    width: 60%;
+    margin-top: 10px;
+    min-width: 500px;
+    overflow: hidden;
+}
+
+.Button {
+    margin: 10px 10px 0 0;
+    background-color: rgb(210,210,210);
+    color: black;
+    float: left;
+}

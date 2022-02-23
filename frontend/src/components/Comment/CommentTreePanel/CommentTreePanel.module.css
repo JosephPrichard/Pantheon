@@ -1,0 +1,51 @@
+.CommentDisplay {
+    display: flex;
+    flex-direction: row;
+    column-gap: 10px;
+}
+
+.CommentContent {
+    flex-grow: 1;
+}
+
+.CommentTreeChild {
+    margin-left: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-left-width: 2px;
+    border-left-style: dashed;
+    border-color: rgb(37,38,39);
+}
+
+.VotePanelFiller {
+    width: 22px;
+}
+
+.CommentTreeLinks {
+    color: rgb(129,131,132);
+}
+
+.Date {
+    font-size: 13px;
+    color: rgb(129, 131, 132);
+}
+
+.Collapse {
+    text-align: center;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 20px;
+    padding-left: 1px;
+    padding-right: 1px;
+    margin-right: 10px;
+
+    border-width: 0;
+    border-style: none;
+
+    background-color: transparent;
+    color: rgb(92,93,94);
+
+    cursor: pointer;
+}

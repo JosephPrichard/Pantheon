@@ -34,6 +34,10 @@ export class SearchController {
             text: query.text
         };
 
+        if (filter.text.length < 3) {
+            return [];
+        }
+
         return await this.searchService.searchUsers(filter);
     }
 
@@ -45,6 +49,10 @@ export class SearchController {
             page: query.page,
             text: query.text
         };
+
+        if (filter.text.length < 3) {
+            return [];
+        }
 
         return await this.searchService.searchForums(filter);
     }

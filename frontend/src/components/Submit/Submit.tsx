@@ -6,6 +6,7 @@ import SubmitText from "./SubmitText/SubmitText";
 import styles from "./Submit.module.css";
 import SubmitLink from "./SubmitLink/SubmitLink";
 import { ForumEntity } from "../../client/models/forum";
+import Divider from "../Util/Widget/Divider/Divider";
 
 interface Props {
     initialForum?: ForumEntity;
@@ -21,27 +22,24 @@ const Submit = ({ initialForum }: Props) => {
             <Title order={3} className={styles.SubmitTitle}>
                 Create Post
             </Title>
-            <div className={styles.Hr}/>
+            <Divider/>
             <Card className={styles.SubmitPanel}>
                 <Space h="md"/>
-                <Tabs className={styles.Tabs} active={active}>
+                <Tabs className={styles.Tabs} onTabChange={setActive}>
                     <Tab 
                         label="Text" 
                         icon={<Type/>}
                         className={styles.Tab}
-                        onClick={() => setActive(0)}
                     />
                     <Tab 
                         label="Images" 
                         icon={<Image/>}
                         className={styles.Tab}
-                        onClick={() => setActive(1)}
                     />
                     <Tab 
                         label="Link" 
                         icon={<Link/>}
                         className={styles.Tab}
-                        onClick={() => setActive(2)}
                     />
                 </Tabs>
                 <Space h="md"/>

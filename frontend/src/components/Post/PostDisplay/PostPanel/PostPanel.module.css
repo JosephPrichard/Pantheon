@@ -1,7 +1,17 @@
-.FullPostPanel {
+.PostPanel {
     background-color: rgb(26, 27, 30);
-    margin-bottom: 5px;
     height: 100%;
-    padding: 30px;
+    padding: 40px 40px;
     min-height: calc(100vh - 80px);
+}
+
+.PostContentContainer {
+    display: flex;
+    flex-direction: row;
+    column-gap: 20px;
+}
+
+.Content {
+    float: left;
+    width: calc(100% - 12px - 22px);
 }

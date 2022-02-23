@@ -1,7 +1,7 @@
 import type { GetServerSideProps, NextPage } from "next";
 import React from "react";
 import Banner from "../../src/components/Banner/Banner";
-import ErrorPage from "../../src/components/Error/ErrorPage";
+import ErrorPage from "../../src/components/ErrorPage/ErrorPage";
 import PopularFeed from "../../src/components/Feed/PostFeed/PopularFeed/PopularFeed";
 import { SortType, TimeType } from "../../src/global";
 import { PageProps } from "../../src/utils/next/PageProps";
@@ -23,6 +23,7 @@ const FeedPage: NextPage<PageProps<Props>> = ({ componentProps }: PageProps<Prop
                         sort={componentProps.sort} 
                         time={componentProps.time}
                         page={componentProps.page}
+                        routeToPopular
                     />
                 </>
                 :

@@ -1,0 +1,15 @@
+.Title {
+    min-width: 8%;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: whitesmoke;
+    display: inline-block;
+    margin-left: 80px;
+    border-radius: 3px;
+    padding: 3px 8px;
+}
+
+.Title:hover { 
+    text-decoration: underline;
+}

@@ -19,3 +19,10 @@
     text-decoration: underline;
     cursor: pointer;
 }
+
+.SearchBar {
+    text-align: center;
+    width: 40%;
+    margin-left: 6%;
+    margin-right: 6%;
+}

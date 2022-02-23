@@ -9,7 +9,7 @@
 }
 
 .Button {
-    all: unset
+    all: unset !important;
 }
 
 .Element {

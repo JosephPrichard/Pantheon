@@ -1,0 +1,8 @@
+.Subtitle {
+    font-size: 13px;
+}
+
+.NameLink:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}

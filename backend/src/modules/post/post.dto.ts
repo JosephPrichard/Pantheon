@@ -1,6 +1,6 @@
 import { Trim } from "class-sanitizer";
-import { IsArray, IsOptional, IsString, IsUrl, MaxLength, MinLength } from "class-validator";
-import { MAX_LINK_LEN, MAX_POST_LEN, MAX_TITLE_LEN, SortType } from "../../global";
+import { ArrayNotEmpty, IsArray, IsOptional, IsString, IsUrl, MaxLength, MinLength } from "class-validator";
+import { MAX_LINK_LEN, MAX_POST_LEN, MAX_TITLE_LEN, MIN_POST_LEN, SortType } from "../../global";
 
 export class CreatePostDto {
     @IsString()
@@ -15,14 +15,14 @@ export class CreatePostDto {
     @IsOptional()
     @IsString()
     @Trim()
-    @MinLength(1, { message: "Text content cannot be empty."})
+    @MinLength(MIN_POST_LEN, { message: `Text content must be at least ${MIN_POST_LEN} characters.`})
     @MaxLength(MAX_POST_LEN, { message: `Text content cannot exceed ${MAX_POST_LEN} characters.`})
     content?: string;
 
     @IsOptional()
     @IsString()
     @Trim()
-    @IsUrl()
+    @IsUrl({}, { message: "Link should be a valid URL."})
     @MaxLength(MAX_LINK_LEN, { message: `Link should be less than ${MAX_LINK_LEN} characters.`})
     link?: string;
 
@@ -36,7 +36,7 @@ export class UpdatePostDto {
     @IsOptional()
     @IsString()
     @Trim()
-    @MinLength(1, { message: "Text content cannot be empty."})
+    @MinLength(MIN_POST_LEN, { message: `Text content must be at least ${MIN_POST_LEN} characters.`})
     @MaxLength(MAX_POST_LEN, { message: `Text content cannot exceed ${MAX_POST_LEN} characters.`})
     content?: string;
     
@@ -48,6 +48,7 @@ export class UpdatePostDto {
     link?: string;
 
     @IsOptional()
+    @ArrayNotEmpty({ message: "Need to upload at least 1 image." })
     @IsString({ each: true })
     images?: string[];
 }

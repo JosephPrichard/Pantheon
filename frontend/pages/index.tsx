@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import React from "react";
 import Banner from "../src/components/Banner/Banner";
-import ErrorPage from "../src/components/Error/ErrorPage";
+import ErrorPage from "../src/components/ErrorPage/ErrorPage";
 import HomeFeed from "../src/components/Feed/PostFeed/HomeFeed/HomeFeed";
 import PopularFeed from "../src/components/Feed/PostFeed/PopularFeed/PopularFeed";
 import { SortType, TimeType } from "../src/global";

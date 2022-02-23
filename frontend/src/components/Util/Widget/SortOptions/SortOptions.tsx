@@ -81,28 +81,28 @@ const SortOptions = ({ sort, time, buildPageURL }: Props) => {
                 }}
             >
                 <div className={styles.DateOptions}>
-                    <Link href={buildPageURL("top", "day")}>
-                        <div className={styles.DateOption}>
+                    <Link href={buildPageURL(sort, "day")}>
+                        <div className={styles.DateOption} onClick={() => setOpened(false)}>
                             today
                         </div>
                     </Link>
-                    <Link href={buildPageURL("top", "week")}>
-                        <div className={styles.DateOption}>
+                    <Link href={buildPageURL(sort, "week")}>
+                        <div className={styles.DateOption} onClick={() => setOpened(false)}>
                             last week
                         </div>
                     </Link>
-                    <Link href={buildPageURL("top", "month")}>
-                        <div className={styles.DateOption}>
+                    <Link href={buildPageURL(sort, "month")}>
+                        <div className={styles.DateOption} onClick={() => setOpened(false)}>
                             last month
                         </div>
                     </Link>
-                    <Link href={buildPageURL("top", "year")}>
-                        <div className={styles.DateOption}>
+                    <Link href={buildPageURL(sort, "year")}>
+                        <div className={styles.DateOption} onClick={() => setOpened(false)}>
                             last year
                         </div>
                     </Link>
-                    <Link href={buildPageURL("top", "alltime")}>
-                        <div className={styles.DateOption}>
+                    <Link href={buildPageURL(sort, "alltime")}>
+                        <div className={styles.DateOption} onClick={() => setOpened(false)}>
                             all time
                         </div>
                     </Link>

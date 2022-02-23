@@ -24,8 +24,8 @@ export class CommentController {
 
         body.content = sanitizeString(body.content);
 
-        const id = await this.commentService.createNode(body, user);
-        return { id };
+        const comment = await this.commentService.createNode(body, user);
+        return { comment };
     }
 
     @Post("/roots")
@@ -40,8 +40,8 @@ export class CommentController {
 
         body.content = sanitizeString(body.content);
 
-        const id = await this.commentService.createRoot(body, user);
-        return { id };
+        const comment = await this.commentService.createRoot(body, user);
+        return { comment };
     }
 
     @Get("/:id")

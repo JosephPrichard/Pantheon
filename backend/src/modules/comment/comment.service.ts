@@ -53,13 +53,13 @@ export class CommentService {
         await this.commentRepository.persistAndFlush(commentEntity);
 
         this.logger.log(`User ${commenter.id} created comment root ${commentEntity.id}`);
-        return commentEntity.id;
+        return commentEntity;
     }
 
     async createNode(node: CreateCommentNodeDto, commenter: User) {
         const parent = await this.findById(node.parentComment);
         if (!parent) {
-            throw new PostNotFoundException();
+            throw new CommentNotFoundException();
         }
 
         const hasPerms = await this.permsService.isBanned(parent.post.forum, commenter);
@@ -78,7 +78,7 @@ export class CommentService {
         await this.commentRepository.persistAndFlush(commentEntity);
 
         this.logger.log(`User ${commenter.id} created a comment node ${commentEntity.id}`);
-        return commentEntity.id;
+        return commentEntity;
     }
 
     async findById(id: number) {

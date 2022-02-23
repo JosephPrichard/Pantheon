@@ -1,0 +1,16 @@
+.Link {
+    color: rgb(88,147,196);
+    font-size: 13px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    display: inline-flex;
+    gap: 5px;
+}
+
+.Link:hover {
+    text-decoration: underline;
+}
+
+.IconWrapper {
+    margin-top: 4px;
+}

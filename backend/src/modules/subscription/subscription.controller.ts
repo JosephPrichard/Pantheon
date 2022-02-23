@@ -5,7 +5,7 @@ import { Request } from "express";
 import { InvalidSessionException } from "src/exception/session.exception";
 
 @Controller("subscriptions")
-export class SubcriptionController {
+export class SubscriptionController {
 
     constructor(private readonly subService: SubscriptionService) {}
 
@@ -66,7 +66,7 @@ export class SubcriptionController {
 
     @Delete()
     async delete(
-        @Body() body: DeleteSubDto,
+        @Query() query: DeleteSubDto,
         @Req() req: Request
     ) {
         const user = req.session.user;
@@ -74,7 +74,7 @@ export class SubcriptionController {
             throw new InvalidSessionException();
         }
 
-        const subscription = await this.subService.delete(body, user);
+        const subscription = await this.subService.delete(query, user);
         return { subscription };
     }
 }

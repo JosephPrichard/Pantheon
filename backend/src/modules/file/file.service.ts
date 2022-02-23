@@ -19,8 +19,8 @@ export class FileService {
         storage: multer.memoryStorage(),
         fileFilter: async (req, file, callback) => {
             const ext = path.extname(file.originalname);
-            if(ext !== ".png" && ext !== ".jpg" && ext !== ".gif" && ext !== ".jpeg") {
-                return callback(new BadRequestException("Only images are allowed"), false);
+            if(ext !== ".png" && ext !== ".jpg" && ext !== ".jpeg") {
+                return callback(new BadRequestException("Only .png and .jpg formats are allowed."), false);
             }
             callback(null, true);
         },
@@ -34,18 +34,18 @@ export class FileService {
 
     private bucket = getBucket();
 
-    async uploadImages(files: Array<Express.Multer.File>) {
+    async uploadFiles(files: Array<Express.Multer.File>) {
         const promises = [];
 
         for(const file of files) {
             const id = uuid();
-            promises.push(this.uploadImage(file, id));
+            promises.push(this.uploadFile(file, id));
         }
 
         return await Promise.all(promises);
     }
 
-    async uploadImage(file: Express.Multer.File, id: string) {
+    async uploadFile(file: Express.Multer.File, id: string) {
         const path = "assets/" + id;
 
         const fileBlob = this.bucket.file(path);

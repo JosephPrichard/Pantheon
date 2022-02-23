@@ -10,8 +10,8 @@ const ForumList = () => {
 
     return (
         <>
-            <Title order={5}>
-                Popular
+            <Title order={4}>
+                Forums
             </Title>
             <div className={styles.Forums}>
                 {!data?.forums || 

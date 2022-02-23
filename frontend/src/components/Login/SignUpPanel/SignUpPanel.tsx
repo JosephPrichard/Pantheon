@@ -1,27 +1,29 @@
 import { InputWrapper, PasswordInput, Text, TextInput, Title } from "@mantine/core";
 import React, { useCallback, useState } from "react";
-import { findError, ErrorRes } from "../../../client/response";
+import { ErrorRes } from "../../../client/response";
 import FormButton from "../../Util/Widget/FormButton/FormButton";
 import styles from "./SignUpPanel.module.css";
 import { createUser, login } from "../Login.client";
 import { isValidError } from "../../../client/util";
+import ErrorMessage from "../../Util/ErrorMessage/ErrorMessage";
+import { useRouter } from "next/router";
 
 const SignUpPanel = () => {
+    const router = useRouter();
+
     const [email, setEmail] = useState("");
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
 
     const [loading, setLoading] = useState(false);
 
-    const [emailError, setEmailError] = useState("");
-    const [nameError, setNameError] = useState("");
-    const [passwordError, setPasswordError] = useState("");
+    const [error, setError] = useState(false);
+    const [message, setMessage] = useState("");
 
-    const clearErrors = useCallback(
+    const clearError = useCallback(
         () => {
-            setEmailError("");
-            setNameError("");
-            setPasswordError("");
+            setError(false);
+            setMessage("");
         },
         []
     );
@@ -42,19 +44,19 @@ const SignUpPanel = () => {
                         password
                     })
                         .then(() => {
-                            document.location.href = "/";
+                            router.push("/");
                         })
                         .catch(() => {
-                            setNameError("Unexpected Error occurred");
+                            setError(true);
+                            setMessage("Unexpected Error occurred");
                             setLoading(false);
                         });
                 })
                 .catch((err) => {
                     if (isValidError(err)) {
                         const errData = err.response.data as ErrorRes;
-                        setEmailError(findError(errData, "email"));
-                        setNameError(findError(errData, "name"));
-                        setPasswordError(findError(errData, "password"));
+                        setError(true);
+                        setMessage(errData.message);
                     }
                     setLoading(false);
                 });
@@ -73,10 +75,10 @@ const SignUpPanel = () => {
                     <TextInput
                         placeholder="Email"
                         value={email}
-                        error={emailError}
+                        error={error}
                         onChange={(event) => {
                             setEmail(event.currentTarget.value);
-                            clearErrors();
+                            clearError();
                         }}
                         autoComplete="email"
                     />
@@ -85,10 +87,10 @@ const SignUpPanel = () => {
                     <TextInput
                         placeholder="Username"
                         value={name}
-                        error={nameError}
+                        error={error}
                         onChange={(event) => {
                             setName(event.currentTarget.value);
-                            clearErrors();
+                            clearError();
                         }}
                         autoComplete="username"
                     />
@@ -97,14 +99,15 @@ const SignUpPanel = () => {
                     <PasswordInput
                         placeholder="Password"
                         value={password}
-                        error={passwordError}
+                        error={error}
                         onChange={(event) => {
                             setPassword(event.currentTarget.value);
-                            clearErrors();
+                            clearError();
                         }}
                         autoComplete="new-password"
                     />
                 </InputWrapper>
+                <ErrorMessage message={message} />
                 <FormButton text="Create Account" loading={loading} />
             </form>
         </div>

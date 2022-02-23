@@ -5,9 +5,7 @@
     display: inline-block;
     margin-left: 20px;
     border-radius: 3px;
-    padding: 3px;
-    padding-right: 8px;
-    padding-left: 8px;
+    padding: 3px 8px;
 }
 
 .a {

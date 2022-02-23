@@ -1,15 +1,12 @@
-export interface NodeObj {
-    id: number;
-    path: string;
-}
+import { CommentEntity } from "../modules/comment/comment.entity";
 
 export interface TreeObj {
-    node?: NodeObj;
+    node?: CommentEntity;
     children: TreeObj[];
     id: number;
 }
 
-export function deserializeTree(nodes: NodeObj[]) {
+export function deserializeTree(nodes: CommentEntity[]) {
 
     function deserializePath(path: string) {
         const nodes = path.split("/").map(function(item) {
@@ -27,7 +24,7 @@ export function deserializeTree(nodes: NodeObj[]) {
         }
     }
     
-    function leaf(node: NodeObj): TreeObj {
+    function leaf(node: CommentEntity): TreeObj {
         return {
             node: node,
             children: [],

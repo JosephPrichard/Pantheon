@@ -1,0 +1,8 @@
+.Title {
+    display: inline-block;
+}
+
+.Title:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}

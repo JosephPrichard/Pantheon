@@ -3,19 +3,19 @@
 }
 
 .Editor {
-    margin: 10px 10px 25px;
+    margin: 20px 10px 25px;
 }
 
-.SubmitButton {
+.Button {
     margin: 10px 10px 15px;
-    float: right;
 }
 
 .DraftButton {
     margin: 10px 10px 15px;
-    float: right;
 }
 
 .ButtonWrapper {
-    height: calc(36px + 10px + 15px);
+    padding-left: 10px;
+    padding-right: 10px;
+    float: right;
 }

@@ -1,4 +1,4 @@
-import { IsEmail, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
+import { IsEmail, IsOptional, IsString, Length, MaxLength, MinLength } from "class-validator";
 import { MAX_EMAIL_LEN, MAX_PASSWORD_LEN, MAX_USER_NAME_LEN } from "../../global";
 import { PreventUnsafe } from "../../decorators/preventUnsafe.decorator";
 import { NormalizeEmail } from "class-sanitizer";
@@ -11,7 +11,7 @@ export interface User {
 }
 
 export class CreateUserDto {
-    @IsEmail()
+    @IsEmail({}, { message: "Email address should be a valid email" })
     @NormalizeEmail()
     @MinLength(5, { message: "Email should be at least 5 characters." })
     @MaxLength(MAX_EMAIL_LEN, { message: `Email should be less than ${MAX_EMAIL_LEN} characters.`})
@@ -25,7 +25,7 @@ export class CreateUserDto {
     name!: string;
 
     @IsString()
-    @MinLength(5, { message: "Password sould be at least 5 characters."})
+    @MinLength(5, { message: "Password should be at least 5 characters."})
     @MaxLength(MAX_PASSWORD_LEN, { message: `Password should be less than ${MAX_PASSWORD_LEN} characters.`})
     password!: string;
 }
@@ -38,7 +38,7 @@ export class UpdateUserDto {
 }
 
 export class SignInDto {
-    @IsEmail()
+    @IsEmail({}, { message: "Email address should be a valid email" })
     @NormalizeEmail()
     email!: string;
 

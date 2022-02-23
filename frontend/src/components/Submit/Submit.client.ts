@@ -1,6 +1,6 @@
 import axios from "axios";
 import { config } from "../../client/config";
-import { PostEntity } from "../../client/models/post";
+import { CreatePostEntityRes } from "../../client/models/post";
 
 export interface Submission {
     title: string;
@@ -18,7 +18,7 @@ export interface FileMetaData {
 }
 
 export interface PostRes {
-    post: PostEntity;
+    post: CreatePostEntityRes;
 }
 
 export interface FileRes { 

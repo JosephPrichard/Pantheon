@@ -5,7 +5,7 @@ import PopularFeed from "../../src/components/Feed/PostFeed/PopularFeed/PopularF
 import { SortType, TimeType } from "../../src/global";
 import { PageProps } from "../../src/utils/next/PageProps";
 import { getServerSidePropsWithSlug } from "../../src/utils/next/postFeedServerSideProps";
-import ErrorPage from "../../src/components/Error/ErrorPage";
+import ErrorPage from "../../src/components/ErrorPage/ErrorPage";
 
 interface Props {
     sort: SortType;
@@ -23,6 +23,7 @@ const FeedPage: NextPage<PageProps<Props>> = ({ componentProps }: PageProps<Prop
                         sort={componentProps.sort} 
                         time={componentProps.time}
                         page={componentProps.page}
+                        routeToPopular
                     />
                 </>
                 :

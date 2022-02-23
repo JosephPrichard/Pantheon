@@ -7,5 +7,3 @@ export const timeTypes = ["day", "week", "month", "year", "alltime"];
 export const ALLTIME: TimeType = "alltime";
 
 export const PUBLIC_CLOUD_URL = "https://storage.googleapis.com/pantheon-forum-bucket";
-
-export const SESSION_COOKIE = "connect.sid";

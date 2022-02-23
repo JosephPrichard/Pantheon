@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import ErrorPage from "../src/components/Error/ErrorPage";
+import ErrorPage from "../src/components/ErrorPage/ErrorPage";
 
 const Error404Page: NextPage = () => {
     return (

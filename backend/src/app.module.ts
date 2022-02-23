@@ -15,7 +15,7 @@ import { SubscriptionModule } from './modules/subscription/subscription.module';
 import { FeedModule } from './modules/feed/feed.module';
 import { APP_PIPE } from '@nestjs/core';
 import { SearchModule } from './modules/search/search.module';
-import { getErrorArr } from './utils/errors.util';
+import { getErrorArr, getErrorMsg } from './utils/errorTransform.util';
 import session from "express-session";
 import connectPgSimple from 'connect-pg-simple';
 
@@ -46,7 +46,7 @@ const PgSession = connectPgSimple(session);
         useValue: new ValidationPipe({
             transform: true,
             exceptionFactory: (errs) => {
-                return new BadRequestException(getErrorArr(errs))
+                return new BadRequestException(getErrorMsg(errs))
             }
         })
     }],

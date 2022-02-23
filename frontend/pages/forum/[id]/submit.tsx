@@ -5,7 +5,7 @@ import React from "react";
 import { configNoCreds } from "../../../src/client/config";
 import { ForumEntity } from "../../../src/client/models/forum";
 import Banner from "../../../src/components/Banner/Banner";
-import ErrorPage from "../../../src/components/Error/ErrorPage";
+import ErrorPage from "../../../src/components/ErrorPage/ErrorPage";
 import ForumPanel from "../../../src/components/Forum/ForumPanel/ForumPanel";
 import Submit from "../../../src/components/Submit/Submit";
 import DoubleColumn from "../../../src/components/Util/Layout/DoubleColumn/DoubleColumn";
@@ -20,7 +20,10 @@ const SubmitPage: NextPage<PageProps<Props>> = ({ componentProps }: PageProps<Pr
         <>
             {componentProps ?
                 <>
-                    <Banner forumId={componentProps.forum.id}/>
+                    <Banner
+                        title={componentProps.forum.id}
+                        href={`/forum/${componentProps.forum.id}`}
+                    />
                     <Space h={40}/>
                     <DoubleColumn
                         column1={<Submit initialForum={componentProps.forum}/>}

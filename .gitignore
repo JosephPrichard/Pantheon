@@ -77,3 +77,17 @@ typings/
 
 # FuseBox cache
 .fusebox/
+
+# Xml
+*.xml
+
+# Iml
+*.iml
+
+# Dist
+*/dist
+
+# Idea
+*/.idea 
+
+

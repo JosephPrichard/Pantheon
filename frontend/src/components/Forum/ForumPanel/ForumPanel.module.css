@@ -13,24 +13,9 @@
     color: rgb(129,131,132);
 }
 
-.Content {
-    margin-left: 5px;
-}
-
 .IconWrapper {
-    margin-left: 5px;
-    display: flex;
+    display: inline-flex;
     align-items: center;
+    gap: 5px;
     font-size: 13px;
-}
-
-.Icon {
-    display: inline-block;
-    margin-right: 5px;
-    vertical-align: middle;
-}
-
-.AlignedText {
-    display: inline-block;
-    text-align: center;
 }

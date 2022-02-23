@@ -7,9 +7,9 @@ import axios from "axios";
 import { UserEntity } from "../../src/client/models/user";
 import { configNoCreds } from "../../src/client/config";
 import { PageProps } from "../../src/utils/next/PageProps";
-import ErrorPage from "../../src/components/Error/ErrorPage";
+import ErrorPage from "../../src/components/ErrorPage/ErrorPage";
 import DoubleColumn from "../../src/components/Util/Layout/DoubleColumn/DoubleColumn";
-import UserPanel from "../../src/components/User/UserPanel";
+import UserPanel from "../../src/components/User/UserPanel/UserPanel";
 import UserFeed from "../../src/components/Feed/PostFeed/UserFeed.tsx/UserFeed";
 
 interface Props {
@@ -23,7 +23,10 @@ const UserPage: NextPage<PageProps<Props>> = ({ componentProps }: PageProps<Prop
     <>
         {componentProps ? 
             <>
-                <Banner username={componentProps.user.name}/>
+                <Banner
+                    title={componentProps.user.name}
+                    href={`/forum/${componentProps.user.name}`}
+                />
                 <UserFeed
                     user={componentProps.user}
                     sort={componentProps.sort} 

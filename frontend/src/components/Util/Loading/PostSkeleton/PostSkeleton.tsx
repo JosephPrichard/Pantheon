@@ -10,7 +10,7 @@ const PostSkeleton = ({ lighter } : Props) => (
     <Card 
         className={styles.PostPanel}
         style={{
-            backgroundColor: lighter ? undefined : "rgb(24, 25, 28)"
+            backgroundColor: lighter ? "rgb(26, 27, 30)" : "rgb(24, 25, 28)"
         }}
     >
         <Skeleton height={12} width={"50%"} radius="xl" />
