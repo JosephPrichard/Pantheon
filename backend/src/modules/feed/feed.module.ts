@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Module } from "@nestjs/common";
 import { CommentModule } from "../comment/comment.module";
 import { PostModule } from "../post/post.module";

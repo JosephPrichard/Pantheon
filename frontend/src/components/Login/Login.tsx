@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Center, Divider } from "@mantine/core";
 import React from "react";
 import styles from "./Login.module.css";

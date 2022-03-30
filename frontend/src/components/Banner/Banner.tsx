@@ -1,18 +1,15 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import React, { useCallback } from "react";
 import AppLogo from "./AppLogo/AppLogo";
 import ProfilePopover from "./ProfilePopover/ProfilePopover";
 import styles from "./Banner.module.css";
-import axios from "axios";
-import { config } from "../../client/config";
 import Link from "next/link";
 import BannerTitle from "./BannerTitle/BannerTitle";
 import { useUserName } from "../../hooks/useUserCreds";
 import SearchBar from "../Search/SearchBar/SearchBar";
-import { useRouter } from "next/router";
-
-function signOut() {
-    return axios.post("/api/users/signOut", {}, config);
-}
 
 interface Props {
     title?: string;
@@ -22,10 +19,6 @@ interface Props {
 const Banner = ({ title, href }: Props) => {
 
     const name = useUserName();
-
-    const onSignOut = useCallback(() => {
-        signOut().then(() => (document.location.href = "/"));
-    }, []);
 
     return (
         <div className={styles.Banner}>
@@ -37,7 +30,7 @@ const Banner = ({ title, href }: Props) => {
             />
 
             <div className={styles.SearchBar}>
-                <SearchBar/>
+                <SearchBar href={href}/>
             </div>
 
             <div className={styles.LoginWrapper}>
@@ -48,7 +41,7 @@ const Banner = ({ title, href }: Props) => {
                         </div>
                     </Link>
                     :
-                    <ProfilePopover name={name} onSignOut={onSignOut}/>
+                    <ProfilePopover name={name} />
                 }
             </div>  
         </div>

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import Link from "next/link";
 import React, { FunctionComponent } from "react";
 import styles from "./BannerLink.module.css";

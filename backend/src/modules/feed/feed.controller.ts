@@ -1,9 +1,13 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Controller, Get, Param, Query, Req } from "@nestjs/common";
 import { PostService } from "../post/post.service";
 import { VoteService } from "../vote/vote.service";
 import { Request  } from "express";
 import { PostVoteEntity } from "../vote/vote.entity";
-import { PageDto, FeedDto } from "./feed.dto";
+import { FeedDto } from "./feed.dto";
 import { CommentService } from "../comment/comment.service";
 import { HighlightService } from "../highlight/highlight.service";
 import { PostFilter } from "../post/post.dto";

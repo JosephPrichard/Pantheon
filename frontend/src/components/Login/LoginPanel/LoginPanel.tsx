@@ -1,9 +1,13 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { InputWrapper, PasswordInput, Text, TextInput, Title } from "@mantine/core";
 import React, { useCallback, useState } from "react";
 import { ErrorRes } from "../../../client/response";
 import FormButton from "../../Util/Widget/FormButton/FormButton";
 import styles from "./LoginPanel.module.css";
-import { login } from "../Login.client";
+import { signIn } from "../Login.client";
 import { isValidError } from "../../../client/util";
 import ErrorMessage from "../../Util/ErrorMessage/ErrorMessage";
 import { useRouter } from "next/router";
@@ -32,7 +36,7 @@ const LoginPanel = () => {
             e.preventDefault();
 
             setLoading(true);
-            login({
+            signIn({
                 email: email,
                 password: password
             })

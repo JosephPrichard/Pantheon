@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { NextPage } from "next";
 import ErrorPage from "../src/components/ErrorPage/ErrorPage";
 

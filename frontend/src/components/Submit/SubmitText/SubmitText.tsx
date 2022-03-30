@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Button, InputWrapper, Space, Textarea } from "@mantine/core";
 import React, { useCallback, useState } from "react";
 import { ORANGE } from "../../colors";

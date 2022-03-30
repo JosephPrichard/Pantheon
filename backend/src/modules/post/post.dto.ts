@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Trim } from "class-sanitizer";
 import { ArrayNotEmpty, IsArray, IsOptional, IsString, IsUrl, MaxLength, MinLength } from "class-validator";
 import { MAX_LINK_LEN, MAX_POST_LEN, MAX_TITLE_LEN, MIN_POST_LEN, SortType } from "../../global";

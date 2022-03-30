@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Title } from "@mantine/core";
 import React, { FunctionComponent } from "react";
 import Banner from "../Banner/Banner";

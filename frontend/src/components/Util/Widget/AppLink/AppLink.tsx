@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import React, { FunctionComponent, MouseEventHandler, ReactElement } from "react";
 import styles from "./AppLink.module.css";
 import Link from "next/link";

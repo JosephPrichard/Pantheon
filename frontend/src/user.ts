@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import Cookies from "js-cookie";
 import { SESSION_EXPIRY } from "./global";
 import { User } from "./hooks/useUserCreds";

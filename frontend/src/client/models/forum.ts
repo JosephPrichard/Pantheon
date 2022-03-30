@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { UserEntity } from "./user";
 
 export interface ForumEntity {

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Title } from "@mantine/core";
 import useSWR from "swr";
 import { fetcher } from "../../../utils/fetcher";

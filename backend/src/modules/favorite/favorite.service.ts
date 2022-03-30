@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { FavoriteEntity } from "./favorite.entity";
 import { UserEntity } from "../user/user.entity"
 import { PostService } from "../post/post.service";

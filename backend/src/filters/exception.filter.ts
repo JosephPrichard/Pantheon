@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { ExceptionFilter, ArgumentsHost, HttpException } from "@nestjs/common";
 import { Catch } from "@nestjs/common/decorators/core/catch.decorator";
 import { EntityNotFoundException } from "../exception/entityNotFound.exception";

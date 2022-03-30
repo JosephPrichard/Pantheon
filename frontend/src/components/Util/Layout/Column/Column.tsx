@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { ReactNode } from "react";
 import styles from "./Column.module.css";
 

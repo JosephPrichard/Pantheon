@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import dynamic from "next/dynamic";
 import React from "react";
 import Markup from "../../Layout/Markup/Markup";

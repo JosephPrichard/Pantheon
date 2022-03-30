@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Body, Controller, Delete, Get, Param, Post, Req, Res } from "@nestjs/common";
 import { CreateModeratorDto, DeleteModeratorDto } from "./moderator.dto";
 import { ModeratorService } from "./moderator.service";

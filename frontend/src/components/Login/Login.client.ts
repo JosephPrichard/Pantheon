@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import axios from "axios";
 import { IdRes } from "../../client/response";
 import { config } from "../../client/config";
@@ -18,10 +22,15 @@ export interface CreateUser {
     password: string;
 }
 
-export function login(body: SignInBody) {
+export function signIn(body: SignInBody) {
     return axios.post<SignInRes>("/api/users/signIn", body, config);
+}
+
+export function signOut() {
+    return axios.post("/api/users/signOut", {}, config);
 }
 
 export function createUser(body: CreateUser) {
     return axios.post<IdRes>("/api/users", body, config);
 }
+

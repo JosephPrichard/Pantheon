@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Body, Controller, Get, Param, Post, Req } from "@nestjs/common";
 import { VoteDto } from "./vote.dto";
 import { VoteService } from "./vote.service";

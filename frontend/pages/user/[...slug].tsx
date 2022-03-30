@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import type { GetServerSideProps, NextPage } from "next";
 import Banner from "../../src/components/Banner/Banner";
 import React from "react";
@@ -8,8 +12,6 @@ import { UserEntity } from "../../src/client/models/user";
 import { configNoCreds } from "../../src/client/config";
 import { PageProps } from "../../src/utils/next/PageProps";
 import ErrorPage from "../../src/components/ErrorPage/ErrorPage";
-import DoubleColumn from "../../src/components/Util/Layout/DoubleColumn/DoubleColumn";
-import UserPanel from "../../src/components/User/UserPanel/UserPanel";
 import UserFeed from "../../src/components/Feed/PostFeed/UserFeed.tsx/UserFeed";
 
 interface Props {
@@ -25,7 +27,7 @@ const UserPage: NextPage<PageProps<Props>> = ({ componentProps }: PageProps<Prop
             <>
                 <Banner
                     title={componentProps.user.name}
-                    href={`/forum/${componentProps.user.name}`}
+                    href={`/user/${componentProps.user.name}`}
                 />
                 <UserFeed
                     user={componentProps.user}

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { CommentTreeEntity } from "../../../client/models/comment";
 import styles from "./CommentTreePanel.module.css";
 import TextContent from "../../Util/Layout/Content/TextContent/TextContent";

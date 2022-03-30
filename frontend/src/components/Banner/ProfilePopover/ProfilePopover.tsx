@@ -1,18 +1,25 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Button, Popover, Space } from "@mantine/core";
-import React, { useState } from "react";
-import { LogOut, User } from "react-feather";
+import React, { useCallback, useState } from "react";
 import BannerLink from "../BannerLink/BannerLink";
 import styles from "./ProfilePopover.module.css";
 import CreateForumModal from "../../Forum/CreateForumModal/CreateForumModal";
+import { signOut } from "../../Login/Login.client";
 
 interface Props {
     name: string;
-    onSignOut: () => void;
 }
 
-const ProfilePopover = ({ name, onSignOut }: Props) => {
+const ProfilePopover = ({ name }: Props) => {
     const [popoverOpened, setPopoverOpened] = useState(false);
     const [modalOpened, setModalOpened] = useState(false);
+
+    const onSignOut = useCallback(() => {
+        signOut().then(() => (document.location.href = "/"));
+    }, []);
 
     return (
         <>

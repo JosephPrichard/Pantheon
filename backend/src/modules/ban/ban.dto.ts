@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { IsNumber, IsString } from "class-validator";
 
 export class CreateBanDto {

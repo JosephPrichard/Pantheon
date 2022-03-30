@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Text } from "@mantine/core";
 import React from "react";
 import { sanitizeHTML } from "../../../../../utils/sanitize";

@@ -1,10 +1,14 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import React from "react";
 import { ChevronDown, ChevronUp } from "react-feather";
-import { PostEntity } from "../../../../../client/models/post";
+import { PostEntity, PostSearchEntity } from "../../../../../client/models/post";
 import styles from "./VotePanel.module.css";
 
 interface Props {
-    post: PostEntity;
+    post: PostEntity | PostSearchEntity;
 }
 
 const VotePanel = ({ post }: Props) => (

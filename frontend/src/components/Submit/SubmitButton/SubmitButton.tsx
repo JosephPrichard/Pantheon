@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Button } from "@mantine/core";
 import { useUserName } from "../../../hooks/useUserCreds";
 import styles from "./SubmitButton.module.css";
@@ -10,7 +14,7 @@ interface Props {
 
 const SubmitButton = ({ forumId }: Props) => {
 
-    const name = useUserName();
+    const name = useUserName(false);
 
     return (
         <div>

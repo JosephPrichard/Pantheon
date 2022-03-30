@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Card } from "@mantine/core";
 import React from "react";
 import { PostEntity } from "../../../client/models/post";

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import dayjs from "dayjs";
 
 export function formatCreatedAt(dateStr: string) {

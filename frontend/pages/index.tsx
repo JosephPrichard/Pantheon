@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import type { NextPage } from "next";
 import React from "react";
 import Banner from "../src/components/Banner/Banner";

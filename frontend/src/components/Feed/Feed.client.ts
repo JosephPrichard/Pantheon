@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { PostEntity } from "../../client/models/post";
 import { SortType, TimeType } from "../../global";
 
@@ -29,4 +33,19 @@ export function buildFetchForumFeedUrl(forum: string, sort: SortType, time: Time
 
 export function buildFetchUserFeedUrl(user: string, sort: SortType, time: TimeType | undefined, page: number) {
     return buildFetchFeedUrl(`/api/feed/users/${user}/posts?`, sort, time, page);
+}
+
+export function buildFetchSearchFeedUrl(text: string, time: TimeType | undefined, page: number, user?: string, forum?: string) {
+    let url = `/api/search/posts?text=${text}`;
+    if (time) {
+        url += "&time=" + time;
+    }
+    if (user) {
+        url += "&user=" + user;
+    }
+    if (forum) {
+        url += "&forum=" + user;
+    }
+    url += "&page=" + page;
+    return url;
 }

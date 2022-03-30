@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Modal, Textarea, Title, Text, Space, Button } from "@mantine/core";
 import React, { useCallback, useState } from "react";
 import styles from "./CreateForumModal.module.css"

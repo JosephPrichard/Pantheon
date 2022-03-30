@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { ConsoleLogger } from "@nestjs/common";
 import { Request } from "express";
 import { User } from "src/modules/user/user.dto";

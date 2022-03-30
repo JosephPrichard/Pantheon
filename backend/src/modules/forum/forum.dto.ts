@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Trim } from "class-sanitizer";
 import { IsOptional, IsString, MaxLength, MinLength } from "class-validator";
 import { PreventSpaces } from "src/decorators/preventSpaces.decorator";

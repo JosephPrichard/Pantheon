@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Image, X } from "react-feather";
 import Dropzone from "react-dropzone";
 import React from "react";

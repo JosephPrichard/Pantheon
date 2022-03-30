@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 const BRANCH = "/";
 
 export function appendNode(path: string, node: number) {

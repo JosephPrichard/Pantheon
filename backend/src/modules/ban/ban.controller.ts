@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Body, Controller, Delete, Get, Post, Req, Res } from "@nestjs/common";
 import { BanService } from "./ban.service";
 import { Request } from "express";

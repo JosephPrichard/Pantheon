@@ -1,11 +1,15 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import React, { FunctionComponent } from "react";
 import styles from "./PostPreviewList.module.css";
-import { PostEntity } from "../../../client/models/post";
+import { PostEntity, PostSearchEntity } from "../../../client/models/post";
 import PostPreview from "../PostDisplay/PostPreview/PostPreview";
 import PostSkeleton from "../../Util/Loading/PostSkeleton/PostSkeleton";
 
 interface Props {
-    posts?: PostEntity[];
+    posts?: (PostEntity | PostSearchEntity)[];
 }
 
 const PostPreviewList: FunctionComponent<Props> = ({ posts }: Props) => (

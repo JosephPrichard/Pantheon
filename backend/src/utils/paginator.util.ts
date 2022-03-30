@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 export const PER_PAGE = 25;
 
 export function countPages(count: number) {

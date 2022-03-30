@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import axios from "axios";
 import { GetServerSideProps, NextPage } from "next";
 import React from "react";

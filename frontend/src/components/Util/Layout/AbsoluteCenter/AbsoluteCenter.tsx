@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Center } from "@mantine/core";
 import React, { ReactNode } from "react";
 import styles from "./AbsoluteCenter.module.css";

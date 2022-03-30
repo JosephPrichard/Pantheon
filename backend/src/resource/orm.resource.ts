@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { LoadStrategy, Options, ReflectMetadataProvider } from "mikro-orm";
 import { PostgreSqlDriver } from "@mikro-orm/postgresql";
 import { FavoriteEntity } from "../modules/favorite/favorite.entity";

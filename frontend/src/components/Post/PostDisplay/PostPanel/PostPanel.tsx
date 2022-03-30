@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Card, Space } from "@mantine/core";
 import React from "react";
 import { PostEntity } from "../../../../client/models/post";
@@ -23,7 +27,11 @@ const PostPanel = ({ post, roots }: Props) => {
     if(post.images.length > 0) {
         content = <ImageContent images={post.images}/>
     } else if(post.content) {
-        content = <TextContent text={post.content}/>
+        content = (
+            <div className={styles.TextWrapper}>
+                <TextContent text={post.content}/>
+            </div>
+        );
     } else if(post.link) {
         content = <LinkContent url={post.link} font={15} clip={false} space={20}/>
     }

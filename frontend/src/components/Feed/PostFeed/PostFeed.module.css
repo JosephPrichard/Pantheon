@@ -1,7 +1,11 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 .PostFeed {
     background-color: rgb(26, 27, 30);
     height: 100%;
     min-height: calc(100vh - 80px);
-    padding: 0px;
+    padding: 0;
     margin-bottom: 5px;
 }

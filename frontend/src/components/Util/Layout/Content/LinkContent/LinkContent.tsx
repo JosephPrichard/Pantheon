@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Space } from "@mantine/core";
 import React, { FunctionComponent } from "react";
 import { ExternalLink } from "react-feather";

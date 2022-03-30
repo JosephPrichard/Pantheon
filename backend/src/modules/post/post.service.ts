@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { PostEntity} from "./post.entity";
 import { CreatePostDto, PostFilter,UpdatePostDto } from "./post.dto";
 import { QueryOrder, QueryOrderMap } from "mikro-orm";
@@ -98,8 +102,10 @@ export class PostService {
             sort = { hotRank: QueryOrder.DESC };
         } else if (filter.sort === "top") {
             sort = { votes: QueryOrder.DESC };
+        } else if (filter.sort === "new") {
+            sort = { id: QueryOrder.DESC };
         } else {
-            sort = { createdAt: QueryOrder.DESC };
+            throw new InvalidInputException("Invalid sort type");
         }
 
         const [posts, count] = await this.postRepository.findAndCount(

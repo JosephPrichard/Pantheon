@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import React, { useState } from "react";
 import styles from "./PhotoGallery.module.css";
 import { ChevronLeft, ChevronRight } from "react-feather";

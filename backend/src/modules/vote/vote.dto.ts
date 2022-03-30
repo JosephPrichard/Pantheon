@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { IsIn, IsInt, IsNumber } from "class-validator";
 
 export class VoteDto {

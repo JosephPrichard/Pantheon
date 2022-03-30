@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { ForumEntity } from "./forum";
 import { UserEntity } from "./user";
 
@@ -15,7 +19,7 @@ export interface PostEntity {
     hotRank?: number;
 }
 
-export interface SearchedPost {
+export interface PostSearchEntity {
     id: number;
     poster: null | {
         id: number;
@@ -32,8 +36,6 @@ export interface SearchedPost {
     link: string | null;
     createdAt: string;
 
-    titleHeadline: string;
-    contentHeadline: string;
     searchRank: number;
 }
 

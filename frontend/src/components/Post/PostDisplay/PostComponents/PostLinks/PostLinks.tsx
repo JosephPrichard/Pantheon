@@ -1,11 +1,15 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { useClipboard } from "@mantine/hooks";
 import { MessageSquare, Link2, Heart } from "react-feather";
-import { PostEntity } from "../../../../../client/models/post";
+import { PostEntity, PostSearchEntity } from "../../../../../client/models/post";
 import { postUrl } from "../../../../../utils/url";
 import AppLink from "../../../../Util/Widget/AppLink/AppLink";
 
 interface Props {
-    post: PostEntity;
+    post: PostEntity | PostSearchEntity;
     fade?: boolean;
 }
 

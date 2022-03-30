@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import useSWR from "swr";
 import { ForumEntity } from "../../../../client/models/forum";
 import { ALLTIME, SortType, TimeType } from "../../../../global";

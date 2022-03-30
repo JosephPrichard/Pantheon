@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import Document, { Head, Html, Main, NextScript } from "next/document";
 import { createGetInitialProps } from "@mantine/next";
 import React from "react";

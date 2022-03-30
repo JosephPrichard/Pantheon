@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { PostEntity } from "./post";
 import { UserEntity } from "./user";
 

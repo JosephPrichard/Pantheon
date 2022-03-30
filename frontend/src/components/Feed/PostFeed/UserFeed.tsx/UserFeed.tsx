@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import useSWR from "swr";
 import { UserEntity } from "../../../../client/models/user";
 import { ALLTIME, SortType, TimeType } from "../../../../global";

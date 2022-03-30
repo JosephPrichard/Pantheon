@@ -1,8 +1,12 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import axios from "axios";
 import { config } from "../../client/config";
 import { ForumEntity } from "../../client/models/forum";
 import { UserEntity } from "../../client/models/user";
-import { SearchedPost } from "../../client/models/post";
+import { PostSearchEntity } from "../../client/models/post";
 
 export interface SearchForumRes {
     forums: ForumEntity[],
@@ -14,7 +18,7 @@ export interface SearchUserRes {
     pageCount: number;
 }
 export interface SearchPostRes {
-    search: SearchedPost[];
+    search: PostSearchEntity[];
     pageCount: number;
 }
 

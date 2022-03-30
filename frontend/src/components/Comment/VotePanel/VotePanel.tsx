@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import React from "react";
 import { ChevronDown, ChevronUp } from "react-feather";
 import styles from "./VotePanel.module.css";

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Space } from "@mantine/core";
 import axios from "axios";
 import type { GetServerSideProps, NextPage } from "next";

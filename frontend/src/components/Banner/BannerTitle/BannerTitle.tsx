@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Title } from "@mantine/core";
 import Link from "next/link";
 import styles from "./BannerTitle.module.css";

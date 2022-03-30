@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { IsBoolean, IsString } from "class-validator";
 
 export class CreateSubDto {

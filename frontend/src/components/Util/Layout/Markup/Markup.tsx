@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { ReactElement } from "react";
 import styles from "./Markup.module.css";
 

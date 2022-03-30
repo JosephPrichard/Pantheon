@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Entity, OneToOne, PrimaryKey, Property } from "mikro-orm";
 import { MAX_EMAIL_LEN, MAX_USER_DESC_LEN, MAX_USER_NAME_LEN } from "../../global";
 

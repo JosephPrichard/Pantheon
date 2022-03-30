@@ -1,6 +1,10 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Card } from "@mantine/core";
 import React, { useState } from "react";
-import { PostEntity } from "../../../../client/models/post";
+import { PostEntity, PostSearchEntity } from "../../../../client/models/post";
 import VotePanel from "../PostComponents/VotePanel/VotePanel";
 import styles from "./PostPreview.module.css";
 import { PUBLIC_CLOUD_URL } from "../../../../global";
@@ -12,7 +16,7 @@ import TextContent from "../../../Util/Layout/Content/TextContent/TextContent";
 import LinkContent from "../../../Util/Layout/Content/LinkContent/LinkContent";
 
 interface Props {
-    post: PostEntity;
+    post: PostEntity | PostSearchEntity;
     lighter: boolean;
 }
     

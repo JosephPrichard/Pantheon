@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import React, { FunctionComponent } from "react";
 import styles from "./SortOption.module.css";
 
@@ -12,7 +16,7 @@ const SortOption: FunctionComponent<Props> = ({ text, selected, onClick }: Props
         className={styles.SortOption}
         onClick={onClick}
         style={{
-            borderColor: selected ? "rgb(65, 127, 212)" : undefined
+            borderColor: selected ? "rgb(194, 195, 197)" : undefined
         }}
     >
         { text }

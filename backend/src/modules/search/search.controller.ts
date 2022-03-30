@@ -1,6 +1,10 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Controller, Get, Query } from "@nestjs/common";
 import { timeTypeToDate } from "src/utils/time.util";
-import { SearchDto, SearchPostsDto } from "./search.dto";
+import { SearchPostsDto } from "./search.dto";
 import { SearchService } from "./search.service";
 
 @Controller("search")
@@ -23,37 +27,5 @@ export class SearchController {
         };
 
         return await this.searchService.searchPosts(filter);
-    }
-
-    @Get("/users")
-    async searchUsers(
-        @Query() query: SearchDto
-    ) {
-        const filter = {
-            page: query.page,
-            text: query.text
-        };
-
-        if (filter.text.length < 3) {
-            return [];
-        }
-
-        return await this.searchService.searchUsers(filter);
-    }
-
-    @Get("/forums") 
-    async searchForums(
-        @Query() query: SearchDto
-    ) {
-        const filter = {
-            page: query.page,
-            text: query.text
-        };
-
-        if (filter.text.length < 3) {
-            return [];
-        }
-
-        return await this.searchService.searchForums(filter);
     }
 }

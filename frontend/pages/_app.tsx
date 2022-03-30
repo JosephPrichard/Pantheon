@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { AppProps } from "next/app";
 import Head from "next/head";
 import { GlobalStyles, MantineProvider, NormalizeCSS } from "@mantine/core";

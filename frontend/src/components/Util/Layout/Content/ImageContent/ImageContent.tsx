@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import React from "react";
 import { PUBLIC_CLOUD_URL } from "../../../../../global";
 import PhotoGallery from "../../../Widget/PhotoGallery/PhotoGallery";

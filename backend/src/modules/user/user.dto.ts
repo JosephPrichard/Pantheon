@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { IsEmail, IsOptional, IsString, Length, MaxLength, MinLength } from "class-validator";
 import { MAX_EMAIL_LEN, MAX_PASSWORD_LEN, MAX_USER_NAME_LEN } from "../../global";
 import { PreventUnsafe } from "../../decorators/preventUnsafe.decorator";

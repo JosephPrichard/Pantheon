@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { PostEntity } from "../post/post.entity";
 import { CommentVoteEntity, PostVoteEntity } from "./vote.entity";
 import { VoteDto } from "./vote.dto";

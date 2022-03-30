@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { AxiosRequestConfig } from "axios";
 
 export const config: AxiosRequestConfig = {

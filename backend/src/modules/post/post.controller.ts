@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Body, Controller, Delete, Get, Param, Post, Put, Req } from "@nestjs/common";
 import { sanitize } from "class-sanitizer";
 import { CreatePostDto, UpdatePostDto } from "./post.dto";

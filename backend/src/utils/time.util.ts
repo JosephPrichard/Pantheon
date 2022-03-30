@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { ALLTIME, TimeType } from "../global";
 
 export function timeTypeToDate(time?: TimeType) {

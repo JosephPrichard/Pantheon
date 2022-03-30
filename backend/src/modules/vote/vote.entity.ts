@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Entity,  ManyToOne, PrimaryKeyType, Property } from "mikro-orm";
 import { CommentEntity } from "../comment/comment.entity";
 import { PostEntity } from "../post/post.entity";

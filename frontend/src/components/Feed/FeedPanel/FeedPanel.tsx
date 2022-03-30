@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Card, Space, Title } from "@mantine/core";
 import React, { FunctionComponent } from "react";
 import styles from "./FeedPanel.module.css";

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Card, Popover, Space, Tab, Tabs } from "@mantine/core";
 import Link from "next/link";
 import React, { useState } from "react";

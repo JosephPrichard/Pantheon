@@ -1,11 +1,15 @@
-import { PostEntity } from "../../../../../client/models/post";
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
+import { PostEntity, PostSearchEntity } from "../../../../../client/models/post";
 import Link from "next/link";
 import { urlify } from "../../../../../utils/url";
 import { Title } from "@mantine/core";
 import styles from "./PostTitle.module.css";
 
 interface Props {
-    post: PostEntity;
+    post: PostEntity | PostSearchEntity;
 }
 
 const PostTitle = ({ post }: Props) => (

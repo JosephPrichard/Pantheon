@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { NestFactory } from '@nestjs/core';
 import { MikroORM } from 'mikro-orm';
 import { AppModule } from './app.module';

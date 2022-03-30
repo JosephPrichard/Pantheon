@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import Link from "next/link";
 import { ForumEntity } from "../../../client/models/forum";
 import styles from "./ForumLink.module.css";

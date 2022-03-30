@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import styles from "./Divider.module.css";
 
 const Divider = () => (

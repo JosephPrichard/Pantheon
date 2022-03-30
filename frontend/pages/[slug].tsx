@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import type { GetServerSideProps, NextPage } from "next";
 import React, { Props, useEffect, useState } from "react";
 import Banner from "../src/components/Banner/Banner";

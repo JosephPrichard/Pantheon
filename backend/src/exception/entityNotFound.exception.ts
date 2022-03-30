@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 export class EntityNotFoundException extends Error {
     constructor(m: string) {
         super(m);

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Storage } from "@google-cloud/storage";
 
 require("dotenv").config();

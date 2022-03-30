@@ -1,10 +1,14 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { PostEntity } from "../../../client/models/post";
 import React, { useCallback, useState } from "react";
-import { Button, InputWrapper, Space } from "@mantine/core";
+import { Button, Space } from "@mantine/core";
 import styles from "./CreateCommentRoot.module.css";
 import TextEditor from "../../Util/Widget/TextEditor/TextEditor";
 import { useUserName } from "../../../hooks/useUserCreds";
-import { ORANGE, WHITE } from "../../colors";
+import { WHITE } from "../../colors";
 import { submitCommentRoot } from "../Comment.client";
 import { CommentEntity } from "../../../client/models/comment";
 import { isValidError } from "../../../client/util";
@@ -58,33 +62,29 @@ const CreateCommentRoot = ({ post, onCreate }: Props) => {
 
     return (
         <div className={styles.CreateCommentRoot}>
-            {!name ||
-                <div>
-                    <Space h="xl"/>
-                    Comment as { name }
-                    <TextEditor
-                        value={content}
-                        onChange={(value) => {
-                            setContent(value);
-                            clearError();
-                        }}
-                    />
-                    <Space h="md"/>
-                    <ErrorMessage message={message}/>
-                    <div className={styles.ButtonWrapper}>
-                        <Button
-                            className={styles.SubmitButton}
-                            style={{
-                                backgroundColor: WHITE
-                            }}
-                            loading={loading}
-                            onClick={submit}
-                        >
-                            Comment
-                        </Button>
-                    </div>
-                </div>
-            }
+            <Space h="xl"/>
+            Comment as { name }
+            <TextEditor
+                value={content}
+                onChange={(value) => {
+                    setContent(value);
+                    clearError();
+                }}
+            />
+            <Space h="md"/>
+            <ErrorMessage message={message}/>
+            <div className={styles.ButtonWrapper}>
+                <Button
+                    className={styles.SubmitButton}
+                    style={{
+                        backgroundColor: WHITE
+                    }}
+                    loading={loading}
+                    onClick={submit}
+                >
+                    Comment
+                </Button>
+            </div>
         </div>
     );
 }

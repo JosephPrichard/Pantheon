@@ -1,7 +1,13 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { GetServerSideProps, NextPage } from "next";
 import { PageProps } from "../../src/utils/next/PageProps";
 import ErrorPage from "../../src/components/ErrorPage/ErrorPage";
 import React from "react";
+import Banner from "../../src/components/Banner/Banner";
+import SearchAllFeed from "../../src/components/Feed/PostFeed/SearchFeed/SearchAllFeed/SearchAllFeed";
 
 interface Props {
     text: string;
@@ -13,7 +19,11 @@ const SearchPage: NextPage<PageProps<Props>> = ({ componentProps }: PageProps<Pr
         <>
             {componentProps ?
                 <>
-
+                    <Banner/>
+                    <SearchAllFeed
+                        text={componentProps.text}
+                        page={componentProps.page}
+                    />
                 </>
                 :
                 <ErrorPage/>

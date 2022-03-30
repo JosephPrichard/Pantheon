@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Trim } from "class-sanitizer";
 import { IsNumber, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
 import { MAX_COMMENT_LEN, MIN_COMMENT_LEN, SortType } from "../../global";

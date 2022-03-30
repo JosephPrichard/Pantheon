@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { CommentTreeEntity } from "../../../client/models/comment";
 import styles from "./CommentRootPanel.module.css"
 import React, { useCallback, useState } from "react";
@@ -7,6 +11,7 @@ import { PostEntity } from "../../../client/models/post";
 import { Space, Tabs, Tab } from "@mantine/core";
 import { MessageSquare } from "react-feather";
 import CommentTreePanel from "../CommentTreePanel/CommentTreePanel";
+import { useUserName } from "../../../hooks/useUserCreds";
 
 interface Props {
     post: PostEntity;
@@ -16,6 +21,8 @@ interface Props {
 const sortTypes = ["hot", "new", "top"];
 
 const CommentRootPanel = ({ post, roots }: Props) => {
+
+    const name = useUserName(false);
 
     const [createdRoots, setCreatedRoots] = useState<CommentTreeEntity[]>([]);
 
@@ -46,18 +53,20 @@ const CommentRootPanel = ({ post, roots }: Props) => {
 
     return (
         <div className={styles.CommentRootPanel}>
-            <CreateCommentRoot
-                post={post}
-                onCreate={(comment) => {
-                    const newCreatedRoots = createdRoots.map(root => root);
-                    newCreatedRoots.push({
-                        node: comment,
-                        children: [],
-                        id: comment.id
-                    });
-                    setCreatedRoots(newCreatedRoots);
-                }}
-            />
+            {!name ||
+                <CreateCommentRoot
+                    post={post}
+                    onCreate={(comment) => {
+                        const newCreatedRoots = createdRoots.map(root => root);
+                        newCreatedRoots.push({
+                            node: comment,
+                            children: [],
+                            id: comment.id
+                        });
+                        setCreatedRoots(newCreatedRoots);
+                    }}
+                />
+            }
             { renderRoots.length === 0 ?
                 <div className={styles.NoRoots}>
                     <MessageSquare />
@@ -67,24 +76,20 @@ const CommentRootPanel = ({ post, roots }: Props) => {
                 </div>
                 :
                 <>
-                    <Space h="xl"/>
-                    <Space h="xl"/>
-                    <Tabs className={styles.Tabs} active={sortActive}>
-                        <Tab
-                            label="Hot"
-                            className={styles.Tab}
-                            onClick={() => setSortActive(0)}
-                        />
-                        <Tab
-                            label="New"
-                            className={styles.Tab}
-                            onClick={() => setSortActive(1)}
-                        />
-                        <Tab
-                            label="Top"
-                            className={styles.Tab}
-                            onClick={() => setSortActive(2)}
-                        />
+                    {!name ||
+                        <>
+                            <Space h="xl"/>
+                            <Space h="xl"/>
+                        </>
+                    }
+                    <Tabs
+                        color="gray"
+                        className={styles.Tabs}
+                        onTabChange={setSortActive}
+                    >
+                        <Tab label="Hot"/>
+                        <Tab label="New"/>
+                        <Tab label="Top"/>
                     </Tabs>
                     {renderRoots.map((tree, i) => {
                         return (

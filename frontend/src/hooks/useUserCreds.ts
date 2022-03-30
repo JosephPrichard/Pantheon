@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { config } from "../client/config";

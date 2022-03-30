@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { ForumEntity } from "../../client/models/forum";
 import { ModeratorEntity } from "../../client/models/moderator";
 import { SubscriptionEntity } from "../../client/models/subscription";

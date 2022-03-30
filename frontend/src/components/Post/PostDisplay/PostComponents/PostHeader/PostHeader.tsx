@@ -1,11 +1,15 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Text, Space } from "@mantine/core";
 import Link from "next/link";
-import { PostEntity } from "../../../../../client/models/post";
+import { PostEntity, PostSearchEntity } from "../../../../../client/models/post";
 import styles from "./PostHeader.module.css";
 import { getDateDisplay } from "../../../../../utils/date";
 
 interface Props {
-    post: PostEntity;
+    post: PostEntity | PostSearchEntity;
     fade?: boolean;
 }
 

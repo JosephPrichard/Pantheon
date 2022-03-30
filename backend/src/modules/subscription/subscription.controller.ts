@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Body, Controller, Delete, Get, Post, Put, Query, Req } from "@nestjs/common";
 import { CreateSubDto, DeleteSubDto, UpdateSubDto } from "./subscription.dto";
 import { SubscriptionService as SubscriptionService } from "./subscription.service";

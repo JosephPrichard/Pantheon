@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { CommentEntity } from "../modules/comment/comment.entity";
 
 export interface TreeObj {

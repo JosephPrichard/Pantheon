@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 export const SESSION_EXPIRY = 86_400; //in seconds
 export const MIN_COMMENT_LEN = 25;
 export const MAX_COMMENT_LEN = 2_500;

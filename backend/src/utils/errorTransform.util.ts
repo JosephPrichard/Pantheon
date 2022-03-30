@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { ValidationError } from "@nestjs/common";
 
 type ErrorArr = { property: string, errors: string[] }[];

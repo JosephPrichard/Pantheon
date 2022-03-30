@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import React from "react";
 import useSWR from "swr";
 import { ALLTIME, SortType, TimeType } from "../../../../global";

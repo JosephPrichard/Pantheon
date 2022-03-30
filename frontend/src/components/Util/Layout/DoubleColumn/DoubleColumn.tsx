@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import React, { FunctionComponent } from "react";
 import Body from "../Body/Body";
 import Column from "../Column/Column";

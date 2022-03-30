@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Card, Space, Tab, Tabs, Title } from "@mantine/core";
 import { Image, Link, Type } from "react-feather";
 import React, { useState } from "react";

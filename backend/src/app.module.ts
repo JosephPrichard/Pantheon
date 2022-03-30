@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { BadRequestException, MiddlewareConsumer, Module, RequestMethod, ValidationPipe } from '@nestjs/common';
 import { ormConfig } from './resource/orm.resource';

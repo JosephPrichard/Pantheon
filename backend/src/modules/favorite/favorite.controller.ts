@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Body, Controller, Delete, Get, Param, Post, Req, Res } from "@nestjs/common";
 import { CreateFavoriteDto } from "./favorite.dto";
 import { FavoriteService } from "./favorite.service";

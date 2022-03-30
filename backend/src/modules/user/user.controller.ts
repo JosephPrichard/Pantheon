@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { BadRequestException, Body, Controller, Get, Logger, NotFoundException, Post, Put, Query, Req } from "@nestjs/common";
 import { Request } from 'express';
 import { UpdateUserDto, CreateUserDto, SignInDto } from "./user.dto";

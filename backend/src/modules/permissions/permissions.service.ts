@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "mikro-orm";
 import { BanEntity } from "../ban/ban.entity";

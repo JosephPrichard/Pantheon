@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 .CommentRootPanel {
     width: 100%;
     float: left;
@@ -16,5 +20,5 @@
 .Tabs {
     margin-bottom: 10px;
     width: fit-content;
-    block-size: fit-content
+    block-size: fit-content;
 }

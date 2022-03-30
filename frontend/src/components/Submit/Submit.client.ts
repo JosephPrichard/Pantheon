@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import axios from "axios";
 import { config } from "../../client/config";
 import { CreatePostEntityRes } from "../../client/models/post";

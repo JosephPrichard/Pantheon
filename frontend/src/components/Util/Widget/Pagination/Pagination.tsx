@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import Link from "next/link";
 import React from "react";
 import { ChevronLeft, ChevronRight } from "react-feather";
@@ -37,7 +41,7 @@ const Pagination = ({ page, total, url, siblings, boundaries }: Props) => {
                 <div 
                     className={styles.Page}
                     style={{
-                        backgroundColor: page === i ? ORANGE : undefined
+                        backgroundColor: page === i ? "rgb(104,106,111)" : undefined
                     }}
                 >
                     { i }

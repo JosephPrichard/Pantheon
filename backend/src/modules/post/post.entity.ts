@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { ArrayType, Entity, ManyToOne, PrimaryKey, PrimaryKeyType, Property } from "mikro-orm";
 import { UserEntity } from "../user/user.entity";
 import { MAX_LINK_LEN, MAX_POST_LEN, MAX_TITLE_LEN } from "../../global";

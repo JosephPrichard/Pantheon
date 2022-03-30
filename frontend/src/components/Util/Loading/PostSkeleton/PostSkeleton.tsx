@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Card, Skeleton } from "@mantine/core";
 import React from "react";
 import styles from "./PostSkeleton.module.css";

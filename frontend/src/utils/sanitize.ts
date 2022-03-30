@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import DOMPurify from "isomorphic-dompurify";
 
 export const options: DOMPurify.Config = {

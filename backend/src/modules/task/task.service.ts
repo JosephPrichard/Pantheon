@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Injectable } from "@nestjs/common";
 import { DynamicPool } from "node-worker-threads-pool";
 import { Func } from "node-worker-threads-pool/dist/types";

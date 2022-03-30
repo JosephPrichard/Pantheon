@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Button } from "@mantine/core";
 import React, { FunctionComponent } from "react";
 import { ORANGE } from "../../../colors";

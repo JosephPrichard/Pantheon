@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { ManyToOne, Index, PrimaryKeyType, Property, Entity } from "mikro-orm";
 import { UserEntity } from "../user/user.entity";
 

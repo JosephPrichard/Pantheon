@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import React from "react";
 import styles from "./UserPanel.module.css";
 import { Card, Text, Title } from "@mantine/core";

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import React, { useCallback, useState } from "react";
 import { submitCommentNode } from "../Comment.client";
 import { isValidError } from "../../../client/util";

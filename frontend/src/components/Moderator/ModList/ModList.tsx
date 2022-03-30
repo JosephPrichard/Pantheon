@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Space, Title } from "@mantine/core";
 import Link from "next/link";
 import useSWR from "swr";

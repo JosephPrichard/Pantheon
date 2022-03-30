@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { GetServerSideProps } from "next";
 import { SortType, TimeType, timeTypes } from "../../global";
 import { PageProps } from "./PageProps";

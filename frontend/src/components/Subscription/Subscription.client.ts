@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { SubscriptionEntity } from "../../client/models/subscription";
 import axios from "axios";
 import { config } from "../../client/config";

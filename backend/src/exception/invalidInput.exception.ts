@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 export class InvalidInputException extends Error {
     constructor(m: string) {
         super(m);

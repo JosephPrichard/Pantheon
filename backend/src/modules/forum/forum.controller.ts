@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Body, Controller, Get, NotFoundException, Param, Post, Put, Req } from "@nestjs/common";
 import { CreateForumDto, UpdateForumDto } from "./forum.dto";
 import { ForumService } from "./forum.service";

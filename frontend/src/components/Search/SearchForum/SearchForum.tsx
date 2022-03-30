@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Card, Space } from "@mantine/core";
 import styles from "./SearchForum.module.css"
 import { ForumEntity } from "../../../client/models/forum";

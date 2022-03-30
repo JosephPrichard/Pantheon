@@ -1,10 +1,23 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
 import { Kbd, TextInput } from "@mantine/core";
 import { RefObject, useRef, useState } from "react";
 import { useHotkeys } from "@mantine/hooks";
 import { useRouter } from "next/router";
 import { MagnifyingGlassIcon } from "@modulz/radix-icons";
 
-const SearchBar = () => {
+const MAX_SEARCH_TEXT_LEN = 100;
+
+interface Props {
+    href?: string;
+}
+
+const SearchBar = ({ href }: Props) => {
+    if (!href) {
+        href = ""
+    }
 
     const router = useRouter();
 
@@ -21,11 +34,6 @@ const SearchBar = () => {
             if (textRef.current) {
                 textRef.current.focus();
             }
-        }],
-        ["enter", () => {
-            if (focused) {
-                router.push(`/search?text=${value}`);
-            }
         }]
     ]);
 
@@ -35,7 +43,18 @@ const SearchBar = () => {
             placeholder="Search Pantheon"
             value={value}
             icon={<MagnifyingGlassIcon/>}
-            onChange={(event) => setValue(event.currentTarget.value)}
+            onChange={(event) => {
+                const newValue = event.currentTarget.value
+                if (newValue.length <= MAX_SEARCH_TEXT_LEN) {
+                    setValue(newValue);
+                }
+            }}
+            onKeyPress={(event) => {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    router.push(`${href}/search?text=${value}`);
+                }
+            }}
             rightSectionWidth={focused ? 60 : 90}
             rightSection={
                 <>
