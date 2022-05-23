@@ -8,7 +8,7 @@ import Dropzone from "react-dropzone";
 import { Image, X } from "react-feather";
 import { ORANGE } from "../../colors";
 import styles from "./SubmitImage.module.css";
-import { ErrorRes } from "../../../client/response";
+import { ErrorRes } from "../../../client/types";
 import { submitImages, submitPost } from "../Submit.client";
 import { ForumEntity } from "../../../client/models/forum";
 import { createdPostUrl } from "../../../utils/url";

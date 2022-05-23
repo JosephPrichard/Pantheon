@@ -1,0 +1,16 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
+.TextContent {
+    margin-top: 10px;
+    width: 80%;
+    display: inline-block;
+}
+
+.Button {
+    margin-top: 20px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    color: black;
+}

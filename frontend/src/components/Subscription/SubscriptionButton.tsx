@@ -15,7 +15,7 @@ interface Props {
 }
 
 const SubscriptionButton = ({ forumId }: Props) => {
-    const name = useUserName(false);
+    const name = useUserName(true);
     const { data } = useSWR<IsSubbedRes>(`/api/subscriptions/isSubbed?forum=${forumId}`, fetcher);
 
     const [justSubbed, setJustSubbed] = useState<boolean | undefined>();

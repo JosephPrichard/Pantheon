@@ -15,3 +15,14 @@ export function postUrl(post: PostEntity | PostSearchEntity) {
 export function createdPostUrl(post: CreatePostEntityRes) {
     return `/forum/${post.forum}/post/${post.id}/${urlify(post.title)}`;
 }
+
+export function getBaseUrl() {
+    return window.location.protocol + "//" + window.location.host;
+}
+
+export function getUrlNoHash() {
+    const url = window.location.href;
+    const hash = window.location.hash;
+    const index_of_hash = url.indexOf(hash) || url.length;
+    return url.substr(0, index_of_hash);
+}

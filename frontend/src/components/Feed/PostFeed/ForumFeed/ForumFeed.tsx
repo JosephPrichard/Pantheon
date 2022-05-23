@@ -34,6 +34,7 @@ const ForumFeed = ({ forum, sort, time, page }: Props) => {
     return (
         <PostFeed
             posts={data?.posts}
+            postVotes={data?.postVotes}
             topBar={
                 <SortOptions 
                     sort={sort} 

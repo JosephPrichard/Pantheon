@@ -11,6 +11,7 @@
 .Title {
     text-overflow: ellipsis;
     overflow: hidden;
+    margin-bottom: 5px;
 }
 
 .TitleAbout {

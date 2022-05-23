@@ -6,28 +6,25 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { config } from "../client/config";
 import { clearUser, getUser, setUser } from "../user";
+import { Id } from "../client/types";
 
 export interface User {
     id: number;
     name: string;
 }
 
-export const useUserName = (refresh?: boolean) => {
-    if (!refresh) {
-        refresh = true;
-    }
-
-    const [name, setName] = useState<string>();
+export const useUserCreds = (noRefresh?: boolean) => {
+    const [creds, setCreds] = useState<User>();
 
     useEffect(() => {
         const user = getUser();
-        setName(user?.name);
+        setCreds(user);
 
-        if (refresh) {
+        if (!noRefresh) {
             axios.get<{ user?: User }>("/api/users/whoami", config)
                 .then(r => {
                     const newUser = r.data.user;
-                    setName(newUser?.name);
+                    setCreds(newUser);
                     if (newUser) {
                         setUser(newUser);
                     } else {
@@ -36,7 +33,31 @@ export const useUserName = (refresh?: boolean) => {
 
                 });
         }
-    }, [refresh]);
+    }, [noRefresh]);
+
+    return creds;
+}
+
+export const useUserName = (noRefresh?: boolean) => {
+    const [name, setName] = useState<string>();
+
+    const creds = useUserCreds(noRefresh);
+
+    useEffect(() => {
+        setName(creds?.name);
+    }, [creds?.name]);
 
     return name;
+}
+
+export const useUserId = (noRefresh?: boolean) => {
+    const [id, setId] = useState<Id>();
+
+    const creds = useUserCreds(noRefresh);
+
+    useEffect(() => {
+        setId(creds?.id);
+    }, [creds?.id]);
+
+    return id;
 }

@@ -6,7 +6,7 @@ import { Button, Space, Textarea } from "@mantine/core";
 import React, { useCallback, useState } from "react";
 import { ORANGE } from "../../colors";
 import styles from "./SubmitLink.module.css";
-import { ErrorRes } from "../../../client/response";
+import { ErrorRes } from "../../../client/types";
 import { submitPost } from "../Submit.client";
 import { ForumEntity } from "../../../client/models/forum";
 import { createdPostUrl } from "../../../utils/url";
@@ -89,8 +89,8 @@ const SubmitPost = ({ forum, show }: Props) => {
             <Textarea
                 className={styles.Title}
                 placeholder={"Link"}
-                minRows={6}
-                maxRows={6}
+                minRows={4}
+                maxRows={4}
                 autosize
                 value={link}
                 onChange={(event) => {
@@ -103,7 +103,6 @@ const SubmitPost = ({ forum, show }: Props) => {
             <Space h={20}/>
             <div className={styles.ButtonWrapper}>
                 <Button
-                    className={styles.SubmitButton}
                     style={{
                         backgroundColor: ORANGE
                     }}

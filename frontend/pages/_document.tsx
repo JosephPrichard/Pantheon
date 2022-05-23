@@ -14,7 +14,9 @@ export default class _Document extends Document {
     render() {
         return (
             <Html lang="en">
-                <Head />
+                <Head>
+                    <meta name="next-head-count" content="4"/>
+                </Head>
                 <body>
                     <Main />
                     <NextScript />

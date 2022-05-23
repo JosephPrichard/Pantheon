@@ -4,9 +4,10 @@
 
 import { ForumEntity } from "./forum";
 import { UserEntity } from "./user";
+import { Id } from "../types";
 
 export interface PostEntity {
-    id: number;
+    id: Id;
     poster: UserEntity | null;
     forum: ForumEntity;
     title: string;

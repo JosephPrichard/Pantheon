@@ -10,7 +10,7 @@ import axios from "axios";
 import { configNoCreds } from "../../../src/client/config";
 import React from "react";
 import { UserEntity } from "../../../src/client/models/user";
-import SearchUserFeed from "../../../src/components/Feed/PostFeed/SearchFeed/SearchUser/SearchUserFeed";
+import SearchUserFeed from "../../../src/components/Feed/PostFeed/SearchFeed/SearchUserFeed/SearchUserFeed";
 
 interface Props {
     user: UserEntity;

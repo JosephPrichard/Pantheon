@@ -1,0 +1,12 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
+.SubmitButton {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    width: 100%;
+    background-color: rgb(205,205,205);
+    color: black;
+    mix-blend-mode: lighten;
+}

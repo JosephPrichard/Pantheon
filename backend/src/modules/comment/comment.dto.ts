@@ -31,7 +31,6 @@ export class CreateCommentRootDto {
 }
 
 export class UpdateCommentDto {
-    @IsOptional()
     @IsString()
     @Trim()
     @MinLength(MIN_COMMENT_LEN, { message: `Text content must be at least ${MIN_COMMENT_LEN} characters.`})

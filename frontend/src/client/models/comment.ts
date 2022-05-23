@@ -4,9 +4,10 @@
 
 import { PostEntity } from "./post";
 import { UserEntity } from "./user";
+import { Id } from "../types";
 
 export interface CommentEntity {
-    id: number;
+    id: Id;
     commenter: UserEntity | null;
     post: PostEntity;
     path: string;

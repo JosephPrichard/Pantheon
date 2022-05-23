@@ -133,12 +133,8 @@ export class PostService {
             throw new ResourcePermissionsException();
         }
 
-        if (post.content && update.content) {
+        if (post.content) {
             post.content = update.content;
-        } else if (post.images.length > 1 && update.images) {
-            post.images = update.images;
-        } else if (post.link && update.link) {
-            post.link = update.link;
         }
 
         await this.postRepository.flush();

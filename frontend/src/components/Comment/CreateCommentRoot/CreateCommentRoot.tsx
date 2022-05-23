@@ -12,7 +12,7 @@ import { WHITE } from "../../colors";
 import { submitCommentRoot } from "../Comment.client";
 import { CommentEntity } from "../../../client/models/comment";
 import { isValidError } from "../../../client/util";
-import { ErrorRes } from "../../../client/response";
+import { ErrorRes } from "../../../client/types";
 import ErrorMessage from "../../Util/ErrorMessage/ErrorMessage";
 
 interface Props {
@@ -22,7 +22,7 @@ interface Props {
 
 const CreateCommentRoot = ({ post, onCreate }: Props) => {
 
-    const name = useUserName(false);
+    const name = useUserName(true);
 
     const [content, setContent] = useState("");
 

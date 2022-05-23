@@ -4,10 +4,13 @@
 
 import { PostEntity } from "../../client/models/post";
 import { SortType, TimeType } from "../../global";
+import { PostVoteEntity } from "../../client/models/vote";
+import { Id } from "../../client/types";
 
 export interface PostsRes {
     posts: PostEntity[];
     pageCount: number;
+    postVotes: PostVoteEntity[];
 }
 
 export function buildFetchFeedUrl(url: string, sort: SortType, time: TimeType | undefined, page: number) {
@@ -31,7 +34,7 @@ export function buildFetchForumFeedUrl(forum: string, sort: SortType, time: Time
     return buildFetchFeedUrl(`/api/feed/forums/${forum}/posts?`, sort, time, page);
 }
 
-export function buildFetchUserFeedUrl(user: string, sort: SortType, time: TimeType | undefined, page: number) {
+export function buildFetchUserFeedUrl(user: Id, sort: SortType, time: TimeType | undefined, page: number) {
     return buildFetchFeedUrl(`/api/feed/users/${user}/posts?`, sort, time, page);
 }
 

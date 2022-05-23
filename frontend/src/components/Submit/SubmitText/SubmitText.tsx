@@ -7,7 +7,7 @@ import React, { useCallback, useState } from "react";
 import { ORANGE } from "../../colors";
 import TextEditor from "../../Util/Widget/TextEditor/TextEditor";
 import styles from "./SubmitText.module.css";
-import { ErrorRes } from "../../../client/response";
+import { ErrorRes } from "../../../client/types";
 import { submitPost } from "../Submit.client";
 import { isValidError } from "../../../client/util";
 import { ForumEntity } from "../../../client/models/forum";
@@ -101,7 +101,6 @@ const SubmitPost = ({ forum, show }: Props) => {
             <Space h={20}/>
             <div className={styles.ButtonWrapper}>
                 <Button
-                    className={styles.SubmitButton}
                     style={{
                         backgroundColor: ORANGE
                     }}

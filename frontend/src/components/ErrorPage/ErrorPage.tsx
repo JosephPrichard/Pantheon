@@ -17,7 +17,6 @@ const ErrorPage: FunctionComponent<Props> = ({ code, message }: Props) => (
         <div
             style={{
                 width: "50%",
-                height: "50%",
                 position: "absolute",
                 top: 0,
                 bottom: 0,
@@ -32,7 +31,8 @@ const ErrorPage: FunctionComponent<Props> = ({ code, message }: Props) => (
                     order={1}
                     style={{
                         fontSize: 200,
-                        display: "block"
+                        display: "block",
+                        marginBottom: 0
                     }}
                 >
                     { code }

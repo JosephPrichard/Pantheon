@@ -7,6 +7,10 @@
     height: 100%;
 }
 
+.FeedDesc {
+    margin-bottom: 15px;
+}
+
 .Button {
     margin-top: 8px;
     margin-bottom: 8px;
@@ -14,5 +18,5 @@
 }
 
 .Title {
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }

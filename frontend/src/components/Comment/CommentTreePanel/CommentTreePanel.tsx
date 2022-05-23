@@ -6,12 +6,21 @@ import { CommentTreeEntity } from "../../../client/models/comment";
 import styles from "./CommentTreePanel.module.css";
 import TextContent from "../../Util/Layout/Content/TextContent/TextContent";
 import { getDateDisplay } from "../../../utils/date";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import AppLink from "../../Util/Widget/AppLink/AppLink";
 import { Link2, MessageSquare } from "react-feather";
 import CreateCommentNode from "../CreateCommentNode/CreateCommentNode";
-import VotePanel from "../VotePanel/VotePanel";
+import CommentVotePanel from "../../Vote/CommentVotePanel/CommentVotePanel";
 import { Space } from "@mantine/core";
+import { CommentVoteEntity, PostVoteEntity } from "../../../client/models/vote";
+import { Id } from "../../../client/types";
+import EditableTextContent from "../../Util/Layout/Content/EditableTextContent/EditableTextContent";
+import { useUserPermissions } from "../../../hooks/useUserPermissions";
+import { editPost } from "../../Post/Post.client";
+import { editComment } from "../Comment.client";
+import CommentLinks from "../CommentDisplay/CommentLinks/CommentLinks";
+import { useUserId } from "../../../hooks/useUserCreds";
+import { useHash } from "@mantine/hooks";
 
 interface Props {
     tree: CommentTreeEntity;
@@ -19,53 +28,77 @@ interface Props {
 
 const CommentTreePanel = ({ tree }: Props) => {
 
+    const comment = tree.node;
+    const linkId = String(comment.id);
+
+    const perms = useUserPermissions(comment.commenter?.id);
+    const [hash] = useHash();
+
+    const [highlight, setHighlight] = useState<string>();
+    const [canEdit, setCanEdit] = useState(false);
+    const [content, setContent] = useState(comment.content);
+
     const [createdNodes, setCreatedNodes] = useState<CommentTreeEntity[]>([]);
 
-    const [show, setShow] = useState(true);
     const [showReply, setShowReply] = useState(false);
 
-    const comment = tree.node;
+    useEffect(
+        () => {
+            if (hash == ("#" + String(comment.id))) {
+                setHighlight("rgb(30, 31, 34)");
+            }
+        },
+        [hash]
+    );
+
+    const onEditComment = useCallback(
+        (text) => {
+            editComment({
+                comment: comment.id,
+                content: text
+            })
+                .then(() => {
+                    setContent(text);
+                    setCanEdit(false);
+                })
+                .catch(() => console.log("Fail"));
+        },
+        [comment.id]
+    );
 
     return (
-        <>
+        <div key={tree.id}>
             <Space h={20}/>
-            <div className={styles.CommentDisplay}>
-                {show ?
-                    <VotePanel comment={comment}/>
-                    :
-                    <div className={styles.VotePanelFiller}/>
-                }
+            <div
+                className={styles.CommentDisplay}
+                id={linkId}
+                style={{
+                    backgroundColor: highlight
+                }}
+            >
+                <CommentVotePanel comment={comment}/>
                 <div className={styles.CommentContent}>
                     { comment.commenter ? comment.commenter.name : "[deleted]" }
                     <span className={styles.Date}>
-                        {" • "}
-                        { getDateDisplay(new Date(comment.createdAt)) }
+                        { " • " + getDateDisplay(new Date(comment.createdAt)) }
                     </span>
-                    <div
-                        style={{
-                            display: show ? "block" : "none"
-                        }}
-                    >
-                        <TextContent text={comment.content} />
-                        <div className={styles.CommentTreeLinks}>
-                            <AppLink
-                                icon={<MessageSquare size={14}/>}
-                                text={showReply ? "Cancel" : "Reply"}
-                                onClick={() => setShowReply(!showReply)}
-                            />
-                            <AppLink
-                                icon={<Link2 size={14}/>}
-                                text="Share"
-                            />
-                        </div>
+                    <div className={styles.TextWrapper}>
+                        <EditableTextContent
+                            isEditing={canEdit && perms >= 2}
+                            text={content}
+                            onCancel={() => setCanEdit(false)}
+                            onSave={(text) => onEditComment(text)}
+                        />
                     </div>
+                    <CommentLinks
+                        linkId={linkId}
+                        toggleReply={showReply}
+                        setShowReply={setShowReply}
+                        onClickEdit={perms >= 2 ? () => setCanEdit(!canEdit) : undefined}
+                    />
                 </div>
             </div>
-            <div
-                style={{
-                    display: show ? "block" : "none"
-                }}
-            >
+            <div>
                 {!showReply ||
                     <div className={styles.CommentTreeChild}>
                         <CreateCommentNode
@@ -89,14 +122,14 @@ const CommentTreePanel = ({ tree }: Props) => {
                 )
                     .map((tree, i) => {
                         return (
-                            <div className={styles.CommentTreeChild}>
-                                <CommentTreePanel key={i} tree={tree}/>
+                            <div key={i} className={styles.CommentTreeChild}>
+                                <CommentTreePanel tree={tree}/>
                             </div>
                         );
                     })
                 }
             </div>
-        </>
+        </div>
     );
 }
 

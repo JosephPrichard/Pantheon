@@ -26,7 +26,7 @@ const TextEditor = ({ value, onChange, error }: Props) => {
                     root: {
                         borderColor: error ? "#fa5252" : undefined,
                         minWidth: 0,
-                        minHeight: 180
+                        // minHeight: 180
                     }
                 }}
                 className={`${styles.Rte} ${error ? styles.RedBorder : ""}`}

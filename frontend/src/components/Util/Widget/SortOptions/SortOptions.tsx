@@ -2,11 +2,10 @@
  * Copyright (c) Joseph Prichard 2022.
  */
 
-import { Card, Popover, Space, Tab, Tabs } from "@mantine/core";
+import { Card, Popover } from "@mantine/core";
 import Link from "next/link";
 import React, { useState } from "react";
 import { SortType, TimeType } from "../../../../global";
-import SortOption from "./SortOption/SortOption";
 import styles from "./SortOptions.module.css";
 
 interface Props {
@@ -42,22 +41,37 @@ const SortOptions = ({ sort, time, buildPageURL }: Props) => {
     return (
         <Card className={styles.Sort}>
             <Link href={buildPageURL("hot", time)}>
-                <SortOption 
-                    text="Hot" 
-                    selected={sort === "hot"} 
-                />
+                <div
+                    className={styles.SortOption}
+                    onClick={() => {}}
+                    style={{
+                        borderColor: sort == "hot" ? "rgb(194, 195, 197)" : undefined
+                    }}
+                >
+                    Hot
+                </div>
             </Link>
             <Link href={buildPageURL("new", time)}>
-                <SortOption 
-                    text="New" 
-                    selected={sort === "new"} 
-                />
+                <div
+                    className={styles.SortOption}
+                    onClick={() => {}}
+                    style={{
+                        borderColor: sort == "new" ? "rgb(194, 195, 197)" : undefined
+                    }}
+                >
+                    New
+                </div>
             </Link>
             <Link href={buildPageURL("top", time)}>
-                <SortOption 
-                    text="Top" 
-                    selected={sort === "top"} 
-                />
+                <div
+                    className={styles.SortOption}
+                    onClick={() => {}}
+                    style={{
+                        borderColor: sort == "top" ? "rgb(194, 195, 197)" : undefined
+                    }}
+                >
+                    Top
+                </div>
             </Link>
             <span className={styles.From} >
                 from

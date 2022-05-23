@@ -17,7 +17,7 @@ const FeedPanel: FunctionComponent<Props> = ({ title, description, children }: P
         <Title order={3} className={styles.Title}>
             { title }
         </Title>
-        <div>
+        <div className={styles.FeedDesc}>
             { description }
         </div>
         <Space h={20}/>

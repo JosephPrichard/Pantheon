@@ -6,6 +6,9 @@
     display: flex;
     flex-direction: row;
     column-gap: 10px;
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin-right: 10px;
 }
 
 .CommentContent {
@@ -23,10 +26,6 @@
 
 .VotePanelFiller {
     width: 22px;
-}
-
-.CommentTreeLinks {
-    color: rgb(129,131,132);
 }
 
 .Date {

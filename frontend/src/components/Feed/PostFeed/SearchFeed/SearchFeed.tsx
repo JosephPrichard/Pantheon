@@ -22,6 +22,7 @@ const SearchFeed = ({ text, page, children }: Props) => {
     return (
         <PostFeed
             posts={data?.posts}
+            postVotes={data?.postVotes}
             topBar={
                 <SearchTopBar text={text}/>
             }

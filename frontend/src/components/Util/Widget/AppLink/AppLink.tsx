@@ -17,7 +17,6 @@ interface Props {
 const AppLink: FunctionComponent<Props> = ({ icon, text, href, onClick, spacing }: Props) => (
     <div
         className={styles.IconWrapper}
-        onClick={onClick}
         style={{
             marginRight: spacing
         }}
@@ -28,7 +27,7 @@ const AppLink: FunctionComponent<Props> = ({ icon, text, href, onClick, spacing 
                 <span className={styles.AlignedText}>{text}</span>
             </Link>
             :
-            <div>
+            <div onClick={onClick}>
                 <span className={styles.AlignedText}>{text}</span>
             </div>
         }

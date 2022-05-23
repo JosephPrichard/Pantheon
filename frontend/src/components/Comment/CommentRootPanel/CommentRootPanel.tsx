@@ -12,21 +12,27 @@ import { Space, Tabs, Tab } from "@mantine/core";
 import { MessageSquare } from "react-feather";
 import CommentTreePanel from "../CommentTreePanel/CommentTreePanel";
 import { useUserName } from "../../../hooks/useUserCreds";
+import { CommentVoteEntity, PostVoteEntity } from "../../../client/models/vote";
+import { Id } from "../../../client/types";
+import { CommentVoteContext, createCommentVoteMap } from "../../Vote/Vote.context";
 
 interface Props {
     post: PostEntity;
     roots: CommentTreeEntity[];
+    commentVotes?: CommentVoteEntity[];
 }
 
 const sortTypes = ["hot", "new", "top"];
 
-const CommentRootPanel = ({ post, roots }: Props) => {
+const CommentRootPanel = ({ post, roots, commentVotes }: Props) => {
 
-    const name = useUserName(false);
+    const name = useUserName(true);
 
     const [createdRoots, setCreatedRoots] = useState<CommentTreeEntity[]>([]);
 
     const [sortActive, setSortActive] = useState(0);
+
+    const map = createCommentVoteMap(commentVotes);
 
     const sortRoots = useCallback(
         () => {
@@ -52,54 +58,57 @@ const CommentRootPanel = ({ post, roots }: Props) => {
     const renderRoots = createdRoots.concat(sortRoots());
 
     return (
-        <div className={styles.CommentRootPanel}>
-            {!name ||
-                <CreateCommentRoot
-                    post={post}
-                    onCreate={(comment) => {
-                        const newCreatedRoots = createdRoots.map(root => root);
-                        newCreatedRoots.push({
-                            node: comment,
-                            children: [],
-                            id: comment.id
-                        });
-                        setCreatedRoots(newCreatedRoots);
-                    }}
-                />
-            }
-            { renderRoots.length === 0 ?
-                <div className={styles.NoRoots}>
-                    <MessageSquare />
-                    <div>
-                        No Comments Yet
+        <CommentVoteContext.Provider value={{ votes: map }}>
+            <div className={styles.CommentRootPanel}>
+                {!name ||
+                    <CreateCommentRoot
+                        post={post}
+                        onCreate={(comment) => {
+                            const newCreatedRoots = createdRoots.map(root => root);
+                            newCreatedRoots.push({
+                                node: comment,
+                                children: [],
+                                id: comment.id
+                            });
+                            setCreatedRoots(newCreatedRoots);
+                        }}
+                    />
+                }
+                { renderRoots.length === 0 ?
+                    <div className={styles.NoRoots}>
+                        <MessageSquare />
+                        <div>
+                            No Comments Yet
+                        </div>
                     </div>
-                </div>
-                :
-                <>
-                    {!name ||
-                        <>
-                            <Space h="xl"/>
-                            <Space h="xl"/>
-                        </>
-                    }
-                    <Tabs
-                        color="gray"
-                        className={styles.Tabs}
-                        onTabChange={setSortActive}
-                    >
-                        <Tab label="Hot"/>
-                        <Tab label="New"/>
-                        <Tab label="Top"/>
-                    </Tabs>
-                    {renderRoots.map((tree, i) => {
-                        return (
-                            <CommentTreePanel key={i} tree={tree}/>
-                        );
-                    })}
-                    <Space h="xl"/>
-                </>
-            }
-        </div>
+                    :
+                    <>
+                        {!name ||
+                            <>
+                                <Space h="xl"/>
+                                <Space h="xl"/>
+                            </>
+                        }
+                        <Tabs
+                            color="gray"
+                            className={styles.Tabs}
+                            onTabChange={setSortActive}
+                        >
+                            <Tab label="Hot"/>
+                            <Tab label="New"/>
+                            <Tab label="Top"/>
+                        </Tabs>
+                        <Space h="sm"/>
+                        {renderRoots.map((tree, i) => {
+                            return (
+                                <CommentTreePanel key={i} tree={tree}/>
+                            );
+                        })}
+                        <Space h="xl"/>
+                    </>
+                }
+            </div>
+        </CommentVoteContext.Provider>
     );
 }
 

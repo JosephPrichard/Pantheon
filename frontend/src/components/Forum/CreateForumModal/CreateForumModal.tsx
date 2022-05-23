@@ -8,7 +8,7 @@ import styles from "./CreateForumModal.module.css"
 import { ORANGE } from "../../colors";
 import { createForum } from "../Forum.client";
 import { isValidError } from "../../../client/util";
-import { ErrorRes } from "../../../client/response";
+import { ErrorRes } from "../../../client/types";
 import ErrorMessage from "../../Util/ErrorMessage/ErrorMessage";
 import { useRouter } from "next/router";
 

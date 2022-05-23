@@ -5,7 +5,7 @@
 import { Card } from "@mantine/core";
 import React, { useState } from "react";
 import { PostEntity, PostSearchEntity } from "../../../../client/models/post";
-import VotePanel from "../PostComponents/VotePanel/VotePanel";
+import PostVotePanel from "../../../Vote/PostVotePanel/PostVotePanel";
 import styles from "./PostPreview.module.css";
 import { PUBLIC_CLOUD_URL } from "../../../../global";
 import PostTitle from "../PostComponents/PostTitle/PostTitle";
@@ -68,7 +68,7 @@ const PostPanel = ({ post, lighter }: Props) => {
             }}
         >
             <div className={styles.VoteWrapper}>
-                <VotePanel post={post}/>
+                <PostVotePanel post={post}/>
             </div>
             { icon }
             <div className={styles.Content}>

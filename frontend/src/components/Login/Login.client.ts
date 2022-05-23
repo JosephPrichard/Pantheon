@@ -3,7 +3,7 @@
  */
 
 import axios from "axios";
-import { IdRes } from "../../client/response";
+import { IdRes } from "../../client/types";
 import { config } from "../../client/config";
 
 export interface SignInBody {

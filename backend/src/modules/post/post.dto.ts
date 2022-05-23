@@ -37,24 +37,11 @@ export class CreatePostDto {
 }
 
 export class UpdatePostDto {
-    @IsOptional()
     @IsString()
     @Trim()
     @MinLength(MIN_POST_LEN, { message: `Text content must be at least ${MIN_POST_LEN} characters.`})
     @MaxLength(MAX_POST_LEN, { message: `Text content cannot exceed ${MAX_POST_LEN} characters.`})
-    content?: string;
-    
-    @IsOptional()
-    @IsString()
-    @Trim()
-    @IsUrl()
-    @MaxLength(MAX_LINK_LEN, { message: `Link should be less than ${MAX_LINK_LEN} characters.`})
-    link?: string;
-
-    @IsOptional()
-    @ArrayNotEmpty({ message: "Need to upload at least 1 image." })
-    @IsString({ each: true })
-    images?: string[];
+    content!: string;
 }
 
 export interface PostFilter {

@@ -34,6 +34,7 @@ const PopularFeed = ({ sort, time, page, routeToPopular }: Props) => {
     return (
         <PostFeed
             posts={data?.posts}
+            postVotes={data?.postVotes}
             topBar={
                 <SortOptions 
                     sort={sort} 

@@ -19,7 +19,7 @@ import { SubscriptionModule } from './modules/subscription/subscription.module';
 import { FeedModule } from './modules/feed/feed.module';
 import { APP_PIPE } from '@nestjs/core';
 import { SearchModule } from './modules/search/search.module';
-import { getErrorArr, getErrorMsg } from './utils/errorTransform.util';
+import { getErrorMsg } from './utils/errparse.util';
 import session from "express-session";
 import connectPgSimple from 'connect-pg-simple';
 

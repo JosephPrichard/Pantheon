@@ -29,7 +29,6 @@
     "express-session": "^1.17.2",
     "isomorphic-dompurify": "^0.17.0",
     "mikro-orm": "^4.5.9",
-    "node-worker-threads-pool": "^1.5.1",
     "rimraf": "^3.0.2",
     "rxjs": "^7.4.0",
     "uuid": "^8.3.2"

@@ -6,3 +6,9 @@
     background-color: rgb(26, 27, 30);
     height: 100%;
 }
+
+.Content {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: justify;
+}

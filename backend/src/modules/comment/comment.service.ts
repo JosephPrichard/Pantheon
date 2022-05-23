@@ -9,15 +9,14 @@ import { QueryOrder } from "mikro-orm";
 import { CommentNotFoundException, PostNotFoundException } from "src/exception/entityNotFound.exception";
 import { BannedException, ResourcePermissionsException } from "src/exception/permissions.exception";
 import { AppLogger } from "src/loggers/applogger";
-import { appendNode, serializePath } from "src/utils/nodeSerializer.util";
 import { countPages, pageOffset, PER_PAGE } from "src/utils/paginator.util";
 import { PermissionsService } from "../permissions/permissions.service";
 import { PostService } from "../post/post.service";
-import { TaskService } from "../task/task.service";
 import { User } from "../user/user.dto";
 import { UserService } from "../user/user.service";
 import { CommentFilter, CommentTreeFilter, CreateCommentNodeDto, CreateCommentRootDto, UpdateCommentDto } from "./comment.dto";
 import { CommentEntity } from "./comment.entity";
+import { appendNode, deserializeTree, serializePath } from "./comment.serializer";
 
 @Injectable()
 export class CommentService {
@@ -32,9 +31,7 @@ export class CommentService {
 
         private readonly userService: UserService,
 
-        private readonly postService: PostService,
-
-        private readonly taskService: TaskService
+        private readonly postService: PostService
     ) {}
 
     async createRoot(root: CreateCommentRootDto, commenter: User) {
@@ -122,7 +119,8 @@ export class CommentService {
 
     async findTreesByFilter(filter: CommentTreeFilter) {
         const comments = await this.commentRepository.find({ post: filter.post }, ["commenter"]);
-        return await this.taskService.executeDeserializeTreeTask(comments);
+        return await deserializeTree(comments);
+        // return deserializeTree1(comments);
     }
 
     async update(update: UpdateCommentDto, id: number, user: User) {

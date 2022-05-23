@@ -3,17 +3,18 @@
  */
 
 import { useClipboard } from "@mantine/hooks";
-import { MessageSquare, Link2, Heart } from "react-feather";
+import { MessageSquare, Link2, Heart, Edit } from "react-feather";
 import { PostEntity, PostSearchEntity } from "../../../../../client/models/post";
-import { postUrl } from "../../../../../utils/url";
+import { getBaseUrl, postUrl } from "../../../../../utils/url";
 import AppLink from "../../../../Util/Widget/AppLink/AppLink";
 
 interface Props {
     post: PostEntity | PostSearchEntity;
     fade?: boolean;
+    onClickEdit?: () => void;
 }
 
-const PostLinks = ({ post, fade }: Props) => {
+const PostLinks = ({ post, fade, onClickEdit }: Props) => {
 
     const clipboard = useClipboard({ timeout: 500 });
 
@@ -34,17 +35,24 @@ const PostLinks = ({ post, fade }: Props) => {
                 text={clipboard.copied ? 'Copied' : 'Share'}
                 onClick={e => {
                     e.stopPropagation();
-                    clipboard.copy(window.location.protocol + "//" + window.location.host + postUrl(post));
+                    clipboard.copy(getBaseUrl() + postUrl(post));
                 }}
                 spacing="5%"
             />
             <AppLink
                 icon={<Heart size={14}/>} 
-                text="Favorite" 
-                href="/"
+                text="Favorite"
                 onClick={e => e.stopPropagation()}
                 spacing="5%"
             />
+            {!onClickEdit ||
+                <AppLink
+                    icon={<Edit size={14}/>}
+                    text="Edit"
+                    onClick={onClickEdit}
+                    spacing="5%"
+                />
+            }
         </div>
     );
 }

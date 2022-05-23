@@ -115,7 +115,7 @@ export class VoteService {
     }
 
     async findPostVote(postId: number, voter: User) {
-        return await this.postVoteRepository.find({ voter: voter.id, post: postId });
+        return await this.postVoteRepository.findOne({ voter: voter.id, post: postId });
     }
 
     async findPostVotes(posts: PostEntity[], voter: User) {

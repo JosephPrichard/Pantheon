@@ -13,13 +13,11 @@ interface Props {
 }
 
 const PostTitle = ({ post }: Props) => (
-    <>
-        <Link href={`/forum/${post.forum.id}/post/${post.id}/${urlify(post.title)}`}>
-            <Title order={4} className={styles.Title}>
-                { post.title }
-            </Title>
-        </Link>
-    </>
+    <Link href={`/forum/${post.forum.id}/post/${post.id}/${urlify(post.title)}`}>
+        <Title order={4} className={styles.Title}>
+            { post.title }
+        </Title>
+    </Link>
 );
 
 export default PostTitle;

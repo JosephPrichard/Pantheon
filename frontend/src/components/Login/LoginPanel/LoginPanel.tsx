@@ -4,7 +4,7 @@
 
 import { InputWrapper, PasswordInput, Text, TextInput, Title } from "@mantine/core";
 import React, { useCallback, useState } from "react";
-import { ErrorRes } from "../../../client/response";
+import { ErrorRes } from "../../../client/types";
 import FormButton from "../../Util/Widget/FormButton/FormButton";
 import styles from "./LoginPanel.module.css";
 import { signIn } from "../Login.client";

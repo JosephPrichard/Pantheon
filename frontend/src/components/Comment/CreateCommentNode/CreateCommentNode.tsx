@@ -5,7 +5,7 @@
 import React, { useCallback, useState } from "react";
 import { submitCommentNode } from "../Comment.client";
 import { isValidError } from "../../../client/util";
-import { ErrorRes } from "../../../client/response";
+import { ErrorRes } from "../../../client/types";
 import styles from "./CreateCommentNode.module.css";
 import TextEditor from "../../Util/Widget/TextEditor/TextEditor";
 import { Button, Space } from "@mantine/core";
