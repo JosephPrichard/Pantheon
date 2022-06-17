@@ -2,31 +2,44 @@
  * Copyright (c) Joseph Prichard 2022.
  */
 
-import { Title } from "@mantine/core";
+import { Space, Title } from "@mantine/core";
 import useSWR from "swr";
 import { fetcher } from "../../../utils/fetcher";
-import { TopForumsRes } from "../Forum.client";
-import ForumLink from "../ForumLink/ForumLink";
+import { buildFetchForumsUrl, ForumsRes } from "../../../client/api/forum";
 import styles from "./ForumList.module.css";
+import DoubleColumn from "../../Util/Layout/DoubleColumn/DoubleColumn";
+import ForumLargeLink from "../ForumLargeLink/ForumLargeLink";
 
-const ForumList = () => {
-    const { data } = useSWR<TopForumsRes>("/api/forums/top", fetcher);
+interface Props {
+    limit?: number;
+}
+
+const ForumList = ({ limit }: Props) => {
+    const { data } = useSWR<ForumsRes>(buildFetchForumsUrl(limit), fetcher);
 
     return (
-        <>
-            <Title order={4}>
-                Forums
-            </Title>
-            <div className={styles.Forums}>
-                {!data?.forums || 
-                    data.forums.sort((a, b) => a.id.localeCompare(b.id)).map((forum, i) => {
-                        return (
-                            <ForumLink key={i} forum={forum}/>
-                        );
-                    })
-                }
-            </div>
-        </>
+        <DoubleColumn
+            column1={
+                <div className={styles.ForumsWrapper}>
+                    <Title order={2}>
+                        Browse Forums
+                    </Title>
+                    <Space h={10}/>
+                    <div className={styles.Forums}>
+                        {!data?.forums ||
+                            data.forums.map((forum, i) => {
+                                return (
+                                    <ForumLargeLink key={i} forum={forum}/>
+                                )
+                            })
+                        }
+                    </div>
+                </div>
+            }
+            column1Width="100%"
+            column2={<></>}
+            column2Width="0%"
+        />
     );
 }
 

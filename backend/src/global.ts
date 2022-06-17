@@ -16,9 +16,10 @@ export const MAX_PATH_LEN = 10_000;
 export const MAX_LINK_LEN = 500;
 export const MAX_FORUM_NAME_LEN = 25;
 export const MAX_FORUM_DESC_LEN = 500;
-export const MAX_PAGE = 100;
 export const MAX_ST_LEN = 100;
+export const MIN_ADMIN_KARMA = 0;
+export const PER_PAGE = 10;
+export const PER_SEARCH_PAGE = 50;
 
-export type SortType = "top" | "new" | "hot";
 export type TimeType = "day" | "week" | "month" | "year" | "alltime";
 export const ALLTIME: TimeType = "alltime";

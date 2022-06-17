@@ -5,13 +5,13 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { AbstractSqlConnection, Knex } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
-import { EntityRepository, MikroORM, QueryOrder } from "mikro-orm";
+import { EntityRepository, MikroORM } from "mikro-orm";
 import { AppLogger } from "src/loggers/applogger";
-import { countPages, pageOffset, PER_PAGE } from "src/utils/paginator.util";
 import { sql } from "src/utils/sql.util";
 import { ForumEntity } from "../forum/forum.entity";
 import { UserEntity } from "../user/user.entity";
 import { PostSearchRow, SearchedPost, SearchPostFilter } from "./search.dto";
+import { PER_SEARCH_PAGE } from "../../global";
 
 @Injectable()
 export class SearchService {
@@ -67,7 +67,7 @@ export class SearchService {
                 p.created_at as "createdAt",
                 COUNT(*) OVER() as "count",
                 (SELECT u.name FROM users u WHERE u.id = p.poster_id) as "posterName",
-                ts_rank_cd(content_document, query) + ts_rank_cd(title_document, query) AS "searchRank"
+                (ts_rank_cd(content_document, query) + ts_rank_cd(title_document, query)) AS "searchRank"
             `))
             .from(this.knex.raw(sql`
                 posts p, 
@@ -89,17 +89,11 @@ export class SearchService {
                         p.poster_id = ?
                     `, [search.poster]);
                 }
-                if (search.date) {
-                    builder.andWhereRaw(sql`
-                        p.created_at > ?
-                    `, [search.date.toISOString()])
-                }
             })
             .orderByRaw(sql`
                 "searchRank" DESC
             `)
-            .limit(PER_PAGE)
-            .offset(pageOffset(search.page));
+            .limit(PER_SEARCH_PAGE);
 
         const mappedPosts: SearchedPost[] = [];
         for (const result of results) {
@@ -125,8 +119,7 @@ export class SearchService {
         }
 
         return { 
-            posts: mappedPosts,
-            pageCount: results[0] ? countPages(results[0].count) : 0
+            posts: mappedPosts
         } ;
     }
 

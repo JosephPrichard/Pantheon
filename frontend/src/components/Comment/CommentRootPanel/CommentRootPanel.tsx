@@ -5,15 +5,13 @@
 import { CommentTreeEntity } from "../../../client/models/comment";
 import styles from "./CommentRootPanel.module.css"
 import React, { useCallback, useState } from "react";
-import { calcCommentHotRank } from "../../../utils/hotrank";
 import CreateCommentRoot from "../CreateCommentRoot/CreateCommentRoot";
 import { PostEntity } from "../../../client/models/post";
 import { Space, Tabs, Tab } from "@mantine/core";
 import { MessageSquare } from "react-feather";
 import CommentTreePanel from "../CommentTreePanel/CommentTreePanel";
 import { useUserName } from "../../../hooks/useUserCreds";
-import { CommentVoteEntity, PostVoteEntity } from "../../../client/models/vote";
-import { Id } from "../../../client/types";
+import { CommentVoteEntity } from "../../../client/models/vote";
 import { CommentVoteContext, createCommentVoteMap } from "../../Vote/Vote.context";
 
 interface Props {
@@ -22,7 +20,7 @@ interface Props {
     commentVotes?: CommentVoteEntity[];
 }
 
-const sortTypes = ["hot", "new", "top"];
+const sortTypes = ["new", "top"];
 
 const CommentRootPanel = ({ post, roots, commentVotes }: Props) => {
 
@@ -34,28 +32,18 @@ const CommentRootPanel = ({ post, roots, commentVotes }: Props) => {
 
     const map = createCommentVoteMap(commentVotes);
 
-    const sortRoots = useCallback(
-        () => {
-            const sort = sortTypes[sortActive];
-            if (sort === "hot") {
-                return roots.sort( (a: CommentTreeEntity, b: CommentTreeEntity) => {
-                    return calcCommentHotRank(b.node.votes, new Date(b.node.createdAt))
-                        - calcCommentHotRank(a.node.votes, new Date(a.node.createdAt));
-                });
-            } else if (sort === "new") {
-                return roots.sort((a, b) => {
-                    return new Date(b.node.createdAt).getTime() - new Date(a.node.createdAt).getTime();
-                });
-            } else { // top
-                return roots.sort((a, b) => {
-                    return b.node.votes - a.node.votes;
-                });
-            }
-        },
-        [sortActive, roots]
-    );
-
-    const renderRoots = createdRoots.concat(sortRoots());
+    const sort = sortTypes[sortActive];
+    if (sort === "new") {
+        // sort by new
+        roots = roots.sort((a, b) => {
+            return new Date(b.node.createdAt).getTime() - new Date(a.node.createdAt).getTime();
+        });
+    } else {
+        // sort by top
+        roots = roots.sort((a, b) => {
+            return b.node.votes - a.node.votes;
+        });
+    }
 
     return (
         <CommentVoteContext.Provider value={{ votes: map }}>
@@ -74,7 +62,7 @@ const CommentRootPanel = ({ post, roots, commentVotes }: Props) => {
                         }}
                     />
                 }
-                { renderRoots.length === 0 ?
+                { roots.length + createdRoots.length === 0 ?
                     <div className={styles.NoRoots}>
                         <MessageSquare />
                         <div>
@@ -94,12 +82,16 @@ const CommentRootPanel = ({ post, roots, commentVotes }: Props) => {
                             className={styles.Tabs}
                             onTabChange={setSortActive}
                         >
-                            <Tab label="Hot"/>
-                            <Tab label="New"/>
-                            <Tab label="Top"/>
+                            <Tab label="Newest"/>
+                            <Tab label="Top Rated"/>
                         </Tabs>
                         <Space h="sm"/>
-                        {renderRoots.map((tree, i) => {
+                        {createdRoots.map((tree, i) => {
+                            return (
+                                <CommentTreePanel key={i} tree={tree}/>
+                            );
+                        })}
+                        {roots.map((tree, i) => {
                             return (
                                 <CommentTreePanel key={i} tree={tree}/>
                             );

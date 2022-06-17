@@ -5,18 +5,16 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
-import { QueryOrder } from "mikro-orm";
 import { CommentNotFoundException, PostNotFoundException } from "src/exception/entityNotFound.exception";
-import { BannedException, ResourcePermissionsException } from "src/exception/permissions.exception";
+import { ResourcePermissionsException } from "src/exception/permissions.exception";
 import { AppLogger } from "src/loggers/applogger";
-import { countPages, pageOffset, PER_PAGE } from "src/utils/paginator.util";
-import { PermissionsService } from "../permissions/permissions.service";
 import { PostService } from "../post/post.service";
 import { User } from "../user/user.dto";
 import { UserService } from "../user/user.service";
-import { CommentFilter, CommentTreeFilter, CreateCommentNodeDto, CreateCommentRootDto, UpdateCommentDto } from "./comment.dto";
+import { CommentTreeDto, CreateCommentNodeDto, CreateCommentRootDto, UpdateCommentDto } from "./comment.dto";
 import { CommentEntity } from "./comment.entity";
 import { appendNode, deserializeTree, serializePath } from "./comment.serializer";
+import { NotificationService } from "../notifications/notification.service";
 
 @Injectable()
 export class CommentService {
@@ -27,22 +25,17 @@ export class CommentService {
         @InjectRepository(CommentEntity) 
         private readonly commentRepository: EntityRepository<CommentEntity>,
 
-        private readonly permsService: PermissionsService,
-
         private readonly userService: UserService,
 
-        private readonly postService: PostService
+        private readonly postService: PostService,
+
+        private readonly notificationService: NotificationService
     ) {}
 
     async createRoot(root: CreateCommentRootDto, commenter: User) {
         const post = await this.postService.findById(root.post);
         if (!post) {
             throw new PostNotFoundException();
-        }
-
-        const hasPerms = await this.permsService.isBanned(post.forum, commenter);
-        if (!hasPerms) {
-            throw new BannedException();
         }
 
         const commentEntity = new CommentEntity();
@@ -52,6 +45,10 @@ export class CommentService {
         post.comments += 1;
 
         await this.commentRepository.persistAndFlush(commentEntity);
+
+        if (commentEntity.post.poster && commentEntity.post.poster.id !== commenter.id) {
+            await this.notificationService.create(commentEntity, commentEntity.post.poster);
+        }
 
         this.logger.log(`User ${commenter.id} created comment root ${commentEntity.id}`);
         return commentEntity;
@@ -63,11 +60,6 @@ export class CommentService {
             throw new CommentNotFoundException();
         }
 
-        const hasPerms = await this.permsService.isBanned(parent.post.forum, commenter);
-        if (!hasPerms) {
-            throw new BannedException();
-        }
-
         const commentEntity = new CommentEntity();
 
         commentEntity.content = node.content;
@@ -77,6 +69,10 @@ export class CommentService {
         parent.post.comments += 1;
 
         await this.commentRepository.persistAndFlush(commentEntity);
+
+        if (parent.commenter && parent.commenter.id !== commenter.id) {
+            await this.notificationService.create(commentEntity, parent.commenter);
+        }
 
         this.logger.log(`User ${commenter.id} created a comment node ${commentEntity.id}`);
         return commentEntity;
@@ -95,32 +91,9 @@ export class CommentService {
         return await this.commentRepository.find({ path: { $like: compare } }, ["commenter"]);
     }
 
-    async findByFilter(filter: CommentFilter) {
-        const where: any = {};
-        if (filter.commenter) {
-            where.commenter = filter.commenter;
-        }
-
-        const [comments, count] = await this.commentRepository.findAndCount(
-            where,
-            ["commenter"],
-            filter.sort === "top" ?
-                { votes: QueryOrder.DESC } :
-                { createdAt: QueryOrder.DESC },
-            PER_PAGE,
-            pageOffset(filter.page)
-        );
-
-        return {
-            comments,
-            pageCount: countPages(count)
-        };
-    }
-
-    async findTreesByFilter(filter: CommentTreeFilter) {
+    async findTreesByFilter(filter: CommentTreeDto) {
         const comments = await this.commentRepository.find({ post: filter.post }, ["commenter"]);
         return await deserializeTree(comments);
-        // return deserializeTree1(comments);
     }
 
     async update(update: UpdateCommentDto, id: number, user: User) {
@@ -152,8 +125,7 @@ export class CommentService {
         }
 
         const userMatches = comment.commenter?.id === user.id;
-        const hasModPerms = await this.permsService.hasModPerms(comment.post.forum, user);
-        if (!userMatches && !hasModPerms) {
+        if (!userMatches) {
             throw new ResourcePermissionsException();
         }
 

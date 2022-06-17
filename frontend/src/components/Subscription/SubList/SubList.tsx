@@ -5,7 +5,7 @@
 import { Title } from "@mantine/core";
 import useSWR from "swr";
 import { fetcher } from "../../../utils/fetcher";
-import { SubsRes } from "../Subscription.client";
+import { SubsRes } from "../../../client/api/subscription";
 import ForumLink from "../../Forum/ForumLink/ForumLink";
 import styles from "./SubList.module.css";
 

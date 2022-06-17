@@ -1,0 +1,38 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
+.Button {
+    margin: 5px;
+    padding: 8px 16px;
+    text-align: center;
+    display: inline-block;
+    vertical-align: middle;
+    cursor: pointer;
+    border-radius: 4px;
+    color: rgb(193, 194, 197);
+    background-color: rgb(28,29,32);
+}
+
+.Button:hover {
+    background-color: rgb(38,39,42);
+}
+
+.Ellipses {
+    font-size: 20px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.Pagination {
+    display: flex;
+    margin-top: 30px;
+    margin-bottom: 40px;
+    float: left;
+    width: 100%;
+}
+
+.PaginationInner {
+    margin-left: auto;
+    margin-right: auto;
+}

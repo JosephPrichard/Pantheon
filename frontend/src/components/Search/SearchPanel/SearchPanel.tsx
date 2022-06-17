@@ -5,11 +5,16 @@
 import styles from "./SearchPanel.module.css";
 import { Card, Title } from "@mantine/core";
 
-const SearchPanel = () => (
+interface Props {
+    text: string;
+    resultCount: number;
+}
+
+const SearchPanel = ({ text, resultCount }: Props) => (
     <Card className={styles.SearchPanel}>
         <div>
             <Title order={3}>
-                Search
+                Search: { text }
             </Title>
             <div className={styles.Content}>
                 Showing results from a search of the entire website.

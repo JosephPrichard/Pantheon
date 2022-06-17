@@ -7,7 +7,7 @@ import React, { useCallback, useState } from "react";
 import { ORANGE } from "../../colors";
 import styles from "./SubmitLink.module.css";
 import { ErrorRes } from "../../../client/types";
-import { submitPost } from "../Submit.client";
+import { submitPost } from "../../../client/api/submit";
 import { ForumEntity } from "../../../client/models/forum";
 import { createdPostUrl } from "../../../utils/url";
 import { isValidError } from "../../../client/util";

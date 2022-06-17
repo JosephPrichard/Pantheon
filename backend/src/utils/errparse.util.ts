@@ -7,11 +7,17 @@ import { ValidationError } from "@nestjs/common";
 export function getErrorMsg(errs: ValidationError[]) {
     const err = errs[0];
 
-    if (!err?.constraints || !err.constraints[0]) {
+    if (!err?.constraints) {
         return "";
     }
 
-    const key = Object.keys(err.constraints[0])[0];
+    const keys = Object.keys(err.constraints);
+
+    if (keys.length < 0) {
+        return "";
+    }
+
+    const key = keys[0];
     return err.constraints[key];
 }
 

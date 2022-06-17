@@ -6,11 +6,11 @@ import { GetServerSideProps, NextPage } from "next";
 import { PageProps } from "../../../src/utils/next/PageProps";
 import Banner from "../../../src/components/Banner/Banner";
 import ErrorPage from "../../../src/components/ErrorPage/ErrorPage";
-import SearchForumFeed from "../../../src/components/Feed/PostFeed/SearchFeed/SearchForumFeed/SearchForum";
 import axios from "axios";
 import { configNoCreds } from "../../../src/client/config";
 import { ForumEntity } from "../../../src/client/models/forum";
 import React from "react";
+import SearchFeed from "../../../src/components/Feed/PostFeeds/CategoryPostFeed/SearchFeed/SearchFeed";
 
 interface Props {
     forum: ForumEntity;
@@ -27,10 +27,9 @@ const SearchPage: NextPage<PageProps<Props>> = ({ componentProps }: PageProps<Pr
                         title={componentProps.forum.id}
                         href={`/forum/${componentProps.forum.id}`}
                     />
-                    <SearchForumFeed
-                        forum={componentProps.forum}
+                    <SearchFeed
                         text={componentProps.text}
-                        page={componentProps.page}
+                        user={componentProps.forum.id}
                     />
                 </>
                 :

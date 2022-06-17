@@ -5,6 +5,7 @@
 import { Title } from "@mantine/core";
 import React, { FunctionComponent } from "react";
 import Banner from "../Banner/Banner";
+import styles from "./ErrorPage.module.css";
 
 interface Props {
     code?: number;
@@ -14,38 +15,14 @@ interface Props {
 const ErrorPage: FunctionComponent<Props> = ({ code, message }: Props) => (
     <>
         <Banner />
-        <div
-            style={{
-                width: "50%",
-                position: "absolute",
-                top: 0,
-                bottom: 0,
-                left: 0,
-                right: 0,
-                margin: "auto",
-                textAlign: "center"
-            }}
-        >
+        <div className={styles.Wrapper}>
             <div>
-                <Title
-                    order={1}
-                    style={{
-                        fontSize: 200,
-                        display: "block",
-                        marginBottom: 0
-                    }}
-                >
+                <Title className={styles.Code} order={1}>
                     { code }
                 </Title>
             </div>
             <div>
-                <Title
-                    order={3}
-                    style={{
-                        fontSize: 20,
-                        display: "block"
-                    }}
-                >
+                <Title className={styles.Message} order={3}>
                     { message }
                 </Title>
             </div>

@@ -7,10 +7,10 @@ import { PostService } from "../post/post.service";
 import { VoteService } from "../vote/vote.service";
 import { Request  } from "express";
 import { PostVoteEntity } from "../vote/vote.entity";
-import { FeedDto } from "./feed.dto";
+import { FeedCursorDto } from "./feed.dto";
 import { CommentService } from "../comment/comment.service";
 import { HighlightService } from "../highlight/highlight.service";
-import { PostFilter } from "../post/post.dto";
+import { PostFilterDto } from "../post/post.dto";
 import { timeTypeToDate } from "src/utils/time.util";
 
 @Controller("feed")
@@ -26,20 +26,16 @@ export class FeedController {
         private readonly highlightService: HighlightService
     ) {}
 
-    @Get("/popular") 
-    async filterPopularPosts(
-        @Query() query: FeedDto,
+    @Get("/global")
+    async getGlobalPosts(
+        @Query() query: FeedCursorDto,
         @Req() req: Request
     ) {
         const date = timeTypeToDate(query.time);
 
-        if (query.page <= 0) {
-            query.page = 1;
-        }
-
-        const filter: PostFilter = {
-            sort: query.sort,
-            page: query.page,
+        const filter: PostFilterDto = {
+            afterCursor: query.afterCursor,
+            beforeCursor: query.beforeCursor,
             date
         };
 
@@ -55,19 +51,15 @@ export class FeedController {
     }
 
     @Get("/home") 
-    async filterHomePosts(
-        @Query() query: FeedDto,
+    async getHomePosts(
+        @Query() query: FeedCursorDto,
         @Req() req: Request
     ) {
         const date = timeTypeToDate(query.time);
 
-        if (query.page <= 0) {
-            query.page = 1;
-        }
-
-        const filter: PostFilter = {
-            sort: query.sort,
-            page: query.page,
+        const filter: PostFilterDto = {
+            afterCursor: query.afterCursor,
+            beforeCursor: query.beforeCursor,
             date
         };
 
@@ -90,21 +82,17 @@ export class FeedController {
     }
 
     @Get("/forums/:forum/posts") 
-    async filterForumPosts(
-        @Query() query: FeedDto,
+    async getForumPosts(
+        @Query() query: FeedCursorDto,
         @Param("forum") forumParam: string,
         @Req() req: Request
     ) {
         const date = timeTypeToDate(query.time);
 
-        if (query.page <= 0) {
-            query.page = 1;
-        }
-
-        const filter: PostFilter = {
+        const filter: PostFilterDto = {
             forums: [forumParam],
-            sort: query.sort,
-            page: query.page,
+            afterCursor: query.afterCursor,
+            beforeCursor: query.beforeCursor,
             date
         };
 
@@ -120,21 +108,16 @@ export class FeedController {
     }
 
     @Get("/users/:user/posts") 
-    async filterUserPosts(
-        @Query() query: FeedDto,
+    async getUserPosts(
+        @Query() query: FeedCursorDto,
         @Param("user") posterParam: string,
         @Req() req: Request
     ) {
         const date = timeTypeToDate(query.time);
 
-        if (query.page <= 0) {
-            query.page = 1;
-        }
-
-        const filter: PostFilter = {
-            poster: posterParam,
-            sort: query.sort,
-            page: query.page,
+        const filter: PostFilterDto = {
+            afterCursor: query.afterCursor,
+            beforeCursor: query.beforeCursor,
             date
         };
 
@@ -149,26 +132,8 @@ export class FeedController {
         return { ...result, postVotes };
     }
 
-    @Get("/users/:user/comments")
-    async filterComments(
-        @Query() query: FeedDto,
-        @Param("user") commenterParam: string
-    ) {
-        const date = timeTypeToDate(query.time);
-
-        const filter = {
-            page: query.page,
-            sort: query.sort,
-            commenter: commenterParam,
-            date
-        };
-
-        const result = await this.commentService.findByFilter(filter);
-        return { result };
-    }
-
     @Get("/posts/:id/comments")
-    async filterPostComments(
+    async getPostComments(
         @Param("id") idParam: number
     ) {
         const filter = {

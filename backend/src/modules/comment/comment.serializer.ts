@@ -64,7 +64,7 @@ export function deserializeTree(nodes: CommentEntity[]) {
 
     const roots: TreeObj[] = [];
 
-    return new Promise<{ roots: TreeObj[] }>((resolve, reject) => {
+    return new Promise<{ roots: TreeObj[] }>((resolve) => {
 
         // each processChunk function handles adding a single node to the tree
         const processChunk = (i: number) => {
@@ -124,49 +124,3 @@ export function deserializeTree(nodes: CommentEntity[]) {
         processChunk(0);
     });
 }
-
-
-// export function deserializeTreeSync(nodes: CommentEntity[]) {
-//
-//     const roots: TreeObj[] = [];
-//
-//     for (const node of nodes) {
-//
-//         const path = deserializePath(node.path);
-//
-//         // base case: path is a root
-//         if (path.length === 0) {
-//             const match = findMatch(roots, node.id);
-//             if (match) {
-//                 match.node = node;
-//             } else {
-//                 roots.push(leaf(node));
-//             }
-//             continue;
-//         }
-//
-//         let level = roots;
-//
-//         for (let i = 0; i < path.length; i++) {
-//
-//             const match = findMatch(level, path[i]);
-//             if (match) {
-//                 level = match.children;
-//             } else {
-//                 const tree = internal(path[i]);
-//                 level.push(tree);
-//                 level = tree.children;
-//             }
-//
-//         }
-//
-//         const match = findMatch(level, node.id);
-//         if (match) {
-//             match.node = node;
-//         } else {
-//             level.push(leaf(node));
-//         }
-//     }
-//
-//     return { roots };
-// }

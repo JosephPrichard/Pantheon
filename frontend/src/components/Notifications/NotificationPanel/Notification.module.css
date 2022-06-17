@@ -1,0 +1,28 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
+.NotificationText {
+    color: rgb(129,131,132);
+}
+
+.Wrapper {
+    display: flex;
+
+}
+
+.Notification {
+    cursor: pointer;
+    padding: 20px 40px 20px 0;
+    flex: 0.95;
+}
+
+.Dot {
+    padding-left: 10px;
+    padding-right: 10px;
+    flex: 0.05;
+    font-size: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

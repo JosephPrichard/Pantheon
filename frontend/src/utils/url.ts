@@ -3,6 +3,7 @@
  */
 
 import { CreatePostEntityRes, PostEntity, PostSearchEntity } from "../client/models/post";
+import { CommentEntity, CommentNotificationEntity } from "../client/models/comment";
 
 export function urlify(text: string) {
     return text.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "").replace(/ /g, "-").toLowerCase();
@@ -14,6 +15,10 @@ export function postUrl(post: PostEntity | PostSearchEntity) {
 
 export function createdPostUrl(post: CreatePostEntityRes) {
     return `/forum/${post.forum}/post/${post.id}/${urlify(post.title)}`;
+}
+
+export function commentUrl(comment: CommentNotificationEntity) {
+    return `/forum/${comment.post.forum}/post/${comment.post.id}/${urlify(comment.post.title)}` + "#" + comment.id;
 }
 
 export function getBaseUrl() {

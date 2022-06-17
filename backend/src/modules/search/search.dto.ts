@@ -3,14 +3,14 @@
  */
 
 import { Type } from "class-transformer";
-import { IsInt, Max, IsString, IsIn, MaxLength, IsOptional } from "class-validator";
-import { MAX_PAGE, MAX_ST_LEN, TimeType } from "src/global";
+import { IsString, IsIn, MaxLength, IsOptional, IsNumber } from "class-validator";
+import { MAX_ST_LEN, TimeType } from "src/global";
 
 export class SearchPostsDto {
-    @IsInt()
+    @IsOptional()
+    @IsNumber()
     @Type(() => Number)
-    @Max(MAX_PAGE, { message: `Page number cannot exceed ${MAX_PAGE}`})
-    page!: number;
+    cursor?: number;
 
     @IsString()
     @MaxLength(MAX_ST_LEN, { message: `Search text length cannot exceed ${MAX_ST_LEN}` })
@@ -31,7 +31,7 @@ export class SearchPostsDto {
 }
 
 export interface SearchPostFilter {
-    page: number;
+    cursor?: number;
     text: string;
     date?: Date;
     poster?: string;

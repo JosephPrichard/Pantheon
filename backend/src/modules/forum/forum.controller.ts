@@ -3,7 +3,7 @@
  */
 
 import { Body, Controller, Get, NotFoundException, Param, Post, Put, Req } from "@nestjs/common";
-import { CreateForumDto, UpdateForumDto } from "./forum.dto";
+import { CreateForumDto, FindForumsDto, UpdateForumDto } from "./forum.dto";
 import { ForumService } from "./forum.service";
 import { Request } from "express";
 import { sanitize } from "class-sanitizer";
@@ -16,25 +16,11 @@ export class ForumController {
 
     constructor(private readonly forumService: ForumService) {}
     
-    @Post()
-    async create(
-        @Body() body: CreateForumDto,
-        @Req() req: Request
+    @Get()
+    async getForums(
+        @Param() params: FindForumsDto
     ) {
-        const user = req.session.user;
-        if (!user) {
-            throw new InvalidSessionException();
-        }
-
-        sanitize(body);
-
-        const id = await this.forumService.create(body, user);
-        return { id };
-    }
-
-    @Get("/top")
-    async getTopForums() {
-        const forums = await this.forumService.findTopForums();
+        const forums = await this.forumService.findForums(params.limit);
         return { forums };
     }
 

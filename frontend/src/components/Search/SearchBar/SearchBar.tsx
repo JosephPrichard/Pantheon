@@ -40,7 +40,7 @@ const SearchBar = ({ href }: Props) => {
     return (
         <TextInput
             ref={textRef}
-            placeholder="Search Pantheon"
+            placeholder="Search"
             value={value}
             icon={<MagnifyingGlassIcon/>}
             onChange={(event) => {

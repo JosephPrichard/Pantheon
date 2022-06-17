@@ -7,7 +7,7 @@ import React, { useCallback, useState } from "react";
 import { ErrorRes } from "../../../client/types";
 import FormButton from "../../Util/Widget/FormButton/FormButton";
 import styles from "./SignUpPanel.module.css";
-import { createUser, signIn } from "../Login.client";
+import { createUser, signIn } from "../../../client/api/login";
 import { isValidError } from "../../../client/util";
 import ErrorMessage from "../../Util/ErrorMessage/ErrorMessage";
 import { useRouter } from "next/router";

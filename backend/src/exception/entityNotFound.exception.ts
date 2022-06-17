@@ -30,24 +30,17 @@ export class ForumNotFoundException extends EntityNotFoundException {
     }
 }
 
-export class BanNotFoundException extends EntityNotFoundException {
+export class NotificationNotFound extends EntityNotFoundException {
     constructor() {
-        super("The user isn't banned on this forum.");
-        this.name = BanNotFoundException.name;
+        super("Notification not found.");
+        this.name = NotificationNotFound.name;
     }
 }
 
 export class FavoriteNotFoundException extends EntityNotFoundException {
     constructor() {
-        super("You haven't favorited this post.");
+        super("You haven't favorite this post.");
         this.name = FavoriteNotFoundException.name;
-    }
-}
-
-export class ModeratorNotFoundException extends EntityNotFoundException {
-    constructor() {
-        super("This user isn't a moderator on this forum.");
-        this.name = ModeratorNotFoundException.name;
     }
 }
 

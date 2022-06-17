@@ -4,15 +4,13 @@
 
 import { Card, Skeleton } from "@mantine/core";
 import React from "react";
-import styles from "./PostSkeleton.module.css";
 
 interface Props {
     lighter: boolean;
 }
 
 const PostSkeleton = ({ lighter } : Props) => (
-    <Card 
-        className={styles.PostPanel}
+    <Card
         style={{
             backgroundColor: lighter ? "rgb(26, 27, 30)" : "rgb(24, 25, 28)"
         }}

@@ -2,7 +2,7 @@
  * Copyright (c) Joseph Prichard 2022.
  */
 
-import React, { useCallback } from "react";
+import React from "react";
 import AppLogo from "./AppLogo/AppLogo";
 import ProfilePopover from "./ProfilePopover/ProfilePopover";
 import styles from "./Banner.module.css";

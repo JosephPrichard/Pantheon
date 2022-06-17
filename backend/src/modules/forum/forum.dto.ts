@@ -3,7 +3,7 @@
  */
 
 import { Trim } from "class-sanitizer";
-import { IsOptional, IsString, MaxLength, MinLength } from "class-validator";
+import { IsInt, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
 import { PreventSpaces } from "src/decorators/preventSpaces.decorator";
 import { PreventSpecialCharacters } from "src/decorators/preventSpecialCharacters.decorator";
 import { MAX_FORUM_DESC_LEN, MAX_FORUM_NAME_LEN, MAX_TITLE_LEN } from "../../global";
@@ -39,4 +39,10 @@ export class UpdateForumDto {
     @MinLength(1, { message: "Description cannot be empty."})
     @MaxLength(MAX_FORUM_DESC_LEN, { message: `Description cannot exceed ${MAX_FORUM_DESC_LEN} characters.` })
     description?: string;
+}
+
+export class FindForumsDto {
+    @IsOptional()
+    @IsInt()
+    limit?: number;
 }

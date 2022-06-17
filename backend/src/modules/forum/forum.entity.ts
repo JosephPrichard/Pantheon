@@ -2,8 +2,9 @@
  * Copyright (c) Joseph Prichard 2022.
  */
 
-import { Entity, PrimaryKey, Property } from "mikro-orm";
+import { Entity, ManyToOne, PrimaryKey, Property } from "mikro-orm";
 import { MAX_FORUM_DESC_LEN, MAX_FORUM_NAME_LEN, MAX_TITLE_LEN } from "../../global";
+import { UserEntity } from "../user/user.entity";
 
 @Entity({ tableName: "forums" })
 export class ForumEntity {
@@ -21,4 +22,7 @@ export class ForumEntity {
 
     @Property({ type: Date })
     createdAt: Date = new Date();
+
+    @ManyToOne({ entity: () => UserEntity })
+    admin!: UserEntity;
 }

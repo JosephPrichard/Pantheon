@@ -1,0 +1,16 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
+.Forum {
+    margin-bottom: 8px;
+}
+
+.Link {
+    color: rgb(0, 150, 255);
+}
+
+.Link:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}

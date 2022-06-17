@@ -1,2 +1,2 @@
 # Pantheon
-News aggregation forum website similar to Reddit.
+ Forum/news aggregation website similar to reddit or hackernews.

@@ -4,12 +4,12 @@
 
 .ProfilePopover {
     display: inline-block;
+    user-select: none;
 }
 
-.PopoverBody {
-    border-style: solid;
-    border-color: rgb(60, 60, 60);
-    border-width: 1px;
+.PopoverOverlay {
+    background-color: rgb(26,27,30);
+    user-select: none;
 }
 
 .Button {

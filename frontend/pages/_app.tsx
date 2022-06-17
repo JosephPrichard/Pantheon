@@ -11,9 +11,11 @@ const App = ({ Component, pageProps }: AppProps) => {
     return (
         <>
             <Head>
-                <title>Pantheon</title>
                 <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
                 <html lang="en"/>
+                <meta name="next-head-count" content="5"/>
+                <meta name="color-scheme" content="light dark"/>
+                <title> Pantheon </title>
             </Head>
 
             <MantineProvider

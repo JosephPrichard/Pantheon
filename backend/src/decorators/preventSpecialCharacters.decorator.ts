@@ -16,7 +16,6 @@ export function PreventSpecialCharacters(validationOptions?: ValidationOptions) 
     };
 }
 
-
 @ValidatorConstraint({name: "Custom" })
 export class PreventSpecialCharactersClass implements ValidatorConstraintInterface {
 

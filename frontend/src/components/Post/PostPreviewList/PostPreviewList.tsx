@@ -5,7 +5,7 @@
 import React, { FunctionComponent } from "react";
 import styles from "./PostPreviewList.module.css";
 import { PostEntity, PostSearchEntity } from "../../../client/models/post";
-import PostPreview from "../PostDisplay/PostPreview/PostPreview";
+import PostPreview from "../PostPreview/PostPreview";
 import PostSkeleton from "../../Util/Loading/PostSkeleton/PostSkeleton";
 
 interface Props {

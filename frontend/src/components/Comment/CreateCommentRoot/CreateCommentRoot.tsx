@@ -9,7 +9,7 @@ import styles from "./CreateCommentRoot.module.css";
 import TextEditor from "../../Util/Widget/TextEditor/TextEditor";
 import { useUserName } from "../../../hooks/useUserCreds";
 import { WHITE } from "../../colors";
-import { submitCommentRoot } from "../Comment.client";
+import { submitCommentRoot } from "../../../client/api/comment";
 import { CommentEntity } from "../../../client/models/comment";
 import { isValidError } from "../../../client/util";
 import { ErrorRes } from "../../../client/types";
@@ -46,8 +46,8 @@ const CreateCommentRoot = ({ post, onCreate }: Props) => {
                 content
             })
                 .then(r => {
-                    onCreate(r.data.comment);
                     setLoading(false);
+                    onCreate(r.data.comment);
                 })
                 .catch(err => {
                     if (isValidError(err)) {
@@ -71,7 +71,7 @@ const CreateCommentRoot = ({ post, onCreate }: Props) => {
                     clearError();
                 }}
             />
-            <Space h="md"/>
+            <Space h={5}/>
             <ErrorMessage message={message}/>
             <div className={styles.ButtonWrapper}>
                 <Button

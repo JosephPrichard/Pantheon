@@ -10,7 +10,7 @@ import axios from "axios";
 import { configNoCreds } from "../../../src/client/config";
 import React from "react";
 import { UserEntity } from "../../../src/client/models/user";
-import SearchUserFeed from "../../../src/components/Feed/PostFeed/SearchFeed/SearchUserFeed/SearchUserFeed";
+import SearchFeed from "../../../src/components/Feed/PostFeeds/CategoryPostFeed/SearchFeed/SearchFeed";
 
 interface Props {
     user: UserEntity;
@@ -27,10 +27,9 @@ const SearchPage: NextPage<PageProps<Props>> = ({ componentProps }: PageProps<Pr
                         title={componentProps.user.name}
                         href={`/user/${componentProps.user.name}`}
                     />
-                    <SearchUserFeed
-                        user={componentProps.user}
+                    <SearchFeed
                         text={componentProps.text}
-                        page={componentProps.page}
+                        user={componentProps.user.id}
                     />
                 </>
                 :

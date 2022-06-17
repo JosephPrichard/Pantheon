@@ -1,0 +1,16 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
+.Wrapper {
+    min-width: 700px;
+    width: 50%;
+    margin: auto;
+}
+
+.Notifications {
+    border-radius: 5px;
+    background-color: rgb(26,27,30);
+    padding-top: 5px;
+    padding-bottom: 5px;
+}

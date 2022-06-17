@@ -3,7 +3,7 @@
  */
 
 import React, { useCallback, useState } from "react";
-import { submitCommentNode } from "../Comment.client";
+import { submitCommentNode } from "../../../client/api/comment";
 import { isValidError } from "../../../client/util";
 import { ErrorRes } from "../../../client/types";
 import styles from "./CreateCommentNode.module.css";
@@ -12,6 +12,7 @@ import { Button, Space } from "@mantine/core";
 import ErrorMessage from "../../Util/ErrorMessage/ErrorMessage";
 import { CommentEntity } from "../../../client/models/comment";
 import { WHITE } from "../../colors";
+import WhiteButton from "../../Util/Widget/Button/WhiteButton";
 
 interface Props {
     parentComment: CommentEntity;
@@ -34,7 +35,7 @@ const CreateCommentNode = ({ parentComment, onCreate, onCancel }: Props) => {
         []
     );
 
-    const submit = useCallback(
+    const onSubmit = useCallback(
         () => {
             setLoading(true);
 
@@ -43,8 +44,8 @@ const CreateCommentNode = ({ parentComment, onCreate, onCancel }: Props) => {
                 content
             })
                 .then(r => {
-                    onCreate(r.data.comment);
                     setLoading(false);
+                    onCreate(r.data.comment);
                 })
                 .catch(err => {
                     if (isValidError(err)) {
@@ -67,29 +68,19 @@ const CreateCommentNode = ({ parentComment, onCreate, onCancel }: Props) => {
                         clearError();
                     }}
                 />
-                <Space h={15}/>
+                <Space h={5}/>
                 <ErrorMessage message={message}/>
                 <div className={styles.ButtonWrapper}>
-                    <Button
-                        className={styles.Button}
-                        style={{
-                            backgroundColor: WHITE
-                        }}
+                    <WhiteButton
+                        text="Comment"
                         loading={loading}
-                        onClick={submit}
-                    >
-                        Comment
-                    </Button>
-                    <Button
-                        className={styles.Button}
-                        style={{
-                            backgroundColor: WHITE
-                        }}
+                        onClick={onSubmit}
+                    />
+                    <WhiteButton
+                        text="Cancel"
                         loading={loading}
                         onClick={onCancel}
-                    >
-                        Cancel
-                    </Button>
+                    />
                 </div>
             </div>
         </div>

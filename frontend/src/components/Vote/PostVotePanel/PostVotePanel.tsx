@@ -5,7 +5,7 @@
 import React from "react";
 import { PostEntity, PostSearchEntity } from "../../../client/models/post";
 import VotePanel from "../VotePanel/VotePanel";
-import { votePost } from "../Vote.client";
+import { votePost } from "../../../client/api/vote.client";
 import { usePostVoteContext } from "../Vote.context";
 
 interface Props {

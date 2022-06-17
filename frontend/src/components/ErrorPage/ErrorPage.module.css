@@ -1,0 +1,26 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
+.Wrapper {
+    width: 50%;
+    height: 50%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    text-align: center;
+}
+
+.Code {
+    font-size: 200px;
+    display: block;
+    margin-bottom: 0
+}
+
+.Message {
+    font-size: 20px;
+    display: block;
+}

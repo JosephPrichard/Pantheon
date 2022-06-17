@@ -3,27 +3,22 @@
  */
 
 import { Type } from "class-transformer";
-import { IsOptional, IsString, IsIn, IsInt, Max } from "class-validator";
-import { MAX_PAGE, SortType, TimeType } from "src/global";
+import { IsOptional, IsString, IsIn, IsNumber } from "class-validator";
+import { TimeType } from "src/global";
 
-export class FeedDto {
+export class FeedCursorDto {
     @IsOptional()
     @IsString()
     @IsIn(["day", "week", "month", "year", "alltime"])
     time?: TimeType;
 
-    @IsInt()
+    @IsOptional()
+    @IsNumber()
     @Type(() => Number)
-    @Max(MAX_PAGE, { message: `Page number cannot exceed ${MAX_PAGE}`})
-    page!: number;
+    afterCursor?: number;
 
-    @IsString()
-    @IsIn(["new", "top", "hot"])
-    sort!: SortType;
-}
-
-export class PageDto {
-    @IsInt()
+    @IsOptional()
+    @IsNumber()
     @Type(() => Number)
-    page!: number;
+    beforeCursor?: number;
 }

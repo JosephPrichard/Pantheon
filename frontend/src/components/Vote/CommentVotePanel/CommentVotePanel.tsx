@@ -5,7 +5,7 @@
 import React from "react";
 import { CommentEntity } from "../../../client/models/comment";
 import VotePanel from "../VotePanel/VotePanel";
-import { voteComment } from "../Vote.client";
+import { voteComment } from "../../../client/api/vote.client";
 import { useCommentVoteContext } from "../Vote.context";
 
 interface Props {

@@ -8,7 +8,7 @@ import React from "react";
 import { configNoCreds } from "../../../../src/client/config";
 import { PostEntity } from "../../../../src/client/models/post";
 import Banner from "../../../../src/components/Banner/Banner";
-import PostPanel from "../../../../src/components/Post/PostDisplay/PostPanel/PostPanel";
+import PostPanel from "../../../../src/components/Post/PostPanel/PostPanel";
 import ErrorPage from "../../../../src/components/ErrorPage/ErrorPage";
 import ForumPanel from "../../../../src/components/Forum/ForumPanel/ForumPanel";
 import DoubleColumn from "../../../../src/components/Util/Layout/DoubleColumn/DoubleColumn";

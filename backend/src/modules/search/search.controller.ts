@@ -19,7 +19,7 @@ export class SearchController {
         const date = timeTypeToDate(query.time);
 
         const filter = {
-            page: query.page,
+            cursor: query.cursor,
             text: query.text,
             forum: query.forum,
             poster: query.poster,

@@ -3,20 +3,20 @@
  */
 
 import { PostEntity} from "./post.entity";
-import { CreatePostDto, PostFilter,UpdatePostDto } from "./post.dto";
-import { QueryOrder, QueryOrderMap } from "mikro-orm";
+import { CreatePostDto, PostFilterDto, UpdatePostDto } from "./post.dto";
+import { FilterQuery, QueryOrder, QueryOrderMap } from "mikro-orm";
 import { Injectable } from "@nestjs/common";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { User } from "../user/user.dto";
 import { UserService } from "../user/user.service";
 import { ForumService } from "../forum/forum.service";
-import { PermissionsService } from "../permissions/permissions.service";
 import { ForumNotFoundException, PostNotFoundException } from "src/exception/entityNotFound.exception";
-import { BannedException, ResourcePermissionsException } from "src/exception/permissions.exception";
+import { ResourcePermissionsException } from "src/exception/permissions.exception";
 import { AppLogger } from "src/loggers/applogger";
-import { countPages, pageOffset, PER_PAGE } from "src/utils/paginator.util";
 import { InvalidInputException } from "src/exception/invalidInput.exception";
+import { PER_PAGE } from "../../global";
+import { NotificationService } from "../notifications/notification.service";
 
 @Injectable()
 export class PostService {
@@ -27,8 +27,6 @@ export class PostService {
         @InjectRepository(PostEntity) 
         private readonly postRepository: EntityRepository<PostEntity>,
 
-        private readonly permsService: PermissionsService,
-
         private readonly forumService: ForumService,
 
         private readonly userService: UserService
@@ -38,11 +36,6 @@ export class PostService {
         const forum = await this.forumService.findById(post.forum);
         if (!forum) {
             throw new ForumNotFoundException();
-        }
-
-        const hasPerms = await this.permsService.isBanned(forum, poster);
-        if (!hasPerms) {
-            throw new BannedException();
         }
 
         if (post.images && post.images.length < 1) {
@@ -79,46 +72,62 @@ export class PostService {
         return await this.postRepository.find({ id: { $in: ids } });
     }
 
-    async findByFilter(filter: PostFilter) {
-        const where: any = {};
+    async findByFilter(filter: PostFilterDto) {
+        const where: FilterQuery<any> = {};
+
+        // check if we want to filter poster
         if (filter.poster) {
             where.poster = filter.poster;
+        } else {
+            where.poster = { $ne: null };
         }
+
+        // check if we want to filter forums
         if (filter.forums) {
-           if (filter.forums.length === 1) {
+            if (filter.forums.length === 1) {
+                // filter out posts for a single forum
                 where.forum = filter.forums[0];
-           } else {
+            } else {
+                // filter out posts for a few forums
                 where.forum = { $in: filter.forums };
-           }
-        }
-        if (filter.date) {
-            where.createdAt = { 
-                $gte: filter.date
             }
         }
 
-        let sort: QueryOrderMap;
-        if (filter.sort === "hot") {
-            sort = { hotRank: QueryOrder.DESC };
-        } else if (filter.sort === "top") {
-            sort = { votes: QueryOrder.DESC };
-        } else if (filter.sort === "new") {
-            sort = { id: QueryOrder.DESC };
-        } else {
-            throw new InvalidInputException("Invalid sort type");
+        // check if we should only include posts after a certain date
+        if (filter.date) {
+            where.createdAt = { $gte: filter.date };
         }
 
-        const [posts, count] = await this.postRepository.findAndCount(
+        let sort: QueryOrderMap = { id: QueryOrder.DESC };
+        // check if we should use cursors to paginate
+        if (filter.afterCursor) {
+            where.id = { $lt: filter.afterCursor };
+        } else if (filter.beforeCursor) {
+            where.id = { $gt: filter.beforeCursor };
+            sort = { id: QueryOrder.ASC };
+        }
+
+        const posts = await this.postRepository.find(
             where,
             ["poster", "forum"],
             sort,
-            PER_PAGE,
-            pageOffset(filter.page)
+            PER_PAGE + 1
         );
 
-        return { 
-            posts, 
-            pageCount: countPages(count)
+        if (!filter.afterCursor && filter.beforeCursor) {
+            posts.reverse();
+        }
+
+        const nextPage = posts.length >= PER_PAGE + 1;
+
+        // remove the extra element from the list
+        if (nextPage) {
+            posts.pop();
+        }
+
+        return {
+            posts,
+            nextPage
         };
     }
 
@@ -150,13 +159,11 @@ export class PostService {
         }
 
         const userMatches = post?.poster?.id === user.id;
-        const hasModPerms = await this.permsService.hasModPerms(post.forum, user);
-        if (!userMatches && !hasModPerms) {
+        if (!userMatches) {
             throw new ResourcePermissionsException();
         }
 
         post.poster = null;
-        post.title = "";
         post.content = "";
         post.images = [];
 

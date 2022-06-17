@@ -12,7 +12,7 @@
 }
 
 .LoginWrapper {
-    margin-right: 50px;
+    margin-right: 75px;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -26,7 +26,7 @@
 
 .SearchBar {
     text-align: center;
-    width: 40%;
-    margin-left: 6%;
-    margin-right: 6%;
+    width: 38%;
+    margin-left: 7%;
+    margin-right: 7%;
 }

@@ -8,12 +8,13 @@ import { EntityRepository, expr, QueryOrder } from "mikro-orm";
 import { EntityManager } from "@mikro-orm/postgresql";
 import { ForumNotFoundException } from "src/exception/entityNotFound.exception";
 import { DuplicateForumException } from "src/exception/invalidInput.exception";
-import { ModPermissionsException } from "src/exception/permissions.exception";
 import { AppLogger } from "src/loggers/applogger";
-import { PermissionsService } from "../permissions/permissions.service";
 import { User } from "../user/user.dto";
 import { CreateForumDto, UpdateForumDto } from "./forum.dto";
 import { ForumEntity } from "./forum.entity";
+import { UserService } from "../user/user.service";
+import { KarmaException, ResourcePermissionsException } from "../../exception/permissions.exception";
+import { MIN_ADMIN_KARMA } from "../../global";
 
 @Injectable()
 export class ForumService {
@@ -26,26 +27,36 @@ export class ForumService {
         @InjectRepository(ForumEntity) 
         private readonly forumRepository: EntityRepository<ForumEntity>,
 
-        private readonly permsService: PermissionsService
+        private readonly userService: UserService
     ) {}
 
-    async create(forum: CreateForumDto, owner: User) {
+    async create(forum: CreateForumDto, admin: User) {
         const oldForumEntity = await this.findByIdCase(forum.name);
         if (oldForumEntity) {
             throw new DuplicateForumException(forum.name);
         }
 
+        const user = await this.userService.findUserById(admin.id);
+        if (user == null || user.karma < MIN_ADMIN_KARMA) {
+            throw new KarmaException(MIN_ADMIN_KARMA);
+        }
+
         const forumEntity = new ForumEntity();
 
         forumEntity.id = forum.name;
+        forumEntity.admin = user;
         if (forum.description) {
             forumEntity.description = forum.description;
         }
 
         await this.forumRepository.persistAndFlush(forumEntity);
 
-        this.logger.log(`User ${owner.id} created a forum ${forumEntity.id}`);
+        this.logger.log(`User ${admin.id} created a forum ${forumEntity.id}`);
         return forumEntity.id;
+    }
+    
+    async isAdmin(user: User) {
+        return await this.forumRepository.findOne({ admin: user.id }) != null;
     }
 
     async findById(id: string) {
@@ -58,13 +69,12 @@ export class ForumService {
         });
     }
 
-    async findTopForums() {
+    async findForums(limit?: number) {
         return await this.forumRepository.find(
             {},
             [],
-            { subscriptions: QueryOrder.DESC },
-            25,
-            0
+            { id: QueryOrder.ASC },
+            limit,
         );
     }
 
@@ -74,9 +84,9 @@ export class ForumService {
             throw new ForumNotFoundException();
         }
 
-        const hasPerms = await this.permsService.hasModPerms(forum, user);
+        const hasPerms = forum.admin.id == user.id;
         if (!hasPerms) {
-            throw new ModPermissionsException();
+            throw new ResourcePermissionsException();
         }
 
         if (update.description) {

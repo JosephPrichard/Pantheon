@@ -7,7 +7,7 @@ import React, { useState } from "react";
 import { sanitizeHTML } from "../../../../../utils/sanitize";
 import Markup from "../../Markup/Markup";
 import styles from "./EditableContent.module.css"
-import { useUserPermissions } from "../../../../../hooks/useUserPermissions";
+import { usePermissions } from "../../../../../hooks/usePermissions";
 import { Id } from "../../../../../client/types";
 import TextEditor from "../../../Widget/TextEditor/TextEditor";
 import { Edit } from "react-feather";

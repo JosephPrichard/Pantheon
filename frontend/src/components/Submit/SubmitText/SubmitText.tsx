@@ -8,7 +8,7 @@ import { ORANGE } from "../../colors";
 import TextEditor from "../../Util/Widget/TextEditor/TextEditor";
 import styles from "./SubmitText.module.css";
 import { ErrorRes } from "../../../client/types";
-import { submitPost } from "../Submit.client";
+import { submitPost } from "../../../client/api/submit";
 import { isValidError } from "../../../client/util";
 import { ForumEntity } from "../../../client/models/forum";
 import { createdPostUrl } from "../../../utils/url";

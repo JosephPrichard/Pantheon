@@ -17,7 +17,19 @@ export interface PostEntity {
     images: string[];
     link: string | null;
     createdAt: string;
-    hotRank?: number;
+}
+
+export interface PostEntityNoForum {
+    id: Id;
+    poster: UserEntity | null;
+    forum: number;
+    title: string;
+    votes: number;
+    comments: number;
+    content: string | null;
+    images: string[];
+    link: string | null;
+    createdAt: string;
 }
 
 export interface PostSearchEntity {

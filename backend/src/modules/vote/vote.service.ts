@@ -14,7 +14,6 @@ import { User } from "../user/user.dto";
 import { UserService } from "../user/user.service";
 import { CommentNotFoundException, PostNotFoundException } from "src/exception/entityNotFound.exception";
 import { AppLogger } from "src/loggers/applogger";
-import { calcHotRank } from "src/utils/hotrank.util";
 
 @Injectable()
 export class VoteService {
@@ -49,7 +48,6 @@ export class VoteService {
 
             post.poster.karma += diff;
             post.votes += diff;
-            post.hotRank = calcHotRank(post.votes, post.createdAt);
 
             voteEntity.value = newVote.value;
 
@@ -58,10 +56,9 @@ export class VoteService {
             this.logger.log(`User ${voter.id} updated a vote on post ${voteEntity.post.id}`);
             return voteEntity;
         } else {
-            // otherwise we create a new vote entity and persist it
+            // other-wise we create a new vote entity and persist it
             post.poster.karma += newVote.value;
             post.votes += newVote.value;
-            post.hotRank = calcHotRank(post.votes, post.createdAt);
 
             const voteEntity = new PostVoteEntity();   
             voteEntity.post = post;
@@ -97,7 +94,7 @@ export class VoteService {
             this.logger.log(`User ${voter.id} updated a vote on comment ${voteEntity.comment.id}`);
             return voteEntity;
         } else {
-            // otherwise we create a new vote entity and persist it
+            // other-wise we create a new vote entity and persist it
             comment.commenter.karma += newVote.value;
             comment.votes += newVote.value;
 
