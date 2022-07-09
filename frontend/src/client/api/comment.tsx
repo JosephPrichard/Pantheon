@@ -3,21 +3,21 @@
  */
 
 import axios from "axios";
-import { config } from "../config";
-import { CommentEntity } from "../models/comment";
+import { config, configNoCreds } from "../config";
+import { CommentEntity, CommentTreeEntity } from "../models/comment";
 import { Id } from "../types";
 
-interface CommentNode {
+export interface CommentNode {
     parentComment: number;
     content: string;
 }
 
-interface CommentRoot {
+export interface CommentRoot {
     post: number;
     content: string;
 }
 
-interface CommentRes {
+export interface CommentRes {
     comment: CommentEntity;
 }
 
@@ -28,6 +28,14 @@ export interface CommentEdit {
 
 export interface CommentDelete {
     comment: Id;
+}
+
+export interface CommentTreeRes {
+    commentTree: CommentTreeEntity[];
+}
+
+export async function fetchCommentTreeByPost(id: string) {
+    return await axios.get<CommentTreeRes>(`/api/feed/posts/${id}/comments`, configNoCreds);
 }
 
 export function submitCommentNode(body: CommentNode) {

@@ -4,7 +4,7 @@
 
 import { Entity, ManyToOne, PrimaryKey, Property } from "mikro-orm";
 import { UserEntity } from "../user/user.entity";
-import { MAX_COMMENT_LEN, MAX_PATH_LEN } from "../../global";
+import { MAX_COMMENT_LEN } from "../../global";
 import { PostEntity } from "../post/post.entity";
 
 // uses the materialized paths way of storing a tree in a relational database
@@ -20,8 +20,8 @@ export class CommentEntity {
     @ManyToOne({ entity: () => PostEntity })
     post!: PostEntity;
 
-    @Property({ type: String, length: MAX_PATH_LEN })
-    path: string = ""; // delimited string containing id's of other comments
+    @Property({ type: Number, nullable: true })
+    parentId: number | null = null;
 
     @Property({ type: Number })
     votes: number = 0;

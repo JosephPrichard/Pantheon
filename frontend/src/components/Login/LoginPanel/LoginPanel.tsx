@@ -9,13 +9,13 @@ import FormButton from "../../Util/Widget/FormButton/FormButton";
 import styles from "./LoginPanel.module.css";
 import { signIn } from "../../../client/api/login";
 import { isValidError } from "../../../client/util";
-import ErrorMessage from "../../Util/ErrorMessage/ErrorMessage";
+import Message from "../../Util/Message/Message/Message";
 import { useRouter } from "next/router";
 
 const LoginPanel = () => {
     const router = useRouter();
 
-    const [email, setEmail] = useState("");
+    const [name, setName] = useState("");
     const [password, setPassword] = useState("");
 
     const [loading, setLoading] = useState(false);
@@ -36,10 +36,7 @@ const LoginPanel = () => {
             e.preventDefault();
 
             setLoading(true);
-            signIn({
-                email: email,
-                password: password
-            })
+            signIn({ name, password })
                 .then(() => {
                     router.push("/")
                 })
@@ -52,7 +49,7 @@ const LoginPanel = () => {
                     setLoading(false);
                 });
         },
-        [email, password]
+        [name, password]
     );
 
     return (
@@ -62,16 +59,16 @@ const LoginPanel = () => {
             </Title>
             <Text className={styles.Text}>Already have an account? Login here.</Text>
             <form onSubmit={submit}>
-                <InputWrapper className={styles.InputWrapper} required label="Email Address">
+                <InputWrapper className={styles.InputWrapper} required label="User Name">
                     <TextInput
-                        placeholder="Email"
-                        value={email}
+                        placeholder="Username"
+                        value={name}
                         onChange={(event) => {
-                            setEmail(event.currentTarget.value);
+                            setName(event.currentTarget.value);
                             clearError();
                         }}
                         error={error}
-                        autoComplete="email"
+                        autoComplete="username"
                     />
                 </InputWrapper>
                 <InputWrapper className={styles.InputWrapper} required label="Password">
@@ -86,7 +83,7 @@ const LoginPanel = () => {
                         autoComplete="current-password"
                     />
                 </InputWrapper>
-                <ErrorMessage message={message} />
+                <Message message={message} />
                 <FormButton text="Log In" loading={loading} />
             </form>
         </div>

@@ -2,8 +2,7 @@
  * Copyright (c) Joseph Prichard 2022.
  */
 
-import useSWR from "swr";
-import { Card, Modal, Space, Title } from "@mantine/core";
+import { Card, Space } from "@mantine/core";
 import React, { useCallback, useState } from "react";
 import { PostEntity } from "../../../client/models/post";
 import PostVotePanel from "../../Vote/PostVotePanel/PostVotePanel";
@@ -15,11 +14,11 @@ import PostHeader from "../PostComponents/PostHeader/PostHeader";
 import PostLinks from "../PostComponents/PostLinks/PostLinks";
 import ImageContent from "../../Util/Layout/Content/ImageContent/ImageContent";
 import LinkContent from "../../Util/Layout/Content/LinkContent/LinkContent";
-import { fetcher } from "../../../utils/fetcher";
 import { buildFetchPostVotesUrl, deletePost, editPost, PostAllVotesRes } from "../../../client/api/post";
 import EditableTextContent from "../../Util/Layout/Content/EditableTextContent/EditableTextContent";
 import { usePermissions } from "../../../hooks/usePermissions";
 import ConfirmModal from "../../Util/Layout/ConfirmModal/ConfirmModal";
+import { useFetch } from "../../../hooks/useFetch";
 
 interface Props {
     post: PostEntity;
@@ -28,7 +27,7 @@ interface Props {
 
 const PostPanel = ({ post, roots }: Props) => {
 
-    const { data } = useSWR<PostAllVotesRes>(buildFetchPostVotesUrl(post.id), fetcher);
+    const { data } = useFetch<PostAllVotesRes>(buildFetchPostVotesUrl(post.id));
     const hasPerms = usePermissions(post.poster?.id);
 
     const [canEdit, setCanEdit] = useState(false);
@@ -113,7 +112,7 @@ const PostPanel = ({ post, roots }: Props) => {
                     />
                 </div>
             </div>
-            <Space h="xl"/>
+            <Space h={50}/>
             <CommentRootPanel
                 post={post}
                 roots={roots}

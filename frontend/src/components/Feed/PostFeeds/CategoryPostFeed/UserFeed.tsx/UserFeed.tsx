@@ -2,15 +2,14 @@
  * Copyright (c) Joseph Prichard 2022.
  */
 
-import useSWR from "swr";
 import { UserEntity } from "../../../../../client/models/user";
-import { fetcher } from "../../../../../utils/fetcher";
 import UserPanel from "../../../../User/UserPanel/UserPanel";
 import { buildFetchUserFeedUrl, PostsRes } from "../../../../../client/api/feed";
 import PostFeed from "../../PostFeed/PostFeed";
 import FeedPagination from "../../../FeedPagination/FeedPagination";
 import React from "react";
 import { getAfterCursor, getBeforeCursor } from "../../../../../utils/cursor";
+import { useFetch } from "../../../../../hooks/useFetch";
 
 interface Props {
     user: UserEntity;
@@ -19,7 +18,7 @@ interface Props {
 }
 
 const UserFeed = ({ user, afterCursor, beforeCursor }: Props) => {
-    const { data } = useSWR<PostsRes>(buildFetchUserFeedUrl(user.id, beforeCursor, afterCursor), fetcher);
+    const { data } = useFetch<PostsRes>(buildFetchUserFeedUrl(user.id, beforeCursor, afterCursor));
 
     return (
         <PostFeed

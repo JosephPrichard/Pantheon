@@ -3,8 +3,6 @@
  */
 
 import React from "react";
-import useSWR from "swr";
-import { fetcher } from "../../../../../utils/fetcher";
 import { buildFetchHomeFeedUrl, PostsRes } from "../../../../../client/api/feed";
 import FeedPagination from "../../../FeedPagination/FeedPagination";
 import { getAfterCursor, getBeforeCursor } from "../../../../../utils/cursor";
@@ -12,6 +10,7 @@ import PostFeed from "../../PostFeed/PostFeed";
 import SubList from "../../../../Subscription/SubList/SubList";
 import FeedPanel from "../../../FeedPanel/FeedPanel";
 import { Space } from "@mantine/core";
+import useSWR from "swr";
 
 interface Props {
     afterCursor?: number;
@@ -19,7 +18,7 @@ interface Props {
 }
 
 const HomeFeed = ({ afterCursor, beforeCursor }: Props) => {
-    const { data } = useSWR<PostsRes>(buildFetchHomeFeedUrl(beforeCursor, afterCursor), fetcher);
+    const { data } = useSWR<PostsRes>(buildFetchHomeFeedUrl(beforeCursor, afterCursor));
 
     return (
         <PostFeed

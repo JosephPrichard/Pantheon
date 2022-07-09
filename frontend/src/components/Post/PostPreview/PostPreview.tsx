@@ -7,13 +7,13 @@ import React, { useState } from "react";
 import { PostEntity, PostSearchEntity } from "../../../client/models/post";
 import PostVotePanel from "../../Vote/PostVotePanel/PostVotePanel";
 import styles from "./PostPreview.module.css";
-import { PUBLIC_CLOUD_URL } from "../../../global";
 import PostTitle from "../PostComponents/PostTitle/PostTitle";
 import PostHeader from "../PostComponents/PostHeader/PostHeader";
 import PostLinks from "../PostComponents/PostLinks/PostLinks";
 import { removeAllHTMLFromString } from "../../../utils/sanitize";
 import TextContent from "../../Util/Layout/Content/TextContent/TextContent";
 import LinkContent from "../../Util/Layout/Content/LinkContent/LinkContent";
+import { filePath } from "../../../client/config";
 
 interface Props {
     post: PostEntity | PostSearchEntity;
@@ -53,7 +53,7 @@ const PostPanel = ({ post, lighter }: Props) => {
             <div className={styles.ImageContainer}>
                 <img
                     className={styles.Image}
-                    src={`${PUBLIC_CLOUD_URL}/assets/${post.images[1]}`}
+                    src={filePath(post.images[0])}
                     alt="Image"
                 />
             </div>

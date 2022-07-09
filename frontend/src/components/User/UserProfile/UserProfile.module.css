@@ -1,0 +1,14 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
+.UserProfile {
+    background-color: rgb(26, 27, 30);
+    height: 100%;
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
+.ProfileContainer {
+    width: 70%;
+}

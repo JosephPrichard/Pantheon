@@ -7,7 +7,7 @@ import { IdRes } from "../types";
 import { config } from "../config";
 
 export interface SignInBody {
-    email: string;
+    name: string;
     password: string;
 }
 
@@ -17,7 +17,6 @@ export interface SignInRes {
 }
 
 export interface CreateUser {
-    email: string;
     name: string;
     password: string;
 }

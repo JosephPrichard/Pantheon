@@ -2,12 +2,11 @@
  * Copyright (c) Joseph Prichard 2022.
  */
 
-import useSWR from "swr";
 import { buildFetchSearchFeedUrl, PostsSearchRes } from "../../../../../client/api/feed";
-import { fetcher } from "../../../../../utils/fetcher";
 import PostFeed from "../../PostFeed/PostFeed";
 import React from "react";
 import SearchPanel from "../../../../Search/SearchPanel/SearchPanel";
+import { useFetch } from "../../../../../hooks/useFetch";
 
 interface Props {
     user?: number;
@@ -16,7 +15,7 @@ interface Props {
 }
 
 const SearchFeed = ({ text, user, forum }: Props) => {
-    const { data } = useSWR<PostsSearchRes>(buildFetchSearchFeedUrl(text, user, forum), fetcher);
+    const { data } = useFetch<PostsSearchRes>(buildFetchSearchFeedUrl(text, user, forum));
 
     const resultCount = data?.posts?.length;
 

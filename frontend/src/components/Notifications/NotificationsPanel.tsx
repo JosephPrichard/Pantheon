@@ -3,17 +3,16 @@
  */
 
 import { Space, Title } from "@mantine/core";
-import useSWR from "swr";
 import { markAllAsRead, NotificationsRes } from "../../client/api/notifications";
 import NotificationPanel from "./NotificationPanel/NotificationPanel";
 import styles from "./NotificationsPanel.module.css";
-import { fetcher } from "../../utils/fetcher";
-import PostSkeleton from "../Util/Loading/PostSkeleton/PostSkeleton";
+import AppSkeleton from "../Util/Loading/AppSkeleton/AppSkeleton";
 import React, { useEffect } from "react";
+import { useFetch } from "../../hooks/useFetch";
 
 const NotificationsPanel = () => {
 
-    const { data } = useSWR<NotificationsRes>("/api/notifications", fetcher);
+    const { data } = useFetch<NotificationsRes>("/api/notifications");
 
     useEffect(() => {
         markAllAsRead().then(() => {});
@@ -46,7 +45,7 @@ const NotificationsPanel = () => {
                     :
                     <>
                         {Array(8).fill(0).map((n, i) => (
-                            <PostSkeleton key={i} lighter={true} />
+                            <AppSkeleton key={i} lighter={true} />
                         ))}
                     </>
                 }

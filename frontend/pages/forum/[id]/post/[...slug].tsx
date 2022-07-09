@@ -2,27 +2,29 @@
  * Copyright (c) Joseph Prichard 2022.
  */
 
-import axios from "axios";
 import { GetServerSideProps, NextPage } from "next";
 import React from "react";
-import { configNoCreds } from "../../../../src/client/config";
 import { PostEntity } from "../../../../src/client/models/post";
 import Banner from "../../../../src/components/Banner/Banner";
 import PostPanel from "../../../../src/components/Post/PostPanel/PostPanel";
 import ErrorPage from "../../../../src/components/ErrorPage/ErrorPage";
 import ForumPanel from "../../../../src/components/Forum/ForumPanel/ForumPanel";
 import DoubleColumn from "../../../../src/components/Util/Layout/DoubleColumn/DoubleColumn";
-import { PageProps } from "../../../../src/utils/next/PageProps";
+import { Next } from "../../../../src/utils/next";
 import { urlify } from "../../../../src/utils/url";
 import { CommentTreeEntity } from "../../../../src/client/models/comment";
+import { fetchCommentTreeByPost } from "../../../../src/client/api/comment";
+import { fetchPostById } from "../../../../src/client/api/post";
+import { NextSeo } from "next-seo";
 
 interface Props {
     post: PostEntity;
     roots: CommentTreeEntity[];
 }
 
-const PostPage: NextPage<PageProps<Props>> = ({ componentProps }: PageProps<Props>) => (
+const PostPage: NextPage<Next<Props>> = ({ componentProps }: Next<Props>) => (
     <>
+        <NextSeo title={componentProps?.post.title}/>
         {componentProps ?
             <>
                 <Banner
@@ -52,25 +54,7 @@ const PostPage: NextPage<PageProps<Props>> = ({ componentProps }: PageProps<Prop
     </>
 );
 
-interface PostRes {
-    post: PostEntity;
-}
-
-async function fetchPostById(id: string) {
-    return await axios.get<PostRes>(`/api/posts/${id}`, configNoCreds);
-}
-
-interface CommentTreeRes {
-    commentTree: {
-        roots: CommentTreeEntity[]
-    };
-}
-
-async function fetchCommentTreeByPost(id: string) {
-    return await axios.get<CommentTreeRes>(`/api/feed/posts/${id}/comments`, configNoCreds);
-}
-
-export const getServerSideProps: GetServerSideProps<PageProps<Props>> = async ({ query }) => {
+export const getServerSideProps: GetServerSideProps<Next<Props>> = async ({ query }) => {
     const forumId = query.id as string | undefined;
     const slug = query.slug as string[] | undefined;
 
@@ -89,11 +73,13 @@ export const getServerSideProps: GetServerSideProps<PageProps<Props>> = async ({
     }
 
     try {
-        const resPost = await fetchPostById(postId);
-        const post = resPost.data.post;
+        const [resPost, resTree] = await Promise.all([
+            fetchPostById(postId),
+            fetchCommentTreeByPost(postId)
+        ]);
 
-        const resTree = await fetchCommentTreeByPost(postId);
-        const roots = resTree.data.commentTree.roots;
+        const post = resPost.data.post;
+        const roots = resTree.data.commentTree;
 
         if (forumId !== post.forum.id
             || title !== urlify(post.title)

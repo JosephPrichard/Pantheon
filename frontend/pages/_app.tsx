@@ -12,10 +12,11 @@ const App = ({ Component, pageProps }: AppProps) => {
         <>
             <Head>
                 <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
-                <html lang="en"/>
                 <meta name="next-head-count" content="5"/>
                 <meta name="color-scheme" content="light dark"/>
                 <title> Pantheon </title>
+                <link rel="shortcut icon" href="/static/favicon.ico" />
+                <html lang="en"/>
             </Head>
 
             <MantineProvider

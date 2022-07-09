@@ -5,20 +5,21 @@
 import type { GetServerSideProps, NextPage } from "next";
 import React from "react";
 import Banner from "../src/components/Banner/Banner";
-import { PageProps } from "../src/utils/next/PageProps";
+import { Next } from "../src/utils/next";
 import ErrorPage from "../src/components/ErrorPage/ErrorPage";
 import HomeFeed from "../src/components/Feed/PostFeeds/CategoryPostFeed/HomeFeed/HomeFeed";
+import { NextSeo } from "next-seo";
 
 interface Props {
     after: number;
     before: number;
 }
 
-const FeedPage: NextPage<PageProps<Props>> = ({ componentProps }: PageProps<Props>) => {
-
+const FeedPage: NextPage<Next<Props>> = ({ componentProps }: Next<Props>) => {
     return (
         <>
-            {componentProps ? 
+            <NextSeo title="Pantheon Home"/>
+            {componentProps ?
                 <>
                     <Banner/>
                     <HomeFeed
@@ -33,7 +34,7 @@ const FeedPage: NextPage<PageProps<Props>> = ({ componentProps }: PageProps<Prop
     );
 };
 
-export const getServerSideProps: GetServerSideProps<PageProps<Props>> = async ({ query }) => {
+export const getServerSideProps: GetServerSideProps<Next<Props>> = async ({ query }) => {
     const after = Number(query.after);
     const before = Number(query.before);
 

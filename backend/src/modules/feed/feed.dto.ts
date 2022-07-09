@@ -3,15 +3,11 @@
  */
 
 import { Type } from "class-transformer";
-import { IsOptional, IsString, IsIn, IsNumber } from "class-validator";
-import { TimeType } from "src/global";
+import { IsOptional, IsNumber } from "class-validator";
+import { PostEntity } from "../post/post.entity";
+import { CommentEntity } from "../comment/comment.entity";
 
 export class FeedCursorDto {
-    @IsOptional()
-    @IsString()
-    @IsIn(["day", "week", "month", "year", "alltime"])
-    time?: TimeType;
-
     @IsOptional()
     @IsNumber()
     @Type(() => Number)
@@ -21,4 +17,21 @@ export class FeedCursorDto {
     @IsNumber()
     @Type(() => Number)
     beforeCursor?: number;
+}
+
+export class ActivityFeedCursorDto {
+    @IsOptional()
+    @IsNumber()
+    @Type(() => Number)
+    commentsAfterCursor?: number;
+
+    @IsOptional()
+    @IsNumber()
+    @Type(() => Number)
+    postsAfterCursor?: number;
+}
+
+export interface ActivityElement {
+    isPost: boolean;
+    activity: PostEntity | CommentEntity;
 }

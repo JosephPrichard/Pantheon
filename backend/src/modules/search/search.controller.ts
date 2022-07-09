@@ -3,7 +3,6 @@
  */
 
 import { Controller, Get, Query } from "@nestjs/common";
-import { timeTypeToDate } from "src/utils/time.util";
 import { SearchPostsDto } from "./search.dto";
 import { SearchService } from "./search.service";
 
@@ -16,14 +15,11 @@ export class SearchController {
     async searchPosts(
         @Query() query: SearchPostsDto
     ) {
-        const date = timeTypeToDate(query.time);
-
         const filter = {
             cursor: query.cursor,
             text: query.text,
             forum: query.forum,
-            poster: query.poster,
-            date
+            poster: query.poster
         };
 
         return await this.searchService.searchPosts(filter);

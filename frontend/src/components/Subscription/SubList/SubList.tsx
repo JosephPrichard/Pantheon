@@ -3,14 +3,13 @@
  */
 
 import { Title } from "@mantine/core";
-import useSWR from "swr";
-import { fetcher } from "../../../utils/fetcher";
 import { SubsRes } from "../../../client/api/subscription";
 import ForumLink from "../../Forum/ForumLink/ForumLink";
 import styles from "./SubList.module.css";
+import { useFetch } from "../../../hooks/useFetch";
 
 const SubList = () => {
-    const { data } = useSWR<SubsRes>("/api/subscriptions", fetcher);
+    const { data } = useFetch<SubsRes>("/api/subscriptions");
 
     const subs = data?.subscriptions?.sort((a, b) => a.forum.id.localeCompare(b.forum.id));
 

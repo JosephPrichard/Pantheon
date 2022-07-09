@@ -6,7 +6,7 @@ import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Req
 import { CommentService } from "./comment.service";
 import { Request } from "express";
 import { sanitize } from "class-sanitizer";
-import { sanitizeString } from "../../utils/sanitize.util";
+import { sanitizeString } from "../../utils/sanitize.utils";
 import { CreateCommentNodeDto, CreateCommentRootDto, UpdateCommentDto } from "./comment.dto";
 import { InvalidSessionException } from "src/exception/session.exception";
 import { CommentNotFoundException } from "src/exception/entityNotFound.exception";

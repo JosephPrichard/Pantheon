@@ -2,7 +2,7 @@
  * Copyright (c) Joseph Prichard 2022.
  */
 
-export interface PageProps<T> {
+export interface Next<T> {
     componentProps?: T;
     errorCode?: number;
     message?: number;

@@ -7,11 +7,13 @@ import { PostService } from "../post/post.service";
 import { VoteService } from "../vote/vote.service";
 import { Request  } from "express";
 import { PostVoteEntity } from "../vote/vote.entity";
-import { FeedCursorDto } from "./feed.dto";
+import { ActivityFeedCursorDto, FeedCursorDto } from "./feed.dto";
 import { CommentService } from "../comment/comment.service";
 import { HighlightService } from "../highlight/highlight.service";
 import { PostFilterDto } from "../post/post.dto";
-import { timeTypeToDate } from "src/utils/time.util";
+import { PER_PAGE } from "../../global";
+import { CommentFilterDto } from "../comment/comment.dto";
+import { mergeActivity } from "./feed.utils";
 
 @Controller("feed")
 export class FeedController {
@@ -31,12 +33,10 @@ export class FeedController {
         @Query() query: FeedCursorDto,
         @Req() req: Request
     ) {
-        const date = timeTypeToDate(query.time);
-
         const filter: PostFilterDto = {
             afterCursor: query.afterCursor,
             beforeCursor: query.beforeCursor,
-            date
+            perPage: PER_PAGE
         };
 
         const result = await this.postService.findByFilter(filter);
@@ -55,12 +55,10 @@ export class FeedController {
         @Query() query: FeedCursorDto,
         @Req() req: Request
     ) {
-        const date = timeTypeToDate(query.time);
-
         const filter: PostFilterDto = {
             afterCursor: query.afterCursor,
             beforeCursor: query.beforeCursor,
-            date
+            perPage: PER_PAGE
         };
 
         const user = req.session.user;  
@@ -87,13 +85,11 @@ export class FeedController {
         @Param("forum") forumParam: string,
         @Req() req: Request
     ) {
-        const date = timeTypeToDate(query.time);
-
         const filter: PostFilterDto = {
             forums: [forumParam],
             afterCursor: query.afterCursor,
             beforeCursor: query.beforeCursor,
-            date
+            perPage: PER_PAGE
         };
 
         const result = await this.postService.findByFilter(filter);
@@ -110,15 +106,14 @@ export class FeedController {
     @Get("/users/:user/posts") 
     async getUserPosts(
         @Query() query: FeedCursorDto,
-        @Param("user") posterParam: string,
+        @Param("user") userParam: string,
         @Req() req: Request
     ) {
-        const date = timeTypeToDate(query.time);
-
         const filter: PostFilterDto = {
+            poster: userParam,
             afterCursor: query.afterCursor,
             beforeCursor: query.beforeCursor,
-            date
+            perPage: PER_PAGE
         };
 
         const result = await this.postService.findByFilter(filter);
@@ -133,9 +128,7 @@ export class FeedController {
     }
 
     @Get("/posts/:id/comments")
-    async getPostComments(
-        @Param("id") idParam: number
-    ) {
+    async getPostComments(@Param("id") idParam: number) {
         const filter = {
             post: idParam
         };
@@ -144,4 +137,32 @@ export class FeedController {
         return { commentTree };
     }
 
+    @Get("/users/:user/activity")
+    async getUserActivity(
+        @Query() query: ActivityFeedCursorDto,
+        @Param("user") userParam: string,
+        @Req() req: Request
+    ) {
+        const postFilter: PostFilterDto = {
+            poster: userParam,
+            afterCursor: query.postsAfterCursor,
+            perPage: PER_PAGE * 2
+        };
+
+        const commentFilter: CommentFilterDto = {
+            commenter: userParam,
+            afterCursor: query.commentsAfterCursor,
+            perPage: PER_PAGE * 2
+        };
+
+        const [postsResult, commentsResults] = await Promise.all([
+            this.postService.findByFilter(postFilter),
+            this.commentService.findByFilter(commentFilter)
+        ]);
+
+        const activities = mergeActivity(postsResult.posts, commentsResults.comments, PER_PAGE);
+        const nextPage = postsResult.nextPage || commentsResults.nextPage;
+
+        return { activities, nextPage };
+    }
 }

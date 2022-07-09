@@ -2,11 +2,9 @@
  * Copyright (c) Joseph Prichard 2022.
  */
 
-import useSWR from "swr";
 import { fetcher } from "../utils/fetcher";
+import useSWRImmutable from "swr/immutable";
 
 export const useFetch = <Res>(url: string) => {
-    const { data } = useSWR<Res>(url, fetcher);
-
-    return data;
+    return useSWRImmutable<Res>(url, fetcher);
 }

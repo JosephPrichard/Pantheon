@@ -47,7 +47,7 @@ export class UpdatePostDto {
 export interface PostFilterDto {
     poster?: string;
     forums?: string[];
-    date?: Date;
     afterCursor?: number;
     beforeCursor?: number;
+    perPage: number;
 }

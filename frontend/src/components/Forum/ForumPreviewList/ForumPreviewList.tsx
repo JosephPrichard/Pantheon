@@ -2,22 +2,20 @@
  * Copyright (c) Joseph Prichard 2022.
  */
 
-import { Space, Title } from "@mantine/core";
-import useSWR from "swr";
-import { fetcher } from "../../../utils/fetcher";
+import { Title } from "@mantine/core";
 import { buildFetchForumsUrl, ForumsRes } from "../../../client/api/forum";
 import ForumLink from "../ForumLink/ForumLink";
 import styles from "./ForumPreviewList.module.css";
 import React from "react";
 import Link from "next/link";
-import { WHITE } from "../../colors";
+import { useFetch } from "../../../hooks/useFetch";
 
 interface Props {
     limit?: number;
 }
 
 const ForumPreviewList = ({ limit }: Props) => {
-    const { data } = useSWR<ForumsRes>(buildFetchForumsUrl(limit), fetcher);
+    const { data } = useFetch<ForumsRes>(buildFetchForumsUrl(limit));
 
     return (
         <div>

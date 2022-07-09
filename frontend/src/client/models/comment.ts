@@ -27,7 +27,6 @@ export interface CommentNotificationEntity {
 }
 
 export interface CommentTreeEntity {
-    node: CommentEntity;
+    comment: CommentEntity;
     children: CommentTreeEntity[];
-    id: number;
 }

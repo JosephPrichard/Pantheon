@@ -13,15 +13,18 @@ import ErrorPage from "../../../src/components/ErrorPage/ErrorPage";
 import ForumPanel from "../../../src/components/Forum/ForumPanel/ForumPanel";
 import Submit from "../../../src/components/Submit/Submit";
 import DoubleColumn from "../../../src/components/Util/Layout/DoubleColumn/DoubleColumn";
-import { PageProps } from "../../../src/utils/next/PageProps";
+import { Next } from "../../../src/utils/next";
+import { fetchForumById } from "../../../src/client/api/forum";
+import { NextSeo } from "next-seo";
 
 interface Props {
     forum: ForumEntity;
 }
 
-const SubmitPage: NextPage<PageProps<Props>> = ({ componentProps }: PageProps<Props>) => {
+const SubmitPage: NextPage<Next<Props>> = ({ componentProps }: Next<Props>) => {
     return (
         <>
+            <NextSeo title={`Submit to ${componentProps?.forum.id}`}/>
             {componentProps ?
                 <>
                     <Banner
@@ -30,7 +33,7 @@ const SubmitPage: NextPage<PageProps<Props>> = ({ componentProps }: PageProps<Pr
                     />
                     <Space h={40}/>
                     <DoubleColumn
-                        column1={<Submit initialForum={componentProps.forum}/>}
+                        column1={<Submit forum={componentProps.forum}/>}
                         column1Width={"56%"}
                         column1Margin={"12%"}
                         column2={<ForumPanel forum={componentProps.forum}/>}
@@ -46,15 +49,7 @@ const SubmitPage: NextPage<PageProps<Props>> = ({ componentProps }: PageProps<Pr
     );
 };
 
-interface ForumRes {
-    forum: ForumEntity;
-}
-
-async function fetchForumById(id: string) {
-    return await axios.get<ForumRes>(`/api/forums/${id}`, configNoCreds);
-}
-
-export const getServerSideProps: GetServerSideProps<PageProps<Props>> = async ({ query }) => {
+export const getServerSideProps: GetServerSideProps<Next<Props>> = async ({ query }) => {
     const forumId = query.id as string | undefined;
 
     if (!forumId) {

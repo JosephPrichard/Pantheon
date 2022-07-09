@@ -9,7 +9,9 @@ import { ForumEntity } from "../../../src/client/models/forum";
 import Banner from "../../../src/components/Banner/Banner";
 import ErrorPage from "../../../src/components/ErrorPage/ErrorPage";
 import ForumFeed from "../../../src/components/Feed/PostFeeds/CategoryPostFeed/ForumFeed/ForumFeed";
-import { PageProps } from "../../../src/utils/next/PageProps";
+import { Next } from "../../../src/utils/next";
+import { NextSeo } from "next-seo";
+import React from "react";
 
 interface Props {
     forum: ForumEntity;
@@ -17,8 +19,9 @@ interface Props {
     before: number;
 }
 
-const ForumPage: NextPage<PageProps<Props>> = ({ componentProps }: PageProps<Props>) => (
+const ForumPage: NextPage<Next<Props>> = ({ componentProps }: Next<Props>) => (
     <>
+        <NextSeo title={`Forum: ${componentProps?.forum.id}`}/>
         {componentProps ?
             <>
                 <Banner

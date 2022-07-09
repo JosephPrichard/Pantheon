@@ -5,7 +5,8 @@
 import { Id } from "../types";
 import { CommentVoteEntity, PostVoteEntity } from "../models/vote";
 import axios from "axios";
-import { config } from "../config";
+import { config, configNoCreds } from "../config";
+import { PostEntity } from "../models/post";
 
 export interface PostAllVotesRes {
     postVote: PostVoteEntity;
@@ -21,8 +22,13 @@ export interface PostDelete {
     post: Id;
 }
 
+
 export interface PostRes {
-    post: PostEdit
+    post: PostEntity;
+}
+
+export async function fetchPostById(id: string) {
+    return await axios.get<PostRes>(`/api/posts/${id}`, configNoCreds);
 }
 
 export function buildFetchPostVotesUrl(post: Id) {

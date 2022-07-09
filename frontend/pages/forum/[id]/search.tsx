@@ -3,24 +3,24 @@
  */
 
 import { GetServerSideProps, NextPage } from "next";
-import { PageProps } from "../../../src/utils/next/PageProps";
+import { Next } from "../../../src/utils/next";
 import Banner from "../../../src/components/Banner/Banner";
 import ErrorPage from "../../../src/components/ErrorPage/ErrorPage";
-import axios from "axios";
-import { configNoCreds } from "../../../src/client/config";
 import { ForumEntity } from "../../../src/client/models/forum";
 import React from "react";
 import SearchFeed from "../../../src/components/Feed/PostFeeds/CategoryPostFeed/SearchFeed/SearchFeed";
+import { fetchForumById } from "../../../src/client/api/forum";
+import { NextSeo } from "next-seo";
 
 interface Props {
     forum: ForumEntity;
     text: string;
-    page: number;
 }
 
-const SearchPage: NextPage<PageProps<Props>> = ({ componentProps }: PageProps<Props>) => {
+const SearchPage: NextPage<Next<Props>> = ({ componentProps }: Next<Props>) => {
     return (
         <>
+            <NextSeo title={`Search Results on ${componentProps?.forum.id}: ${componentProps?.text}`}/>
             {componentProps ?
                 <>
                     <Banner
@@ -29,7 +29,7 @@ const SearchPage: NextPage<PageProps<Props>> = ({ componentProps }: PageProps<Pr
                     />
                     <SearchFeed
                         text={componentProps.text}
-                        user={componentProps.forum.id}
+                        forum={componentProps.forum.id}
                     />
                 </>
                 :
@@ -39,29 +39,10 @@ const SearchPage: NextPage<PageProps<Props>> = ({ componentProps }: PageProps<Pr
     );
 };
 
-interface ForumRes {
-    forum: ForumEntity;
-}
-
-async function fetchForumById(id: string) {
-    return await axios.get<ForumRes>(`/api/forums/${id}`, configNoCreds);
-}
-
-export const getServerSideProps: GetServerSideProps<PageProps<Props>> = async ({ query }) => {
+export const getServerSideProps: GetServerSideProps<Next<Props>> = async ({ query }) => {
     const forumId = query.id as string | undefined;
 
     if (!forumId) {
-        return {
-            props: {}
-        };
-    }
-
-    const pageStr = query.p as string | undefined;
-    let page = Number(pageStr);
-    if (!page) {
-        page = 1;
-    }
-    if (isNaN(page) || page <= 0) {
         return {
             props: {}
         };
@@ -82,11 +63,10 @@ export const getServerSideProps: GetServerSideProps<PageProps<Props>> = async ({
             props: {
                 componentProps: {
                     forum,
-                    text,
-                    page
+                    text
                 }
             }
-        }
+        };
     } catch(err) {
         return {
             props: {}

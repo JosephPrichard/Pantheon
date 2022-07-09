@@ -27,7 +27,7 @@ const PostFeed = ({ posts, postVotes, children, pagination }: Props) => {
             <DoubleColumn
                 column1={
                     <Card className={styles.PostFeed}>
-                        <Space h={10} w={1}/>
+                        <Space h={10}/>
                         <PostPreviewList posts={posts}/>
                     </Card>
                 }

@@ -4,7 +4,7 @@
 
 import { BadRequestException, Body, Controller, Get, Logger, NotFoundException, Post, Put, Query, Req } from "@nestjs/common";
 import { Request } from 'express';
-import { UpdateUserDto, CreateUserDto, SignInDto } from "./user.dto";
+import { UpdateUserDto, CreateUserDto, SignInDto, ResetPasswordDto } from "./user.dto";
 import { UserService } from "./user.service";
 import { sanitize } from 'class-sanitizer';
 import { InvalidSessionException } from "src/exception/session.exception";
@@ -21,11 +21,6 @@ export class UserController {
         @Body() body: CreateUserDto
     ) {
         sanitize(body);
-
-        const emailExists = await this.userService.findCredsByEmail(body.email) !== null;
-        if (emailExists) {
-            throw new BadRequestException("Email address is already in use.");
-        }
 
         const nameExists = await this.userService.findUserByName(body.name) !== null;
         if (nameExists) {
@@ -76,14 +71,14 @@ export class UserController {
     ) {
         sanitize(body);
 
-        const user = await this.userService.findByLogin(body.email, body.password);
+        const user = await this.userService.findByLogin(body.name, body.password);
         if (!user) {
             throw new NotFoundException("Incorrect login information.");
         }
 
         req.session.user = { 
             id: user.id, 
-            name: user.name
+            name: user.name!
         };
         this.logger.log(`User ${user.id} signed in`);
         return { 
@@ -103,9 +98,21 @@ export class UserController {
             this.logger.log(`User ${id} signed out`);
         }
 
-        return {
-            message: "Successfully logged out"
-        }
+        return { message: "Successfully logged out" }
     }
 
+    @Post("/resetPassword")
+    async resetPassword(
+        @Body() body: ResetPasswordDto,
+        @Req() req: Request
+    ) {
+        const user = req.session.user;
+        if (!user) {
+            throw new InvalidSessionException();
+        }
+
+        const id = await this.userService.updatePassword(body, user);
+
+        return { id };
+    }
 }

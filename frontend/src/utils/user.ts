@@ -3,8 +3,8 @@
  */
 
 import Cookies from "js-cookie";
-import { SESSION_EXPIRY } from "./global";
-import { User } from "./hooks/useUserCreds";
+import { SESSION_EXPIRY } from "./session";
+import { User } from "../hooks/useUserCreds";
 
 export const USER_COOKIE = "USER";
 

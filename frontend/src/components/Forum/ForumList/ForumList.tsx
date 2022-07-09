@@ -3,19 +3,18 @@
  */
 
 import { Space, Title } from "@mantine/core";
-import useSWR from "swr";
-import { fetcher } from "../../../utils/fetcher";
 import { buildFetchForumsUrl, ForumsRes } from "../../../client/api/forum";
 import styles from "./ForumList.module.css";
 import DoubleColumn from "../../Util/Layout/DoubleColumn/DoubleColumn";
 import ForumLargeLink from "../ForumLargeLink/ForumLargeLink";
+import { useFetch } from "../../../hooks/useFetch";
 
 interface Props {
     limit?: number;
 }
 
 const ForumList = ({ limit }: Props) => {
-    const { data } = useSWR<ForumsRes>(buildFetchForumsUrl(limit), fetcher);
+    const { data } = useFetch<ForumsRes>(buildFetchForumsUrl(limit));
 
     return (
         <DoubleColumn

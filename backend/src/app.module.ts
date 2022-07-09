@@ -18,9 +18,10 @@ import { FeedModule } from './modules/feed/feed.module';
 import { NotificationModule } from "./modules/notifications/notification.module";
 import { SearchModule } from './modules/search/search.module';
 import { APP_PIPE } from '@nestjs/core';
-import { getErrorMsg } from './utils/errparse.util';
+import { getErrorMsg } from './utils/errparse.utils';
 import session from "express-session";
 import connectPgSimple from 'connect-pg-simple';
+import { AccountModule } from "./modules/account/account.module";
 
 const PgSession = connectPgSimple(session);
 
@@ -42,7 +43,9 @@ const PgSession = connectPgSimple(session);
         VoteModule,
 
         FeedModule,
-        SearchModule
+        SearchModule,
+
+        AccountModule
     ],
     providers: [{
         provide: APP_PIPE,

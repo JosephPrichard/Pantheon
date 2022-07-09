@@ -7,7 +7,7 @@ import { AbstractSqlConnection, Knex } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import { EntityRepository, MikroORM } from "mikro-orm";
 import { AppLogger } from "src/loggers/applogger";
-import { sql } from "src/utils/sql.util";
+import { sql } from "src/utils/sql.utils";
 import { ForumEntity } from "../forum/forum.entity";
 import { UserEntity } from "../user/user.entity";
 import { PostSearchRow, SearchedPost, SearchPostFilter } from "./search.dto";
@@ -95,6 +95,7 @@ export class SearchService {
             `)
             .limit(PER_SEARCH_PAGE);
 
+        // map each result from result set to a mapped searched post dto
         const mappedPosts: SearchedPost[] = [];
         for (const result of results) {
             mappedPosts.push({

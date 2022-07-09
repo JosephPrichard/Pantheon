@@ -3,6 +3,11 @@
  */
 
 .Wrapper {
+    width: 100%;
+    height: 50vh;
+}
+
+.Error {
     width: 50%;
     height: 50%;
     position: absolute;

@@ -8,10 +8,9 @@ import { isValidError } from "../../../client/util";
 import { ErrorRes } from "../../../client/types";
 import styles from "./CreateCommentNode.module.css";
 import TextEditor from "../../Util/Widget/TextEditor/TextEditor";
-import { Button, Space } from "@mantine/core";
-import ErrorMessage from "../../Util/ErrorMessage/ErrorMessage";
+import { Space } from "@mantine/core";
+import Message from "../../Util/Message/Message/Message";
 import { CommentEntity } from "../../../client/models/comment";
-import { WHITE } from "../../colors";
 import WhiteButton from "../../Util/Widget/Button/WhiteButton";
 
 interface Props {
@@ -23,26 +22,14 @@ interface Props {
 const CreateCommentNode = ({ parentComment, onCreate, onCancel }: Props) => {
 
     const [content, setContent] = useState("");
-
     const [loading, setLoading] = useState(false);
-
     const [message, setMessage] = useState("");
-
-    const clearError = useCallback(
-        () => {
-            setMessage("");
-        },
-        []
-    );
 
     const onSubmit = useCallback(
         () => {
             setLoading(true);
 
-            submitCommentNode({
-                parentComment: parentComment.id,
-                content
-            })
+            submitCommentNode({ parentComment: parentComment.id, content })
                 .then(r => {
                     setLoading(false);
                     onCreate(r.data.comment);
@@ -65,12 +52,12 @@ const CreateCommentNode = ({ parentComment, onCreate, onCancel }: Props) => {
                     value={content}
                     onChange={(value) => {
                         setContent(value);
-                        clearError();
+                        setMessage("");
                     }}
                 />
                 <Space h={5}/>
-                <ErrorMessage message={message}/>
-                <div className={styles.ButtonWrapper}>
+                <Message message={message}/>
+                <div>
                     <WhiteButton
                         text="Comment"
                         loading={loading}

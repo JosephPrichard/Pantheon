@@ -8,9 +8,11 @@ import React from "react";
 import axios from "axios";
 import { UserEntity } from "../../../src/client/models/user";
 import { configNoCreds } from "../../../src/client/config";
-import { PageProps } from "../../../src/utils/next/PageProps";
+import { Next } from "../../../src/utils/next";
 import ErrorPage from "../../../src/components/ErrorPage/ErrorPage";
 import UserFeed from "../../../src/components/Feed/PostFeeds/CategoryPostFeed/UserFeed.tsx/UserFeed";
+import { fetchUserByName } from "../../../src/client/api/user";
+import { NextSeo } from "next-seo";
 
 interface Props {
     user: UserEntity;
@@ -18,8 +20,9 @@ interface Props {
     before: number;
 }
 
-const UserPage: NextPage<PageProps<Props>> = ({ componentProps }: PageProps<Props>) => (
+const UserPage: NextPage<Next<Props>> = ({ componentProps }: Next<Props>) => (
     <>
+        <NextSeo title={`User: ${componentProps?.user.name}`}/>
         {componentProps ? 
             <>
                 <Banner
@@ -39,15 +42,7 @@ const UserPage: NextPage<PageProps<Props>> = ({ componentProps }: PageProps<Prop
     </>
 );
 
-interface UserRes {
-    user: UserEntity;
-}
-
-async function fetchUserByName(name: string) {
-    return await axios.get<UserRes>(`/api/users?name=${name}`, configNoCreds);
-}
-
-export const getServerSideProps: GetServerSideProps<PageProps<Props>> = async ({ query }) => {
+export const getServerSideProps: GetServerSideProps<Next<Props>> = async ({ query }) => {
     const after = Number(query.after);
     const before = Number(query.before);
 

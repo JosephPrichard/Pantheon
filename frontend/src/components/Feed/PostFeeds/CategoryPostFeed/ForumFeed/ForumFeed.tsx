@@ -2,15 +2,14 @@
  * Copyright (c) Joseph Prichard 2022.
  */
 
-import useSWR from "swr";
 import { ForumEntity } from "../../../../../client/models/forum";
-import { fetcher } from "../../../../../utils/fetcher";
 import ForumPanel from "../../../../Forum/ForumPanel/ForumPanel";
 import PostFeed from "../../PostFeed/PostFeed";
 import { buildFetchForumFeedUrl, PostsRes } from "../../../../../client/api/feed";
 import FeedPagination from "../../../FeedPagination/FeedPagination";
 import React from "react";
 import { getAfterCursor, getBeforeCursor } from "../../../../../utils/cursor";
+import { useFetch } from "../../../../../hooks/useFetch";
 
 interface Props {
     forum: ForumEntity;
@@ -19,7 +18,7 @@ interface Props {
 }
 
 const ForumFeed = ({ forum, afterCursor, beforeCursor }: Props) => {
-    const { data } = useSWR<PostsRes>(buildFetchForumFeedUrl(forum.id, beforeCursor, afterCursor), fetcher);
+    const { data } = useFetch<PostsRes>(buildFetchForumFeedUrl(forum.id, beforeCursor, afterCursor));
 
     return (
         <PostFeed

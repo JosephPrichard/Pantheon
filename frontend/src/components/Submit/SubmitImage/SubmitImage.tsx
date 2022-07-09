@@ -13,12 +13,12 @@ import { submitImages, submitPost } from "../../../client/api/submit";
 import { ForumEntity } from "../../../client/models/forum";
 import { createdPostUrl } from "../../../utils/url";
 import { isValidError } from "../../../client/util";
-import ErrorMessage from "../../Util/ErrorMessage/ErrorMessage";
+import Message from "../../Util/Message/Message/Message";
 import FileDropzone from "../../Util/Widget/FileDropzone/FileDropzone";
 import { useRouter } from "next/router";
 
 interface Props {
-    forum?: ForumEntity;
+    forum: ForumEntity;
     show: boolean;
 }
 
@@ -43,20 +43,12 @@ const SubmitImage = ({ forum, show }: Props) => {
 
     const submit = useCallback(
         () => {
-            if (!forum) {
-                return;
-            }
-
             setLoading(true);
             // do a pre-check for title size, so we don't need to rely on server
             if (title.length >= 5 && title.length <= 50) {
                 submitImages(files)
                     .then((r) => {
-                        submitPost({
-                            title: title,
-                            images: r.data.ids,
-                            forum: forum.id
-                        })
+                        submitPost({ title: title, images: r.data.ids, forum: forum.id })
                             .then((r1) => {
                                 setLoading(false);
                                 router.push(createdPostUrl(r1.data.post));
@@ -119,7 +111,7 @@ const SubmitImage = ({ forum, show }: Props) => {
                 }}
                 error={error}
             />
-            <ErrorMessage message={message} textAlign="right" sidePaddings={10}/>
+            <Message message={message} textAlign="right" sidePaddings={10}/>
             <Space h={20}/>
             <div className={styles.ButtonWrapper}>
                 <Button 

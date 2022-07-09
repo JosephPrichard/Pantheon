@@ -7,7 +7,7 @@ import { sanitize } from "class-sanitizer";
 import { CreatePostDto, UpdatePostDto } from "./post.dto";
 import { PostService } from "./post.service";
 import { Request } from "express";
-import { sanitizeString } from "../../utils/sanitize.util";
+import { sanitizeString } from "../../utils/sanitize.utils";
 import { InvalidSessionException } from "src/exception/session.exception";
 import { PostNotFoundException } from "src/exception/entityNotFound.exception";
 

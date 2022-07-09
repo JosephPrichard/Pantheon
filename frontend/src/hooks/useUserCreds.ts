@@ -5,7 +5,7 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { config } from "../client/config";
-import { clearUser, getUser, setUser } from "../user";
+import { clearUser, getUser, setUser } from "../utils/user";
 import { Id } from "../client/types";
 
 export interface User {
@@ -39,25 +39,11 @@ export const useUserCreds = (noRefresh?: boolean) => {
 }
 
 export const useUserName = (noRefresh?: boolean) => {
-    const [name, setName] = useState<string>();
-
     const creds = useUserCreds(noRefresh);
-
-    useEffect(() => {
-        setName(creds?.name);
-    }, [creds?.name]);
-
-    return name;
+    return creds?.name;
 }
 
 export const useUserId = (noRefresh?: boolean) => {
-    const [id, setId] = useState<Id>();
-
     const creds = useUserCreds(noRefresh);
-
-    useEffect(() => {
-        setId(creds?.id);
-    }, [creds?.id]);
-
-    return id;
+    return creds?.id;
 }

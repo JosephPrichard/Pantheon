@@ -22,7 +22,7 @@ interface Props {
 
 const CommentTreePanel = ({ tree }: Props) => {
 
-    const comment = tree.node;
+    const comment = tree.comment;
     const linkId = String(comment.id);
 
     const hasPerms = usePermissions(comment.commenter?.id);
@@ -50,10 +50,7 @@ const CommentTreePanel = ({ tree }: Props) => {
 
     const onEditComment = useCallback(
         (text) => {
-            editComment({
-                comment: comment.id,
-                content: text
-            })
+            editComment({ comment: comment.id, content: text })
                 .then(() => {
                     setContent(text);
                     setCanEdit(false);
@@ -64,12 +61,8 @@ const CommentTreePanel = ({ tree }: Props) => {
 
     const onDeleteComment = useCallback(
         () => {
-            deleteComment({
-                comment: comment.id
-            })
-                .then(() => {
-                    setShowDelete(false);
-                });
+            deleteComment({ comment: comment.id })
+                .then(() => setShowDelete(false));
         },
         [comment.id]
     );
@@ -77,12 +70,7 @@ const CommentTreePanel = ({ tree }: Props) => {
     const onCreateReply = useCallback(
         (nodeComment: CommentEntity) => {
             const newCreatedNodes = createdNodes.map(node => node);
-            newCreatedNodes.push({
-                node: nodeComment,
-                children: [],
-                id: comment.id
-            });
-            console.log(newCreatedNodes);
+            newCreatedNodes.push({ comment: nodeComment, children: [] });
             setCreatedNodes(newCreatedNodes);
             setShowReply(false);
         },
@@ -94,7 +82,7 @@ const CommentTreePanel = ({ tree }: Props) => {
     }
 
     return (
-        <div key={tree.id}>
+        <div key={tree.comment.id}>
             <div
                 className={styles.CommentDisplay}
                 id={linkId}
@@ -115,7 +103,7 @@ const CommentTreePanel = ({ tree }: Props) => {
                     <span className={styles.Date}>
                         { " • " + getDateDisplay(new Date(comment.createdAt)) }
                     </span>
-                    <div className={styles.TextWrapper}>
+                    <div>
                         <EditableTextContent
                             isEditing={canEdit && hasPerms}
                             text={content}
@@ -137,7 +125,7 @@ const CommentTreePanel = ({ tree }: Props) => {
                 {!showReply ||
                     <div className={styles.CommentTreeChild}>
                         <CreateCommentNode
-                            parentComment={tree.node}
+                            parentComment={tree.comment}
                             onCreate={onCreateReply}
                             onCancel={() => setShowReply(false)}
                         />
@@ -152,7 +140,7 @@ const CommentTreePanel = ({ tree }: Props) => {
                         );
                     })
                 }
-                {tree.children.sort((a, b) => b.node.votes - a.node.votes)
+                {tree.children.sort((a, b) => b.comment.votes - a.comment.votes)
                     .map((tree, i) => {
                         return (
                             <div key={i} className={styles.CommentTreeChild}>

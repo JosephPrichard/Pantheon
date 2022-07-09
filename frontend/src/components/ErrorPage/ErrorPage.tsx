@@ -16,15 +16,17 @@ const ErrorPage: FunctionComponent<Props> = ({ code, message }: Props) => (
     <>
         <Banner />
         <div className={styles.Wrapper}>
-            <div>
-                <Title className={styles.Code} order={1}>
-                    { code }
-                </Title>
-            </div>
-            <div>
-                <Title className={styles.Message} order={3}>
-                    { message }
-                </Title>
+            <div className={styles.Error}>
+                <div>
+                    <Title className={styles.Code} order={1}>
+                        { code }
+                    </Title>
+                </div>
+                <div>
+                    <Title className={styles.Message} order={3}>
+                        { message }
+                    </Title>
+                </div>
             </div>
         </div>
     </>

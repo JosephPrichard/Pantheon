@@ -7,7 +7,7 @@ import { ChevronDown, ChevronUp } from "react-feather";
 import { PostEntity, PostSearchEntity } from "../../../client/models/post";
 import styles from "./VotePanel.module.css";
 import { Button } from "@mantine/core";
-import { Vote } from "../../../client/api/vote.client";
+import { Vote } from "../../../client/api/vote";
 
 const UP_VOTE_COLOR = "rgb(229, 113, 50)";
 const DOWN_VOTE_COLOR = "rgb(60, 133, 208)";

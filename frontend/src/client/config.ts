@@ -4,12 +4,18 @@
 
 import { AxiosRequestConfig } from "axios";
 
+const URL = "http://localhost:5000";
+
+export function filePath(name: string) {
+    return URL + "/api/files/" + name;
+}
+
 export const config: AxiosRequestConfig = {
     withCredentials: true,
-    baseURL: "http://localhost:5000"
+    baseURL: URL
 }
 
 export const configNoCreds: AxiosRequestConfig = {
-    withCredentials: true,
-    baseURL: "http://localhost:5000"
+    withCredentials: false,
+    baseURL: URL
 }

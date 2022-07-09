@@ -24,10 +24,7 @@ const Banner = ({ title, href }: Props) => {
         <div className={styles.Banner}>
             <AppLogo />
 
-            <BannerTitle
-                text={title}
-                href={href}
-            />
+            <BannerTitle text={title} href={href} />
 
             <div className={styles.SearchBar}>
                 <SearchBar href={href}/>

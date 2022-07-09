@@ -5,6 +5,7 @@
 .ProfilePopover {
     display: inline-block;
     user-select: none;
+    overflow: visible;
 }
 
 .PopoverOverlay {

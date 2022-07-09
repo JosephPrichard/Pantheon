@@ -2,23 +2,25 @@
  * Copyright (c) Joseph Prichard 2022.
  */
 
-import styles from "./ErrorMessage.module.css";
+import styles from "./Message.module.css";
 import { FunctionComponent } from "react";
 
 interface Props {
     message: string;
     textAlign?: "left" | "right";
     sidePaddings?: number;
+    isSuccess?: boolean
 }
 
-const ErrorMessage: FunctionComponent<Props> = ({ message, textAlign, sidePaddings }: Props) => {
+const Message: FunctionComponent<Props> = ({ message, textAlign, sidePaddings, isSuccess }: Props) => {
     return (
         <div
             className={styles.ErrorMessage}
             style={{
                 textAlign,
                 paddingLeft: sidePaddings,
-                paddingRight: sidePaddings
+                paddingRight: sidePaddings,
+                color: isSuccess ? "whitesmoke" : "#fa5252"
             }}
         >
             { message }
@@ -26,8 +28,8 @@ const ErrorMessage: FunctionComponent<Props> = ({ message, textAlign, sidePaddin
     );
 }
 
-ErrorMessage.defaultProps = {
+Message.defaultProps = {
     textAlign: "left"
 }
 
-export default ErrorMessage;
+export default Message;

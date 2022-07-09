@@ -41,3 +41,9 @@ export class UpdateCommentDto {
 export interface CommentTreeDto {
     post: number;
 }
+
+export interface CommentFilterDto {
+    commenter: string;
+    afterCursor?: number;
+    perPage: number;
+}

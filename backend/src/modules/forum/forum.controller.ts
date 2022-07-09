@@ -2,12 +2,12 @@
  * Copyright (c) Joseph Prichard 2022.
  */
 
-import { Body, Controller, Get, NotFoundException, Param, Post, Put, Req } from "@nestjs/common";
-import { CreateForumDto, FindForumsDto, UpdateForumDto } from "./forum.dto";
+import { Body, Controller, Get, Param, Put, Req } from "@nestjs/common";
+import { FindForumsDto, UpdateForumDto } from "./forum.dto";
 import { ForumService } from "./forum.service";
 import { Request } from "express";
 import { sanitize } from "class-sanitizer";
-import { sanitizeString } from "src/utils/sanitize.util";
+import { sanitizeString } from "src/utils/sanitize.utils";
 import { InvalidSessionException } from "src/exception/session.exception";
 import { ForumNotFoundException } from "src/exception/entityNotFound.exception";
 

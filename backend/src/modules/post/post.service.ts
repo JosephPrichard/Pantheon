@@ -15,8 +15,6 @@ import { ForumNotFoundException, PostNotFoundException } from "src/exception/ent
 import { ResourcePermissionsException } from "src/exception/permissions.exception";
 import { AppLogger } from "src/loggers/applogger";
 import { InvalidInputException } from "src/exception/invalidInput.exception";
-import { PER_PAGE } from "../../global";
-import { NotificationService } from "../notifications/notification.service";
 
 @Injectable()
 export class PostService {
@@ -68,10 +66,6 @@ export class PostService {
         return await this.postRepository.findOne({ id: id }, ["poster", "forum"]);
     }
 
-    async findManyByIds(ids: number[]) {
-        return await this.postRepository.find({ id: { $in: ids } });
-    }
-
     async findByFilter(filter: PostFilterDto) {
         const where: FilterQuery<any> = {};
 
@@ -93,11 +87,6 @@ export class PostService {
             }
         }
 
-        // check if we should only include posts after a certain date
-        if (filter.date) {
-            where.createdAt = { $gte: filter.date };
-        }
-
         let sort: QueryOrderMap = { id: QueryOrder.DESC };
         // check if we should use cursors to paginate
         if (filter.afterCursor) {
@@ -107,28 +96,26 @@ export class PostService {
             sort = { id: QueryOrder.ASC };
         }
 
+        // fetch posts from the repository
         const posts = await this.postRepository.find(
             where,
             ["poster", "forum"],
             sort,
-            PER_PAGE + 1
+            filter.perPage + 1
         );
 
+        // if the before cursor was used, reverse list (since it fetches backwards)
         if (!filter.afterCursor && filter.beforeCursor) {
             posts.reverse();
         }
 
-        const nextPage = posts.length >= PER_PAGE + 1;
-
         // remove the extra element from the list
+        const nextPage = posts.length >= filter.perPage + 1;
         if (nextPage) {
             posts.pop();
         }
 
-        return {
-            posts,
-            nextPage
-        };
+        return { posts, nextPage };
     }
 
     async update(update: UpdatePostDto, id: number, user: User) {
@@ -173,4 +160,11 @@ export class PostService {
         return post;
     }
 
+    async deleteAll(user: User) {
+        this.logger.log(`User ${user.id}'s posts were deleted`);
+        return await this.postRepository.nativeUpdate(
+            { poster: user.id },
+            { poster: null, content: "", images: [] }
+        );
+    }
 }

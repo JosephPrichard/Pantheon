@@ -2,7 +2,7 @@
  * Copyright (c) Joseph Prichard 2022.
  */
 
-import { ReactNode } from "react";
+import { FunctionComponent, ReactNode } from "react";
 import styles from "./Column.module.css";
 
 interface Props {
@@ -14,11 +14,7 @@ interface Props {
     space?: boolean;
 }
 
-const Column = ({ children, width, minWidth, marginLeft, marginRight, space }: Props) => {
-    if (space === undefined) {
-        space = true;
-    }
-
+const Column: FunctionComponent<Props> = ({ children, width, minWidth, marginLeft, marginRight, space }: Props) => {
     return (
         <div 
             className={styles.Column}
@@ -34,6 +30,10 @@ const Column = ({ children, width, minWidth, marginLeft, marginRight, space }: P
             { children }
         </div>
     );
+}
+
+Column.defaultProps = {
+    space: true
 }
 
 export default Column;

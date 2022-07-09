@@ -6,13 +6,13 @@ import React, { FunctionComponent } from "react";
 import styles from "./PostPreviewList.module.css";
 import { PostEntity, PostSearchEntity } from "../../../client/models/post";
 import PostPreview from "../PostPreview/PostPreview";
-import PostSkeleton from "../../Util/Loading/PostSkeleton/PostSkeleton";
+import AppSkeleton from "../../Util/Loading/AppSkeleton/AppSkeleton";
 
 interface Props {
     posts?: (PostEntity | PostSearchEntity)[];
 }
 
-const PostPreviewList: FunctionComponent<Props> = ({ posts }: Props) => (
+const PostPreviewList = ({ posts }: Props) => (
     <div className={styles.Posts}>
         { posts ?
             (posts.length !== 0) ?
@@ -28,7 +28,7 @@ const PostPreviewList: FunctionComponent<Props> = ({ posts }: Props) => (
             :
             <>
                 {Array(15).fill(0).map((n, i) => (
-                    <PostSkeleton key={i} lighter={i % 2 == 0} />
+                    <AppSkeleton key={i} lighter={i % 2 == 0} />
                 ))}
             </>
         }

@@ -3,17 +3,17 @@
  */
 
 import { WHITE } from "../../../colors";
-import React from "react";
+import React, { FunctionComponent } from "react";
 import styles from "./WhiteButton.module.css";
 import { Button } from "@mantine/core";
 
 interface Props {
     text: string;
-    loading: boolean;
+    loading?: boolean;
     onClick: () => void;
 }
 
-const WhiteButton = ({ text, loading, onClick }: Props) => {
+const WhiteButton: FunctionComponent<Props> = ({ text, loading, onClick }: Props) => {
     return (
         <Button
             className={styles.Button}
@@ -26,6 +26,10 @@ const WhiteButton = ({ text, loading, onClick }: Props) => {
             { text }
         </Button>
     );
+}
+
+WhiteButton.defaultProps = {
+    loading: false
 }
 
 export default WhiteButton;

@@ -12,11 +12,11 @@ import { submitPost } from "../../../client/api/submit";
 import { isValidError } from "../../../client/util";
 import { ForumEntity } from "../../../client/models/forum";
 import { createdPostUrl } from "../../../utils/url";
-import ErrorMessage from "../../Util/ErrorMessage/ErrorMessage";
+import Message from "../../Util/Message/Message/Message";
 import { useRouter } from "next/router";
 
 interface Props {
-    forum?: ForumEntity;
+    forum: ForumEntity;
     show: boolean;
 }
 
@@ -42,16 +42,8 @@ const SubmitPost = ({ forum, show }: Props) => {
 
     const submit = useCallback(
         () => {
-            if (!forum) {
-                return;
-            }
-
             setLoading(true);
-            submitPost({
-                title,
-                forum: forum.id,
-                content
-            })
+            submitPost({ title, forum: forum.id, content })
                 .then((r) => {
                     setLoading(false);
                     router.push(createdPostUrl(r.data.post));
@@ -97,7 +89,7 @@ const SubmitPost = ({ forum, show }: Props) => {
                     error={error}
                 />
             </div>
-            <ErrorMessage message={message} textAlign="right" sidePaddings={10}/>
+            <Message message={message} textAlign="right" sidePaddings={10}/>
             <Space h={20}/>
             <div className={styles.ButtonWrapper}>
                 <Button

@@ -4,7 +4,7 @@
 
 import { Type } from "class-transformer";
 import { IsString, IsIn, MaxLength, IsOptional, IsNumber } from "class-validator";
-import { MAX_ST_LEN, TimeType } from "src/global";
+import { MAX_ST_LEN } from "src/global";
 
 export class SearchPostsDto {
     @IsOptional()
@@ -15,11 +15,6 @@ export class SearchPostsDto {
     @IsString()
     @MaxLength(MAX_ST_LEN, { message: `Search text length cannot exceed ${MAX_ST_LEN}` })
     text!: string;
-
-    @IsOptional()
-    @IsString()
-    @IsIn(["day", "week", "month", "year", "alltime"])
-    time?: TimeType;
 
     @IsOptional()
     @IsString()

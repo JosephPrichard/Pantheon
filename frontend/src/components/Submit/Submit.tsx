@@ -13,12 +13,11 @@ import { ForumEntity } from "../../client/models/forum";
 import Divider from "../Util/Widget/Divider/Divider";
 
 interface Props {
-    initialForum?: ForumEntity;
+    forum: ForumEntity;
 }
 
-const Submit = ({ initialForum }: Props) => {
+const Submit = ({ forum }: Props) => {
 
-    const [forum, setForum] = useState(initialForum);
     const [active, setActive] = useState(0);
 
     return (

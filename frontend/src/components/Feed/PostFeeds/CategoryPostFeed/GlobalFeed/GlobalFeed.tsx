@@ -3,7 +3,6 @@
  */
 
 import React from "react";
-import useSWR from "swr";
 import { fetcher } from "../../../../../utils/fetcher";
 import PostFeed from "../../PostFeed/PostFeed";
 import { buildFetchGlobalFeedUrl, PostsRes } from "../../../../../client/api/feed";
@@ -12,6 +11,7 @@ import { getAfterCursor, getBeforeCursor } from "../../../../../utils/cursor";
 import ForumPreviewList from "../../../../Forum/ForumPreviewList/ForumPreviewList";
 import FeedPanel from "../../../FeedPanel/FeedPanel";
 import { Space } from "@mantine/core";
+import { useFetch } from "../../../../../hooks/useFetch";
 
 interface Props {
     afterCursor?: number;
@@ -19,7 +19,7 @@ interface Props {
 }
 
 const GlobalFeed = ({ afterCursor, beforeCursor }: Props) => {
-    const { data } = useSWR<PostsRes>(buildFetchGlobalFeedUrl(beforeCursor, afterCursor), fetcher);
+    const { data } = useFetch<PostsRes>(buildFetchGlobalFeedUrl(beforeCursor, afterCursor));
 
     return (
         <PostFeed

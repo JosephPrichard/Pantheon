@@ -7,9 +7,8 @@ import React, { useCallback, useState } from "react";
 import BannerLink from "../BannerLink/BannerLink";
 import styles from "./ProfilePopover.module.css";
 import { signOut } from "../../../client/api/login";
-import useSWR from "swr";
-import { fetcher } from "../../../utils/fetcher";
 import { UnreadCountRes } from "../../../client/api/notifications";
+import { useFetch } from "../../../hooks/useFetch";
 
 interface Props {
     name: string;
@@ -17,7 +16,7 @@ interface Props {
 
 const ProfilePopover = ({ name }: Props) => {
 
-    const { data } = useSWR<UnreadCountRes>("/api/notifications/unread", fetcher);
+    const { data } = useFetch<UnreadCountRes>("/api/notifications/unread");
 
     const [popoverOpened, setPopoverOpened] = useState(false);
 
@@ -48,6 +47,7 @@ const ProfilePopover = ({ name }: Props) => {
             >
                 <Space h={10}/>
                 <BannerLink text="Profile" href={`/user/${name}`} />
+                <BannerLink text="Settings" href={`/user/settings`} />
                 <BannerLink text={`Inbox ${count}`} href={`/notifications`} />
                 <BannerLink text="Sign Out" onClick={onSignOut} />
                 <Space h={12}/>

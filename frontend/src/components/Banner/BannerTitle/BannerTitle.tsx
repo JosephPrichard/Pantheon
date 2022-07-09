@@ -20,9 +20,9 @@ const BannerTitle = ({ text, href }: Props) => (
             <Link href={href}>
                 <a className={styles.a}>
                     {!text ||
-                        <>
+                        <span>
                             { text }
-                        </>
+                        </span>
                     }
                 </a>
             </Link>

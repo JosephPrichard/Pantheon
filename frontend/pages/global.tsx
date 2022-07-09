@@ -7,18 +7,19 @@ import React from "react";
 import Banner from "../src/components/Banner/Banner";
 import ErrorPage from "../src/components/ErrorPage/ErrorPage";
 import GlobalFeed from "../src/components/Feed/PostFeeds/CategoryPostFeed/GlobalFeed/GlobalFeed";
-import { PageProps } from "../src/utils/next/PageProps";
+import { Next } from "../src/utils/next";
 import { GetServerSideProps } from "next";
+import { NextSeo } from "next-seo";
 
 interface Props {
     after: number;
     before: number;
 }
 
-const FeedPage: NextPage<PageProps<Props>> = ({ componentProps }: PageProps<Props>) => {
-
+const FeedPage: NextPage<Next<Props>> = ({ componentProps }: Next<Props>) => {
     return (
         <>
+            <NextSeo title="Pantheon"/>
             {componentProps ? 
                 <>
                     <Banner/>
@@ -34,7 +35,7 @@ const FeedPage: NextPage<PageProps<Props>> = ({ componentProps }: PageProps<Prop
     );
 };
 
-export const getServerSideProps: GetServerSideProps<PageProps<Props>> = async ({ query }) => {
+export const getServerSideProps: GetServerSideProps<Next<Props>> = async ({ query }) => {
     const after = Number(query.after);
     const before = Number(query.before);
 

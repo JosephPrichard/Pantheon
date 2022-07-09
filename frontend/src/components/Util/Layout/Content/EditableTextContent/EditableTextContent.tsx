@@ -2,21 +2,22 @@
  * Copyright (c) Joseph Prichard 2022.
  */
 
-import { Button, Text } from "@mantine/core";
-import React, { useState } from "react";
+import { Button, Space, Text } from "@mantine/core";
+import React, { FunctionComponent, useState } from "react";
 import { sanitizeHTML } from "../../../../../utils/sanitize";
 import Markup from "../../Markup/Markup";
-import styles from "./EditableContent.module.css"
+import styles from "./EditableTextContent.module.css"
 import { usePermissions } from "../../../../../hooks/usePermissions";
 import { Id } from "../../../../../client/types";
 import TextEditor from "../../../Widget/TextEditor/TextEditor";
 import { Edit } from "react-feather";
 import { ORANGE, WHITE } from "../../../../colors";
+import WhiteButton from "../../../Widget/Button/WhiteButton";
 
 interface Props {
     text: string;
-    isEditing: boolean;
     onSave: (editedText: string) => void;
+    isEditing: boolean;
     onCancel: () => void;
 }
 
@@ -38,24 +39,9 @@ const EditableTextContent = ({ text, isEditing, onSave, onCancel }: Props) => {
                         value={editedText}
                         onChange={(value) => setEditedText(value)}
                     />
-                    <Button
-                        className={styles.Button}
-                        style={{
-                            backgroundColor: WHITE
-                        }}
-                        onClick={() => onSave(editedText)}
-                    >
-                        Save
-                    </Button>
-                    <Button
-                        className={styles.Button}
-                        style={{
-                            backgroundColor: WHITE
-                        }}
-                        onClick={onCancel}
-                    >
-                        Cancel
-                    </Button>
+                    <WhiteButton text="Save" onClick={() => onSave(editedText)}/>
+                    <WhiteButton text="Cancel" onClick={onCancel}/>
+                    <Space h={20}/>
                 </div>
             }
         </div>

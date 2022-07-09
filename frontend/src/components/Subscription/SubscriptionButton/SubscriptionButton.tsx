@@ -3,12 +3,11 @@
  */
 
 import { Button } from "@mantine/core";
-import useSWR from "swr";
-import { fetcher } from "../../../utils/fetcher";
 import { createSubscription, deleteSubscription, IsSubbedRes } from "../../../client/api/subscription";
 import styles from "./SubscriptionButton.module.css";
 import { useState } from "react";
 import { useUserName } from "../../../hooks/useUserCreds";
+import { useFetch } from "../../../hooks/useFetch";
 
 interface Props {
     forumId: string;
@@ -16,7 +15,8 @@ interface Props {
 
 const SubscriptionButton = ({ forumId }: Props) => {
     const name = useUserName(true);
-    const { data } = useSWR<IsSubbedRes>(`/api/subscriptions/isSubbed?forum=${forumId}`, fetcher);
+
+    const { data } = useFetch<IsSubbedRes>(`/api/subscriptions/isSubbed?forum=${forumId}`);
 
     const [justSubbed, setJustSubbed] = useState<boolean | undefined>();
 

@@ -6,15 +6,15 @@ import React, { useState } from "react";
 import styles from "./PhotoGallery.module.css";
 import { ChevronLeft, ChevronRight } from "react-feather";
 import LoadableImage from "../../Loading/LoadableImage/LoadableImage";
+import { filePath } from "../../../../client/config";
 
 interface Props {
     imgIds: string[];
-    baseUrl: string;
     width: string | number;
     height: string | number;
 }
 
-const PhotoGallery = ({ imgIds, baseUrl, width, height }: Props) => {
+const PhotoGallery = ({ imgIds, width, height }: Props) => {
 
     const [hovering, setHovering] = useState(false);
     const [img, setImg] = useState(0);
@@ -82,7 +82,7 @@ const PhotoGallery = ({ imgIds, baseUrl, width, height }: Props) => {
                         }}
                     >
                         <LoadableImage
-                            src={`${baseUrl}/${id}`} 
+                            src={filePath(id)}
                             layout="fill"
                             objectFit="contain"
                         />

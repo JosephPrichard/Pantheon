@@ -22,7 +22,7 @@ export interface SearchPostRes {
     pageCount: number;
 }
 
-interface Search {
+export interface Search {
     text: string;
     page: number;
 }

@@ -4,10 +4,15 @@
 
 import { NextPage } from "next";
 import ErrorPage from "../src/components/ErrorPage/ErrorPage";
+import { NextSeo } from "next-seo";
+import React from "react";
 
 const Error404Page: NextPage = () => {
     return (
-        <ErrorPage/>
+        <>
+            <NextSeo title="Not Found"/>
+            <ErrorPage/>
+        </>
     );
 };
 

@@ -3,24 +3,24 @@
  */
 
 import { GetServerSideProps, NextPage } from "next";
-import { PageProps } from "../../../src/utils/next/PageProps";
+import { Next } from "../../../src/utils/next";
 import Banner from "../../../src/components/Banner/Banner";
 import ErrorPage from "../../../src/components/ErrorPage/ErrorPage";
-import axios from "axios";
-import { configNoCreds } from "../../../src/client/config";
 import React from "react";
 import { UserEntity } from "../../../src/client/models/user";
 import SearchFeed from "../../../src/components/Feed/PostFeeds/CategoryPostFeed/SearchFeed/SearchFeed";
+import { fetchUserByName } from "../../../src/client/api/user";
+import { NextSeo } from "next-seo";
 
 interface Props {
     user: UserEntity;
     text: string;
-    page: number;
 }
 
-const SearchPage: NextPage<PageProps<Props>> = ({ componentProps }: PageProps<Props>) => {
+const SearchPage: NextPage<Next<Props>> = ({ componentProps }: Next<Props>) => {
     return (
         <>
+            <NextSeo title={`Search Results on ${componentProps?.user.name}: ${componentProps?.text}`}/>
             {componentProps ?
                 <>
                     <Banner
@@ -39,29 +39,10 @@ const SearchPage: NextPage<PageProps<Props>> = ({ componentProps }: PageProps<Pr
     );
 };
 
-interface UserRes {
-    user: UserEntity;
-}
-
-async function fetchUserByName(name: string) {
-    return await axios.get<UserRes>(`/api/users?name=${name}`, configNoCreds);
-}
-
-export const getServerSideProps: GetServerSideProps<PageProps<Props>> = async ({ query }) => {
+export const getServerSideProps: GetServerSideProps<Next<Props>> = async ({ query }) => {
     const name = query.name as string | undefined;
 
     if (!name) {
-        return {
-            props: {}
-        };
-    }
-
-    const pageStr = query.p as string | undefined;
-    let page = Number(pageStr);
-    if (!page) {
-        page = 1;
-    }
-    if (isNaN(page) || page <= 0) {
         return {
             props: {}
         };
@@ -81,8 +62,7 @@ export const getServerSideProps: GetServerSideProps<PageProps<Props>> = async ({
             props: {
                 componentProps: {
                     user,
-                    text,
-                    page
+                    text
                 }
             }
         };

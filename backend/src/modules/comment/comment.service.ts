@@ -11,10 +11,12 @@ import { AppLogger } from "src/loggers/applogger";
 import { PostService } from "../post/post.service";
 import { User } from "../user/user.dto";
 import { UserService } from "../user/user.service";
-import { CommentTreeDto, CreateCommentNodeDto, CreateCommentRootDto, UpdateCommentDto } from "./comment.dto";
+import { CommentFilterDto, CommentTreeDto, CreateCommentNodeDto, CreateCommentRootDto, UpdateCommentDto } from "./comment.dto";
 import { CommentEntity } from "./comment.entity";
-import { appendNode, deserializeTree, serializePath } from "./comment.serializer";
+import { deserializeTree } from "./comment.utils";
 import { NotificationService } from "../notifications/notification.service";
+import { PostFilterDto } from "../post/post.dto";
+import { FilterQuery, QueryOrder, QueryOrderMap } from "mikro-orm";
 
 @Injectable()
 export class CommentService {
@@ -64,7 +66,7 @@ export class CommentService {
 
         commentEntity.content = node.content;
         commentEntity.commenter = this.userService.getEntityReference(commenter.id);
-        commentEntity.path = appendNode(parent.path, parent.id);
+        commentEntity.parentId = parent.id;
         commentEntity.post = parent.post;
         parent.post.comments += 1;
 
@@ -82,18 +84,38 @@ export class CommentService {
         return await this.commentRepository.findOne({ id: id }, ["commenter", "post"]);
     }
 
-    async findManyByIds(ids: number[]) {
-        return await this.commentRepository.findOne({ id: { $in: ids } });
-    }
+    async findByFilter(filter: CommentFilterDto) {
+        const where: FilterQuery<any> = {};
 
-    async findTreeByPath(path: number[]) {
-        const compare = serializePath(path) + "%";
-        return await this.commentRepository.find({ path: { $like: compare } }, ["commenter"]);
+        // add filter commenter
+        where.commenter = filter.commenter;
+
+        let sort: QueryOrderMap = { id: QueryOrder.DESC };
+        // check if we should use cursors to paginate
+        if (filter.afterCursor) {
+            where.id = { $lt: filter.afterCursor };
+        }
+
+        // fetch comments from the repository
+        const comments = await this.commentRepository.find(
+            where,
+            ["commenter", "post"],
+            sort,
+            filter.perPage + 1
+        );
+
+        // remove the extra element from the list
+        const nextPage = comments.length >= filter.perPage + 1;
+        if (nextPage) {
+            comments.pop();
+        }
+
+        return { comments, nextPage };
     }
 
     async findTreesByFilter(filter: CommentTreeDto) {
         const comments = await this.commentRepository.find({ post: filter.post }, ["commenter"]);
-        return await deserializeTree(comments);
+        return deserializeTree(comments);
     }
 
     async update(update: UpdateCommentDto, id: number, user: User) {
@@ -138,4 +160,11 @@ export class CommentService {
         return comment;
     }
 
+    async deleteAll(user: User) {
+        this.logger.log(`User ${user.id}'s comments were deleted`);
+        return await this.commentRepository.nativeUpdate(
+            { commenter: user.id },
+            { commenter: null, content: "" }
+        );
+    }
 }

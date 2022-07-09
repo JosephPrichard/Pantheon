@@ -17,3 +17,7 @@
 .Title:hover { 
     text-decoration: underline;
 }
+
+.Font {
+    font-family: Georgia, Times, "Times New Roman", serif !important;
+}
