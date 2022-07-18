@@ -4,7 +4,7 @@
 
 import Cookies from "js-cookie";
 import { SESSION_EXPIRY } from "./session";
-import { User } from "../hooks/useUserCreds";
+import { User } from "../client/hooks/creds";
 
 export const USER_COOKIE = "USER";
 

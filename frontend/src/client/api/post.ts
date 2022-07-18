@@ -22,7 +22,6 @@ export interface PostDelete {
     post: Id;
 }
 
-
 export interface PostRes {
     post: PostEntity;
 }

@@ -4,9 +4,8 @@
 
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { config } from "../client/config";
-import { clearUser, getUser, setUser } from "../utils/user";
-import { Id } from "../client/types";
+import { config } from "../config";
+import { clearUser, getUser, setUser } from "../../utils/user";
 
 export interface User {
     id: number;

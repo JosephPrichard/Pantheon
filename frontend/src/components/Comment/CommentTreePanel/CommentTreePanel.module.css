@@ -32,23 +32,3 @@
     font-size: 13px;
     color: rgb(129, 131, 132);
 }
-
-.Collapse {
-    text-align: center;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-
-    height: 20px;
-    padding-left: 1px;
-    padding-right: 1px;
-    margin-right: 10px;
-
-    border-width: 0;
-    border-style: none;
-
-    background-color: transparent;
-    color: rgb(92,93,94);
-
-    cursor: pointer;
-}

@@ -6,13 +6,13 @@ import { InputWrapper, PasswordInput, Text, TextInput, Title } from "@mantine/co
 import React, { useCallback, useState } from "react";
 import { ErrorRes } from "../../../client/types";
 import FormButton from "../../Util/Widget/FormButton/FormButton";
-import styles from "./LoginPanel.module.css";
-import { signIn } from "../../../client/api/login";
+import styles from "./SignUpPanel.module.css";
+import { createUser, signIn } from "../../../client/api/login";
 import { isValidError } from "../../../client/util";
-import Message from "../../Util/Message/Message/Message";
+import Message from "../../Util/Widget/Message/Message/Message";
 import { useRouter } from "next/router";
 
-const LoginPanel = () => {
+const SignUpPanel = () => {
     const router = useRouter();
 
     const [name, setName] = useState("");
@@ -36,9 +36,17 @@ const LoginPanel = () => {
             e.preventDefault();
 
             setLoading(true);
-            signIn({ name, password })
+            createUser({ name, password })
                 .then(() => {
-                    router.push("/")
+                    signIn({ name, password })
+                        .then(() => {
+                            router.push("/");
+                        })
+                        .catch(() => {
+                            setError(true);
+                            setMessage("Unexpected Error occurred");
+                            setLoading(false);
+                        });
                 })
                 .catch((err) => {
                     if (isValidError(err)) {
@@ -53,21 +61,21 @@ const LoginPanel = () => {
     );
 
     return (
-        <div className={styles.LoginPanel}>
+        <div className={styles.SignUpPanel}>
             <Title className={styles.Title} order={2}>
-                Log In
+                Sign Up
             </Title>
-            <Text className={styles.Text}>Already have an account? Login here.</Text>
+            <Text className={styles.Text}>Don't have an account? Signing up is free!</Text>
             <form onSubmit={submit}>
                 <InputWrapper className={styles.InputWrapper} required label="User Name">
                     <TextInput
                         placeholder="Username"
                         value={name}
+                        error={error}
                         onChange={(event) => {
                             setName(event.currentTarget.value);
                             clearError();
                         }}
-                        error={error}
                         autoComplete="username"
                     />
                 </InputWrapper>
@@ -75,19 +83,19 @@ const LoginPanel = () => {
                     <PasswordInput
                         placeholder="Password"
                         value={password}
+                        error={error}
                         onChange={(event) => {
                             setPassword(event.currentTarget.value);
                             clearError();
                         }}
-                        error={error}
-                        autoComplete="current-password"
+                        autoComplete="new-password"
                     />
                 </InputWrapper>
                 <Message message={message} />
-                <FormButton text="Log In" loading={loading} />
+                <FormButton text="Create Account" loading={loading} />
             </form>
         </div>
     );
 };
 
-export default LoginPanel;
+export default SignUpPanel;

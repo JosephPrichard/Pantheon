@@ -1,0 +1,15 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
+.Activity {
+    float: left;
+    width: 100%;
+}
+
+.BigText {
+    margin-top: 20%;
+    margin-bottom: 20%;
+    text-align: center;
+    font-size: 30px;
+}

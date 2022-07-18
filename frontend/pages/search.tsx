@@ -3,10 +3,10 @@
  */
 
 import { GetServerSideProps, NextPage } from "next";
-import { Next } from "../src/utils/next";
-import ErrorPage from "../src/components/ErrorPage/ErrorPage";
+import { NextProps } from "../src/utils/next";
+import Error from "../src/components/Error/Error";
 import React from "react";
-import Banner from "../src/components/Banner/Banner";
+import TopBanner from "../src/components/Banner/TopBanner/TopBanner";
 import SearchFeed from "../src/components/Feed/PostFeeds/CategoryPostFeed/SearchFeed/SearchFeed";
 import { NextSeo } from "next-seo";
 
@@ -15,23 +15,23 @@ interface Props {
     page: number;
 }
 
-const SearchPage: NextPage<Next<Props>> = ({ componentProps }: Next<Props>) => {
+const SearchPage: NextPage<NextProps<Props>> = ({ componentProps }: NextProps<Props>) => {
     return (
         <>
             <NextSeo title={`Search Results: ${componentProps?.text}`}/>
             {componentProps ?
                 <>
-                    <Banner/>
+                    <TopBanner/>
                     <SearchFeed text={componentProps.text} />
                 </>
                 :
-                <ErrorPage/>
+                <Error/>
             }
         </>
     );
 };
 
-export const getServerSideProps: GetServerSideProps<Next<Props>> = async ({ query }) => {
+export const getServerSideProps: GetServerSideProps<NextProps<Props>> = async ({ query }) => {
     const pageStr = query.p as string | undefined;
     let page = Number(pageStr);
     if (!page) {

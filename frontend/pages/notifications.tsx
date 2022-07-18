@@ -3,19 +3,23 @@
  */
 
 import { NextPage } from "next";
-import Banner from "../src/components/Banner/Banner";
+import TopBanner from "../src/components/Banner/TopBanner/TopBanner";
 import React from "react";
-import NotificationsPanel from "../src/components/Notifications/NotificationsPanel";
+import NotificationsPanel from "../src/components/Notifications/NotificationsPanel/NotificationsPanel";
 import { Space } from "@mantine/core";
 import { NextSeo } from "next-seo";
+import SingleColumn from "../src/components/Util/Layout/SingleColumn/SingleColumn";
 
 const NotificationsPage: NextPage = () => {
     return (
         <>
             <NextSeo title="Pantheon Notifications"/>
-            <Banner />
-            <Space h={40} w={1}/>
-            <NotificationsPanel/>
+            <TopBanner />
+            <SingleColumn
+                column={<NotificationsPanel/>}
+                columnWidth="50%"
+                columnMargin="25%"
+            />
         </>
     );
 };

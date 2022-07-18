@@ -3,7 +3,7 @@
  */
 
 import { NextPage } from "next";
-import ErrorPage from "../src/components/ErrorPage/ErrorPage";
+import Error from "../src/components/Error/Error";
 import { NextSeo } from "next-seo";
 import React from "react";
 
@@ -11,7 +11,7 @@ const Error404Page: NextPage = () => {
     return (
         <>
             <NextSeo title="Not Found"/>
-            <ErrorPage/>
+            <Error/>
         </>
     );
 };

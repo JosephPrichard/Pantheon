@@ -14,6 +14,7 @@ import { User } from "../user/user.dto";
 import { UserService } from "../user/user.service";
 import { CommentNotFoundException, PostNotFoundException } from "src/exception/entityNotFound.exception";
 import { AppLogger } from "src/loggers/applogger";
+import { CommentEntity } from "../comment/comment.entity";
 
 @Injectable()
 export class VoteService {
@@ -119,7 +120,19 @@ export class VoteService {
         return await this.postVoteRepository.find({ voter: voter.id, post: { $in: posts } });
     }
 
-    async findCommentVotes(postId: number, voter: User) {
+    async findPostVotesFromIds(ids: number[], voter: User) {
+        return await this.postVoteRepository.find({ voter: voter.id, post: { $in: ids } });
+    }
+
+    async findCommentVotes(comments: CommentEntity[], voter: User) {
+        return await this.commentVoteRepository.find({ voter: voter.id, comment: { $in: comments } });
+    }
+
+    async findCommentVotesFromIds(ids: number[], voter: User) {
+        return await this.commentVoteRepository.find({ voter: voter.id, comment: { $in: ids } });
+    }
+
+    async findPostCommentVotes(postId: number, voter: User) {
         return await this.commentVoteRepository.find({ voter: voter.id, post: postId });
     }
 }

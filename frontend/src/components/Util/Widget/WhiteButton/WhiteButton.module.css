@@ -3,7 +3,8 @@
  */
 
 .Button {
-    margin: 10px 10px 0 0;
-    background-color: rgb(210,210,210);
     color: black;
+    outline: none;
+    mix-blend-mode: lighten;
+
 }

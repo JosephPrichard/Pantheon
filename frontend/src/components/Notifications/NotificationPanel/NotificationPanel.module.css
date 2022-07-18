@@ -1,0 +1,41 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
+.NotificationText {
+    color: rgb(129,131,132);
+}
+
+.Notification {
+    display: flex;
+    padding: 10px 0 10px 0;
+    cursor: pointer;
+}
+
+.NotificationTitle {
+    font-size: 17px;
+}
+
+.NotificationInnerTitle:hover {
+    text-decoration: underline;
+}
+
+.NotificationPanel {
+    background-color: rgb(26, 27, 30);
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.HeaderTitle {
+    color: inherit;
+    font-weight: bold;
+}
+
+.Dot {
+    font-size: 25px;
+    margin-right: 20px;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #4dabf7;
+}

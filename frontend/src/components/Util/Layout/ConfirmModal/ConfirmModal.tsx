@@ -6,6 +6,7 @@ import { Button, Modal, Title } from "@mantine/core";
 import React from "react";
 import { WHITE } from "../../../colors";
 import styles from "./ConfirmModal.module.css";
+import WhiteButton from "../../Widget/WhiteButton/WhiteButton";
 
 interface Props {
     opened: boolean;
@@ -31,15 +32,7 @@ const ConfirmModal = ({ opened, onClose, title, message, onConfirmed }: Props) =
                 { message }
             </div>
             <div className={styles.ButtonBlocks}>
-                <Button
-                    className={styles.Button}
-                    style={{
-                        backgroundColor: WHITE
-                    }}
-                    onClick={onConfirmed}
-                >
-                    Confirm
-                </Button>
+                <WhiteButton text="Confirm" onClick={onConfirmed}/>
             </div>
         </Modal>
     );

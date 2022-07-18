@@ -1,0 +1,19 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
+.BottomBanner {
+    padding-top: 40px;
+    padding-bottom: 100px;
+    float: left;
+    width: 100%;
+    text-align: center;
+}
+
+.Link {
+    font-size: 14px;
+}
+
+.Link:hover {
+    text-decoration: underline;
+}

@@ -1,0 +1,36 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
+.CommentPreview {
+    background-color: rgb(26, 27, 30);
+    margin: 5px 10px;
+    display: flex;
+    flex-direction: row;
+    padding-left: 12px;
+    padding-right: 12px;
+    column-gap: 15px;
+}
+
+.Content {
+    width: 100%;
+}
+
+.VoteWrapper {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.PostHeader {
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.HeaderText {
+    color: rgb(129,131,132);
+}
+
+.HeaderTitle {
+    color: inherit;
+    font-weight: bold;
+}

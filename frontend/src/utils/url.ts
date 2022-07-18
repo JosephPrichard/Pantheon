@@ -17,7 +17,11 @@ export function createdPostUrl(post: CreatePostEntityRes) {
     return `/forum/${post.forum}/post/${post.id}/${urlify(post.title)}`;
 }
 
-export function commentUrl(comment: CommentNotificationEntity) {
+export function commentUrl(comment: CommentEntity) {
+    return `/forum/${comment.post.forum.id}/post/${comment.post.id}/${urlify(comment.post.title)}` + "#" + comment.id;
+}
+
+export function commentNotificationUrl(comment: CommentNotificationEntity) {
     return `/forum/${comment.post.forum}/post/${comment.post.id}/${urlify(comment.post.title)}` + "#" + comment.id;
 }
 

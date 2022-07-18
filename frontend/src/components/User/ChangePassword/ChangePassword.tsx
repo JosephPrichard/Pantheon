@@ -4,8 +4,8 @@
 
 import { PasswordInput, Space, Title } from "@mantine/core";
 import React, { useCallback, useState } from "react";
-import Message from "../../Util/Message/Message/Message";
-import WhiteButton from "../../Util/Widget/Button/WhiteButton";
+import Message from "../../Util/Widget/Message/Message/Message";
+import WhiteButton from "../../Util/Widget/WhiteButton/WhiteButton";
 import { changePassword } from "../../../client/api/user";
 import { isValidError } from "../../../client/util";
 import { ErrorRes } from "../../../client/types";
@@ -68,8 +68,8 @@ const ChangePassword = () => {
                 error={error}
                 autoComplete="new-password"
             />
-            <Space h={10}/>
             <Message message={message} isSuccess={!error}/>
+            <Space h={10}/>
             <WhiteButton text="Update" onClick={onUpdatePassword}/>
         </div>
     );

@@ -38,10 +38,6 @@ export class UpdateCommentDto {
     content!: string;
 }
 
-export interface CommentTreeDto {
-    post: number;
-}
-
 export interface CommentFilterDto {
     commenter: string;
     afterCursor?: number;

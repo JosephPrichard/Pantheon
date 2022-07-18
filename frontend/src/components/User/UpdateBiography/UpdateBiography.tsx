@@ -3,8 +3,8 @@
  */
 
 import { Space, Textarea, Title } from "@mantine/core";
-import Message from "../../Util/Message/Message/Message";
-import WhiteButton from "../../Util/Widget/Button/WhiteButton";
+import Message from "../../Util/Widget/Message/Message/Message";
+import WhiteButton from "../../Util/Widget/WhiteButton/WhiteButton";
 import React, { useCallback, useState } from "react";
 import { updateUser } from "../../../client/api/user";
 import { isValidError } from "../../../client/util";
@@ -62,6 +62,7 @@ const UpdateBiography = ({ biography }: Props) => {
                 }}
             />
             <Message message={message} isSuccess={!error}/>
+            <Space h={10}/>
             <WhiteButton text="Save" onClick={onSaveBio}/>
         </>
     );

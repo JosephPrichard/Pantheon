@@ -5,7 +5,7 @@
 import { UserEntity } from "../../../client/models/user";
 import styles from "../UserProfile/UserProfile.module.css";
 import { Card, Space, Title } from "@mantine/core";
-import { useUserName } from "../../../hooks/useUserCreds";
+import { useUserName } from "../../../client/hooks/creds";
 import React, { useEffect, useState } from "react";
 import ChangePassword from "../ChangePassword/ChangePassword";
 import { fetchUserByName } from "../../../client/api/user";
@@ -25,12 +25,12 @@ const UserProfile = () => {
 
     return (
         <Card className={styles.UserProfile}>
-            <Space h={25}/>
-            <Title order={3}>
-                User Settings
-            </Title>
             {!user ||
                 <div className={styles.ProfileContainer}>
+                    <Space h={25}/>
+                    <Title order={3}>
+                        User Settings
+                    </Title>
                     <Space h={25}/>
                     <UpdateBiography biography={user.description}/>
                     <Space h={40}/>

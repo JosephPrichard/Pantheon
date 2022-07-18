@@ -3,21 +3,20 @@
  */
 
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { AbstractSqlConnection, Knex } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
-import { EntityRepository, MikroORM } from "mikro-orm";
+import { EntityManager, EntityRepository, MikroORM } from "mikro-orm";
 import { AppLogger } from "src/loggers/applogger";
 import { sql } from "src/utils/sql.utils";
 import { ForumEntity } from "../forum/forum.entity";
 import { UserEntity } from "../user/user.entity";
-import { PostSearchRow, SearchedPost, SearchPostFilter } from "./search.dto";
-import { PER_SEARCH_PAGE } from "../../global";
+import { PostSearchRow, SearchedPostDto, SearchFilterDto } from "./search.dto";
+import { PER_PAGE, PER_SEARCH_PAGE } from "../../global";
 
 @Injectable()
 export class SearchService {
 
     private readonly logger = new AppLogger(SearchService.name);
-    private readonly knex: Knex;
+    private readonly em: EntityManager;
 
     constructor(
         orm: MikroORM,
@@ -28,8 +27,7 @@ export class SearchService {
         @InjectRepository(UserEntity) 
         private readonly userRepository: EntityRepository<UserEntity>
     ) {
-        const conn = orm.em.getConnection() as AbstractSqlConnection;
-        this.knex = conn.getKnex();
+        this.em = orm.em;
     }
 
     cleanSearchText(searchText: string) {
@@ -50,11 +48,27 @@ export class SearchService {
         return newSearchText;
     }
 
-    async searchPosts(search: SearchPostFilter) {
+    async searchPosts(search: SearchFilterDto) {
         const searchText = this.cleanSearchText(search.text);
 
-        const results: PostSearchRow[] = await this.knex
-            .select(this.knex.raw(sql`
+        const params = [];
+
+        // construct the dynamic parts of the query and the query parameters
+        params.push(searchText);
+        let condition = "";
+        if (search.forum) {
+            condition += sql`AND p.forum_id = ?`;
+            params.push(search.forum);
+        }
+        if (search.poster) {
+            condition += sql`AND p.poster_id = ?`;
+            params.push(search.poster);
+        }
+        params.push(PER_SEARCH_PAGE);
+
+        // construct a raw search query to send to database
+        const query = sql`
+            SELECT
                 p.id as "id", 
                 p.poster_id as "posterId", 
                 p.forum_id as "forumId", 
@@ -68,37 +82,32 @@ export class SearchService {
                 COUNT(*) OVER() as "count",
                 (SELECT u.name FROM users u WHERE u.id = p.poster_id) as "posterName",
                 (ts_rank_cd(content_document, query) + ts_rank_cd(title_document, query)) AS "searchRank"
-            `))
-            .from(this.knex.raw(sql`
+            FROM
                 posts p, 
                 to_tsquery(?) query
-            `, [searchText]))
-            .whereRaw(sql`(
-                (query @@ p.content_document) 
-                    OR 
-                (query @@ p.title_document)
-            )`)
-            .andWhere((builder) => {
-                if (search.forum) {
-                    builder.andWhereRaw(sql`
-                        p.forum_id = ?
-                    `, [search.forum]);
-                }
-                if (search.poster) {
-                    builder.andWhereRaw(sql`
-                        p.poster_id = ?
-                    `, [search.poster]);
-                }
-            })
-            .orderByRaw(sql`
+            WHERE
+                ((query @@ p.content_document) OR (query @@ p.title_document)) 
+                ${condition}
+            ORDER BY
                 "searchRank" DESC
-            `)
-            .limit(PER_SEARCH_PAGE);
+             LIMIT
+                ?
+        `;
+
+        // send the query with params to retrieve result and perform cast
+        const results = await this.em.getConnection().execute(query, params) as PostSearchRow[];
 
         // map each result from result set to a mapped searched post dto
-        const mappedPosts: SearchedPost[] = [];
+        const posts = this.mapResultsToPosts(results);
+
+        return { posts } ;
+    }
+
+    mapResultsToPosts(results: PostSearchRow[]) {
+        const posts: SearchedPostDto[] = [];
+
         for (const result of results) {
-            mappedPosts.push({
+            posts.push({
                 id: Number(result.id),
                 poster: {
                     id: Number(result.posterId),
@@ -119,9 +128,7 @@ export class SearchService {
             });
         }
 
-        return { 
-            posts: mappedPosts
-        } ;
+        return posts;
     }
 
 }

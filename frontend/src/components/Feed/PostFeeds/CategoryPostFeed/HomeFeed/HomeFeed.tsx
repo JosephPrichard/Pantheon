@@ -11,6 +11,7 @@ import SubList from "../../../../Subscription/SubList/SubList";
 import FeedPanel from "../../../FeedPanel/FeedPanel";
 import { Space } from "@mantine/core";
 import useSWR from "swr";
+import { useFetch } from "../../../../../client/hooks/fetch";
 
 interface Props {
     afterCursor?: number;
@@ -18,7 +19,7 @@ interface Props {
 }
 
 const HomeFeed = ({ afterCursor, beforeCursor }: Props) => {
-    const { data } = useSWR<PostsRes>(buildFetchHomeFeedUrl(beforeCursor, afterCursor));
+    const { data } = useFetch<PostsRes>(buildFetchHomeFeedUrl(beforeCursor, afterCursor));
 
     return (
         <PostFeed

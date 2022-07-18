@@ -34,8 +34,8 @@ export interface CommentTreeRes {
     commentTree: CommentTreeEntity[];
 }
 
-export async function fetchCommentTreeByPost(id: string) {
-    return await axios.get<CommentTreeRes>(`/api/feed/posts/${id}/comments`, configNoCreds);
+export function fetchCommentTreeByPost(id: string) {
+    return axios.get<CommentTreeRes>(`/api/feed/posts/${id}/comments`, configNoCreds);
 }
 
 export function submitCommentNode(body: CommentNode) {

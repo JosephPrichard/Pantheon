@@ -103,10 +103,11 @@ export class UserService {
     }
 
     async delete(user: User) {
-        this.logger.log(`User ${user.id} was deleted`);
-        return await this.userRepository.nativeUpdate(
+        const count = await this.userRepository.nativeUpdate(
             { id: user.id },
             { name: null, description: "" }
         );
+        this.logger.log(`User ${user.id} was deleted`);
+        return count;
     }
 }

@@ -9,9 +9,9 @@ import { ErrorRes } from "../../../client/types";
 import styles from "./CreateCommentNode.module.css";
 import TextEditor from "../../Util/Widget/TextEditor/TextEditor";
 import { Space } from "@mantine/core";
-import Message from "../../Util/Message/Message/Message";
+import Message from "../../Util/Widget/Message/Message/Message";
 import { CommentEntity } from "../../../client/models/comment";
-import WhiteButton from "../../Util/Widget/Button/WhiteButton";
+import WhiteButton from "../../Util/Widget/WhiteButton/WhiteButton";
 
 interface Props {
     parentComment: CommentEntity;
@@ -57,13 +57,15 @@ const CreateCommentNode = ({ parentComment, onCreate, onCancel }: Props) => {
                 />
                 <Space h={5}/>
                 <Message message={message}/>
-                <div>
+                <div className={styles.ButtonWrapper}>
                     <WhiteButton
+                        className={styles.Button}
                         text="Comment"
                         loading={loading}
                         onClick={onSubmit}
                     />
                     <WhiteButton
+                        className={styles.Button}
                         text="Cancel"
                         loading={loading}
                         onClick={onCancel}

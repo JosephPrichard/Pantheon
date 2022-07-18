@@ -3,52 +3,63 @@
  */
 
 import { NotificationEntity } from "../../../client/models/notification";
-import { Title } from "@mantine/core";
+import { Card } from "@mantine/core";
 import { removeAllHTMLFromString } from "../../../utils/sanitize";
-import styles from "./Notification.module.css";
+import styles from "./NotificationPanel.module.css";
 import { getDateDisplay } from "../../../utils/date";
 import Link from "next/link";
-import { commentUrl } from "../../../utils/url";
+import { commentNotificationUrl } from "../../../utils/url";
+import { useCallback } from "react";
+import { markAsRead } from "../../../client/api/notifications";
 
 interface Props {
     notification: NotificationEntity;
-    separator: boolean;
+    lighter: boolean;
 }
 
-const NotificationPanel = ({ notification, separator }: Props) => {
+const NotificationPanel = ({ notification, lighter }: Props) => {
 
     const name = notification.comment.commenter?.name;
     const forum = notification.comment.post.forum;
     const date = getDateDisplay(new Date(notification.comment.createdAt));
 
-    const read = notification.read;
+    const onClick = useCallback(() => {
+        markAsRead(notification.id);
+    }, []);
 
     return (
-        <div
-            className={styles.Wrapper}
+        <Card
+            className={styles.NotificationPanel}
             style={{
-                borderBottom: separator ? "solid rgba(128,128,128,0.12) 1px" : undefined
+                backgroundColor: lighter ? undefined : "rgb(24, 25, 28)"
             }}
         >
-            <div
-                className={styles.Dot}
-                style={{
-                    color: !read ? "rgb(51,105,212)" : "transparent"
-                }}
-            >
-                {" • "}
-            </div>
-            <Link href={commentUrl(notification.comment)}>
-                <div className={styles.Notification}>
-                    <Title order={4}>
-                        { name ? name : "[deleted]" } replied to your comment in { forum } { date }
-                    </Title>
-                    <div className={styles.NotificationText}>
-                        { removeAllHTMLFromString(notification.comment.content) }
-                    </div>
+            <div className={styles.Notification}>
+                <div
+                    className={styles.Dot}
+                    style={{
+                        color: notification.read ? "transparent" : undefined
+                    }}
+                >
+                    {" • "}
                 </div>
-            </Link>
-        </div>
+                <Link href={commentNotificationUrl(notification.comment)}>
+                    <div onClick={onClick}>
+                        <div className={styles.NotificationTitle}>
+                            <span className={styles.NotificationInnerTitle}>
+                                <span className={styles.HeaderTitle}>{ name ? name : "[deleted]" }</span>
+                                <span> replied to your comment in </span>
+                                <span className={styles.HeaderTitle}>{ forum }</span>
+                            </span>
+                            <span className={styles.NotificationText}> {" • "}  { date }</span>
+                        </div>
+                        <div className={styles.NotificationText}>
+                            { name ? removeAllHTMLFromString(notification.comment.content) : "[deleted]" }
+                        </div>
+                    </div>
+                </Link>
+            </div>
+        </Card>
     );
 }
 

@@ -4,11 +4,10 @@
 
 import { PostEntity } from "../post/post.entity";
 import { CommentEntity } from "../comment/comment.entity";
-import { ActivityElement } from "./feed.dto";
+import { ActivityDto } from "./feed.dto";
 
 export function mergeActivity(posts: PostEntity[], comments: CommentEntity[], size: number) {
-    const activity: ActivityElement[] = [];
-
+    const activities: ActivityDto[] = [];
     let p = 0;
     let c = 0;
     // perform a mergeSortedLists algorithm on the posts and comments array
@@ -21,22 +20,33 @@ export function mergeActivity(posts: PostEntity[], comments: CommentEntity[], si
         }
         // if we run out of posts, add only comments, and vice versa
         if (exceedsComment) {
-            activity.push({ isPost: true, activity: posts[p] });
+            activities.push({ isPost: true, activity: posts[p] });
             p++;
-        }
-        if (exceedsPost) {
-            activity.push({ isPost: false, activity: comments[c] });
+            continue;
+        } else if (exceedsPost) {
+            activities.push({ isPost: false, activity: comments[c] });
             c++;
+            continue;
         }
         // add the newer post or comment
         if (posts[p].createdAt > comments[c].createdAt) {
-            activity.push({ isPost: true, activity: posts[p] });
+            activities.push({ isPost: true, activity: posts[p] });
             p++;
         } else {
-            activity.push({ isPost: false, activity: comments[c] });
+            activities.push({ isPost: false, activity: comments[c] });
             c++;
         }
     }
 
-    return activity;
+    return activities;
+}
+
+export function countActivities(activities: ActivityDto[], isPost: boolean) {
+    let i = 0;
+    for (const activity of activities) {
+        if (activity.isPost === isPost) {
+            i++;
+        }
+    }
+    return i;
 }

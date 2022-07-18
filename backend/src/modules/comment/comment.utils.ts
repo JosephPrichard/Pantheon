@@ -24,6 +24,7 @@ export function deserializeTree(comments: CommentEntity[]) {
     const nodeMap: { [key: number]: TreeObj } = {};
 
     for (const comment of comments) {
+
         const parent = comment.parentId;
 
         // set the comment value for the node
@@ -55,6 +56,8 @@ export function deserializeTree(comments: CommentEntity[]) {
         // add the node as a child of the parent
         parentNode.children.push(node);
     }
+
+
 
     return roots;
 }

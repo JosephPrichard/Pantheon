@@ -11,12 +11,17 @@ interface Props {
     text: string;
     loading?: boolean;
     onClick: () => void;
+    className?: string;
 }
 
-const WhiteButton: FunctionComponent<Props> = ({ text, loading, onClick }: Props) => {
+const WhiteButton: FunctionComponent<Props> = ({ text, loading, onClick, className }: Props) => {
+    let classNames = styles.Button;
+    if (className) {
+        classNames += " " + className;
+    }
     return (
         <Button
-            className={styles.Button}
+            className={classNames}
             style={{
                 backgroundColor: WHITE
             }}

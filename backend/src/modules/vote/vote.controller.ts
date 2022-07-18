@@ -52,7 +52,7 @@ export class VoteController {
         }
 
         const postVote = await this.voteService.findPostVote(idParam, user);
-        const commentVotes = await this.voteService.findCommentVotes(idParam, user);
+        const commentVotes = await this.voteService.findPostCommentVotes(idParam, user);
 
         return { postVote, commentVotes };
     }

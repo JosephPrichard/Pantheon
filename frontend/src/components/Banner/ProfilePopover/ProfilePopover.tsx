@@ -8,7 +8,7 @@ import BannerLink from "../BannerLink/BannerLink";
 import styles from "./ProfilePopover.module.css";
 import { signOut } from "../../../client/api/login";
 import { UnreadCountRes } from "../../../client/api/notifications";
-import { useFetch } from "../../../hooks/useFetch";
+import { useFetch } from "../../../client/hooks/fetch";
 
 interface Props {
     name: string;
@@ -46,6 +46,7 @@ const ProfilePopover = ({ name }: Props) => {
                 noEscape
             >
                 <Space h={10}/>
+                <BannerLink text="Home" href="/home" />
                 <BannerLink text="Profile" href={`/user/${name}`} />
                 <BannerLink text="Settings" href={`/user/settings`} />
                 <BannerLink text={`Inbox ${count}`} href={`/notifications`} />

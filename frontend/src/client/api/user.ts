@@ -29,7 +29,6 @@ export interface AccountDelete {
     password: string;
 }
 
-
 export async function fetchUserByName(name: string) {
     return await axios.get<UserRes>(`/api/users?name=${name}`, configNoCreds);
 }

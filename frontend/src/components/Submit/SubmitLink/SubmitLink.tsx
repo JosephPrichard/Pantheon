@@ -11,7 +11,7 @@ import { submitPost } from "../../../client/api/submit";
 import { ForumEntity } from "../../../client/models/forum";
 import { createdPostUrl } from "../../../utils/url";
 import { isValidError } from "../../../client/util";
-import Message from "../../Util/Message/Message/Message";
+import Message from "../../Util/Widget/Message/Message/Message";
 import { useRouter } from "next/router";
 
 interface Props {

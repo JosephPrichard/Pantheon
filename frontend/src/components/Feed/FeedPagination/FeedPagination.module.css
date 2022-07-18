@@ -4,7 +4,6 @@
 
 .Button {
     margin: 5px;
-    padding: 8px 16px;
     text-align: center;
     display: inline-block;
     vertical-align: middle;
@@ -12,6 +11,7 @@
     border-radius: 4px;
     color: rgb(193, 194, 197);
     background-color: rgb(28,29,32);
+    padding: 8px 34px;
 }
 
 .Button:hover {
@@ -26,7 +26,7 @@
 
 .Pagination {
     display: flex;
-    margin-top: 30px;
+    margin-top: 40px;
     margin-bottom: 40px;
     float: left;
     width: 100%;

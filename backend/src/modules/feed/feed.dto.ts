@@ -3,11 +3,33 @@
  */
 
 import { Type } from "class-transformer";
-import { IsOptional, IsNumber } from "class-validator";
+import { IsOptional, IsNumber, IsString } from "class-validator";
 import { PostEntity } from "../post/post.entity";
 import { CommentEntity } from "../comment/comment.entity";
 
 export class FeedCursorDto {
+    @IsOptional()
+    @IsString()
+    @Type(() => String)
+    user?: string;
+
+    @IsOptional()
+    @IsString()
+    @Type(() => String)
+    forum?: string;
+
+    @IsOptional()
+    @IsNumber()
+    @Type(() => Number)
+    afterCursor?: number;
+
+    @IsOptional()
+    @IsNumber()
+    @Type(() => Number)
+    beforeCursor?: number;
+}
+
+export class HomeFeedCursorDto {
     @IsOptional()
     @IsNumber()
     @Type(() => Number)
@@ -31,7 +53,7 @@ export class ActivityFeedCursorDto {
     postsAfterCursor?: number;
 }
 
-export interface ActivityElement {
+export interface ActivityDto {
     isPost: boolean;
     activity: PostEntity | CommentEntity;
 }

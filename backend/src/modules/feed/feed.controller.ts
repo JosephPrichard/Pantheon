@@ -6,14 +6,14 @@ import { Controller, Get, Param, Query, Req } from "@nestjs/common";
 import { PostService } from "../post/post.service";
 import { VoteService } from "../vote/vote.service";
 import { Request  } from "express";
-import { PostVoteEntity } from "../vote/vote.entity";
-import { ActivityFeedCursorDto, FeedCursorDto } from "./feed.dto";
+import { CommentVoteEntity, PostVoteEntity } from "../vote/vote.entity";
+import { ActivityFeedCursorDto, FeedCursorDto, HomeFeedCursorDto } from "./feed.dto";
 import { CommentService } from "../comment/comment.service";
 import { HighlightService } from "../highlight/highlight.service";
 import { PostFilterDto } from "../post/post.dto";
 import { PER_PAGE } from "../../global";
 import { CommentFilterDto } from "../comment/comment.dto";
-import { mergeActivity } from "./feed.utils";
+import { countActivities, mergeActivity } from "./feed.utils";
 
 @Controller("feed")
 export class FeedController {
@@ -28,7 +28,7 @@ export class FeedController {
         private readonly highlightService: HighlightService
     ) {}
 
-    @Get("/global")
+    @Get("global")
     async getGlobalPosts(
         @Query() query: FeedCursorDto,
         @Req() req: Request
@@ -38,6 +38,13 @@ export class FeedController {
             beforeCursor: query.beforeCursor,
             perPage: PER_PAGE
         };
+
+        if (query.user) {
+            filter.poster = query.user;
+        }
+        if (query.forum) {
+            filter.forums = [query.forum];
+        }
 
         const result = await this.postService.findByFilter(filter);
 
@@ -52,7 +59,7 @@ export class FeedController {
 
     @Get("/home") 
     async getHomePosts(
-        @Query() query: FeedCursorDto,
+        @Query() query: HomeFeedCursorDto,
         @Req() req: Request
     ) {
         const filter: PostFilterDto = {
@@ -79,65 +86,13 @@ export class FeedController {
         return { ...result, postVotes };
     }
 
-    @Get("/forums/:forum/posts") 
-    async getForumPosts(
-        @Query() query: FeedCursorDto,
-        @Param("forum") forumParam: string,
-        @Req() req: Request
-    ) {
-        const filter: PostFilterDto = {
-            forums: [forumParam],
-            afterCursor: query.afterCursor,
-            beforeCursor: query.beforeCursor,
-            perPage: PER_PAGE
-        };
-
-        const result = await this.postService.findByFilter(filter);
-
-        const user = req.session.user;
-        let postVotes: PostVoteEntity[] = [];
-        if (user) {
-            postVotes = await this.voteService.findPostVotes(result.posts, user);
-        }
-        
-        return { ...result, postVotes };
-    }
-
-    @Get("/users/:user/posts") 
-    async getUserPosts(
-        @Query() query: FeedCursorDto,
-        @Param("user") userParam: string,
-        @Req() req: Request
-    ) {
-        const filter: PostFilterDto = {
-            poster: userParam,
-            afterCursor: query.afterCursor,
-            beforeCursor: query.beforeCursor,
-            perPage: PER_PAGE
-        };
-
-        const result = await this.postService.findByFilter(filter);
-
-        const user = req.session.user;
-        let postVotes: PostVoteEntity[] = [];
-        if (user) {
-            postVotes = await this.voteService.findPostVotes(result.posts, user);
-        }
-        
-        return { ...result, postVotes };
-    }
-
     @Get("/posts/:id/comments")
     async getPostComments(@Param("id") idParam: number) {
-        const filter = {
-            post: idParam
-        };
-
-        const commentTree = await this.commentService.findTreesByFilter(filter);
+        const commentTree = await this.commentService.findTreesByFilter(idParam);
         return { commentTree };
     }
 
-    @Get("/users/:user/activity")
+    @Get("/users/:user/activities")
     async getUserActivity(
         @Query() query: ActivityFeedCursorDto,
         @Param("user") userParam: string,
@@ -160,9 +115,30 @@ export class FeedController {
             this.commentService.findByFilter(commentFilter)
         ]);
 
-        const activities = mergeActivity(postsResult.posts, commentsResults.comments, PER_PAGE);
-        const nextPage = postsResult.nextPage || commentsResults.nextPage;
+        const user = req.session.user;
+        let postVotes: PostVoteEntity[] = [];
+        let commentVotes: CommentVoteEntity[] = [];
+        if (user) {
+            const [p, c] = await Promise.all([
+                this.voteService.findPostVotes(postsResult.posts, user),
+                this.voteService.findCommentVotes(commentsResults.comments, user)
+            ]);
+            postVotes = p;
+            commentVotes = c;
+        }
 
-        return { activities, nextPage };
+        const activities = mergeActivity(postsResult.posts, commentsResults.comments, PER_PAGE);
+        const nextPage = countActivities(activities, true) < postsResult.posts.length
+            || countActivities(activities, false) < commentsResults.comments.length;
+
+        console.log(activities);
+        console.log(postVotes);
+
+        return {
+            activities,
+            nextPage,
+            postVotes,
+            commentVotes
+        };
     }
 }

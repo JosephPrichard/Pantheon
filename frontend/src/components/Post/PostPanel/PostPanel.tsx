@@ -16,9 +16,9 @@ import ImageContent from "../../Util/Layout/Content/ImageContent/ImageContent";
 import LinkContent from "../../Util/Layout/Content/LinkContent/LinkContent";
 import { buildFetchPostVotesUrl, deletePost, editPost, PostAllVotesRes } from "../../../client/api/post";
 import EditableTextContent from "../../Util/Layout/Content/EditableTextContent/EditableTextContent";
-import { usePermissions } from "../../../hooks/usePermissions";
+import { usePermissions } from "../../../client/hooks/permissions";
 import ConfirmModal from "../../Util/Layout/ConfirmModal/ConfirmModal";
-import { useFetch } from "../../../hooks/useFetch";
+import { useFetch } from "../../../client/hooks/fetch";
 
 interface Props {
     post: PostEntity;
@@ -36,10 +36,7 @@ const PostPanel = ({ post, roots }: Props) => {
 
     const onEditPost = useCallback(
         (text) => {
-            editPost({
-                post: post.id,
-                content: text
-            })
+            editPost({ post: post.id, content: text })
                 .then(() => {
                     setContent(text);
                     setCanEdit(false);
@@ -50,9 +47,7 @@ const PostPanel = ({ post, roots }: Props) => {
 
     const onDeletePost = useCallback(
         () => {
-            deletePost({
-                post: post.id
-            })
+            deletePost({ post: post.id })
                 .then(() => {
                     setShowDelete(false);
                 });

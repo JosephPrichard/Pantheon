@@ -4,11 +4,11 @@
 
 import { Center, Divider } from "@mantine/core";
 import React from "react";
-import styles from "./Login.module.css";
-import LoginPanel from "./LoginPanel/LoginPanel";
-import SignUpPanel from "./SignUpPanel/SignUpPanel";
+import styles from "./AuthPanel.module.css";
+import LoginPanel from "../LoginPanel/LoginPanel";
+import SignUpPanel from "../SignUpPanel/SignUpPanel";
 
-const Login = () => {
+const AuthPanel = () => {
     return (
         <Center className={styles.Login}>
             <SignUpPanel />
@@ -18,4 +18,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default AuthPanel;

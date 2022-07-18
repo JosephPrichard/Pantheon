@@ -161,10 +161,11 @@ export class PostService {
     }
 
     async deleteAll(user: User) {
-        this.logger.log(`User ${user.id}'s posts were deleted`);
-        return await this.postRepository.nativeUpdate(
+        const count = await this.postRepository.nativeUpdate(
             { poster: user.id },
             { poster: null, content: "", images: [] }
         );
+        this.logger.log(`User ${user.id}'s posts were deleted`);
+        return count;
     }
 }

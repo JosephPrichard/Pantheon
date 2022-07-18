@@ -6,8 +6,8 @@ import { Button } from "@mantine/core";
 import { createSubscription, deleteSubscription, IsSubbedRes } from "../../../client/api/subscription";
 import styles from "./SubscriptionButton.module.css";
 import { useState } from "react";
-import { useUserName } from "../../../hooks/useUserCreds";
-import { useFetch } from "../../../hooks/useFetch";
+import { useUserName } from "../../../client/hooks/creds";
+import { useFetch } from "../../../client/hooks/fetch";
 
 interface Props {
     forumId: string;
@@ -19,12 +19,9 @@ const SubscriptionButton = ({ forumId }: Props) => {
     const { data } = useFetch<IsSubbedRes>(`/api/subscriptions/isSubbed?forum=${forumId}`);
 
     const [justSubbed, setJustSubbed] = useState<boolean | undefined>();
-
     const [isHovering, setHovering] = useState(false);
 
-    function isSubbed() {
-        return justSubbed !== undefined ? justSubbed : data?.isSubbed;
-    }
+    const isSubbed = () => justSubbed !== undefined ? justSubbed : data?.isSubbed;
 
     return (
         <>
@@ -42,14 +39,10 @@ const SubscriptionButton = ({ forumId }: Props) => {
                         const body = { forum: forumId };
                         if (isSubbed()) {
                             deleteSubscription(body)
-                                .then(() => {
-                                    setJustSubbed(false);
-                                });
+                                .then(() => setJustSubbed(false));
                         } else {
                             createSubscription(body)
-                                .then(() => {
-                                    setJustSubbed(true);
-                                });
+                                .then(() => setJustSubbed(true));
                         }
                     }}
                 >

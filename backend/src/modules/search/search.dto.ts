@@ -2,14 +2,12 @@
  * Copyright (c) Joseph Prichard 2022.
  */
 
-import { Type } from "class-transformer";
-import { IsString, IsIn, MaxLength, IsOptional, IsNumber } from "class-validator";
+import { IsString, MaxLength, IsOptional, IsNumber } from "class-validator";
 import { MAX_ST_LEN } from "src/global";
 
 export class SearchPostsDto {
     @IsOptional()
     @IsNumber()
-    @Type(() => Number)
     cursor?: number;
 
     @IsString()
@@ -25,7 +23,7 @@ export class SearchPostsDto {
     poster?: string;
 }
 
-export interface SearchPostFilter {
+export interface SearchFilterDto {
     cursor?: number;
     text: string;
     date?: Date;
@@ -49,7 +47,7 @@ export interface PostSearchRow {
     searchRank: string;
 }
 
-export interface SearchedPost {
+export interface SearchedPostDto {
     id: number;
     poster: null | {
         id: number;

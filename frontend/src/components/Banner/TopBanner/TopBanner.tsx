@@ -3,20 +3,20 @@
  */
 
 import React from "react";
-import AppLogo from "./AppLogo/AppLogo";
-import ProfilePopover from "./ProfilePopover/ProfilePopover";
-import styles from "./Banner.module.css";
+import AppLogo from "../AppLogo/AppLogo";
+import ProfilePopover from "../ProfilePopover/ProfilePopover";
+import styles from "./TopBanner.module.css";
 import Link from "next/link";
-import BannerTitle from "./BannerTitle/BannerTitle";
-import { useUserName } from "../../hooks/useUserCreds";
-import SearchBar from "../Search/SearchBar/SearchBar";
+import BannerTitle from "../BannerTitle/BannerTitle";
+import { useUserName } from "../../../client/hooks/creds";
+import SearchBar from "../../Search/SearchBar/SearchBar";
 
 interface Props {
     title?: string;
     href?: string;
 }
 
-const Banner = ({ title, href }: Props) => {
+const TopBanner = ({ title, href }: Props) => {
 
     const name = useUserName();
 
@@ -45,4 +45,4 @@ const Banner = ({ title, href }: Props) => {
     );
 };
 
-export default Banner;
+export default TopBanner;

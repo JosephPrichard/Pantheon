@@ -9,7 +9,7 @@ import { buildFetchForumFeedUrl, PostsRes } from "../../../../../client/api/feed
 import FeedPagination from "../../../FeedPagination/FeedPagination";
 import React from "react";
 import { getAfterCursor, getBeforeCursor } from "../../../../../utils/cursor";
-import { useFetch } from "../../../../../hooks/useFetch";
+import { useFetch } from "../../../../../client/hooks/fetch";
 
 interface Props {
     forum: ForumEntity;

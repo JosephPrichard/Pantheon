@@ -3,7 +3,7 @@
  */
 
 import { Button } from "@mantine/core";
-import { useUserName } from "../../../hooks/useUserCreds";
+import { useUserName } from "../../../client/hooks/creds";
 import styles from "./PostSubmitButton.module.css";
 import Link from "next/link";
 import { WHITE } from "../../colors";

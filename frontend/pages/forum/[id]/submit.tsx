@@ -8,12 +8,12 @@ import type { GetServerSideProps, NextPage } from "next";
 import React from "react";
 import { configNoCreds } from "../../../src/client/config";
 import { ForumEntity } from "../../../src/client/models/forum";
-import Banner from "../../../src/components/Banner/Banner";
-import ErrorPage from "../../../src/components/ErrorPage/ErrorPage";
+import TopBanner from "../../../src/components/Banner/TopBanner/TopBanner";
+import Error from "../../../src/components/Error/Error";
 import ForumPanel from "../../../src/components/Forum/ForumPanel/ForumPanel";
 import Submit from "../../../src/components/Submit/Submit";
 import DoubleColumn from "../../../src/components/Util/Layout/DoubleColumn/DoubleColumn";
-import { Next } from "../../../src/utils/next";
+import { NextProps } from "../../../src/utils/next";
 import { fetchForumById } from "../../../src/client/api/forum";
 import { NextSeo } from "next-seo";
 
@@ -21,13 +21,13 @@ interface Props {
     forum: ForumEntity;
 }
 
-const SubmitPage: NextPage<Next<Props>> = ({ componentProps }: Next<Props>) => {
+const SubmitPage: NextPage<NextProps<Props>> = ({ componentProps }: NextProps<Props>) => {
     return (
         <>
             <NextSeo title={`Submit to ${componentProps?.forum.id}`}/>
             {componentProps ?
                 <>
-                    <Banner
+                    <TopBanner
                         title={componentProps.forum.id}
                         href={`/forum/${componentProps.forum.id}`}
                     />
@@ -43,13 +43,13 @@ const SubmitPage: NextPage<Next<Props>> = ({ componentProps }: Next<Props>) => {
                     />
                 </>
                 :
-                <ErrorPage/>
+                <Error/>
             }
         </>
     );
 };
 
-export const getServerSideProps: GetServerSideProps<Next<Props>> = async ({ query }) => {
+export const getServerSideProps: GetServerSideProps<NextProps<Props>> = async ({ query }) => {
     const forumId = query.id as string | undefined;
 
     if (!forumId) {

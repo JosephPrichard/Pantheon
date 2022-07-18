@@ -7,7 +7,7 @@ import { AxiosRequestConfig } from "axios";
 const URL = "http://localhost:5000";
 
 export function filePath(name: string) {
-    return URL + "/api/files/" + name;
+    return `${URL}/api/files/${name}`;
 }
 
 export const config: AxiosRequestConfig = {

@@ -3,9 +3,9 @@
  */
 
 import { GetServerSideProps, NextPage } from "next";
-import { Next } from "../../../src/utils/next";
-import Banner from "../../../src/components/Banner/Banner";
-import ErrorPage from "../../../src/components/ErrorPage/ErrorPage";
+import { NextProps } from "../../../src/utils/next";
+import TopBanner from "../../../src/components/Banner/TopBanner/TopBanner";
+import Error from "../../../src/components/Error/Error";
 import { ForumEntity } from "../../../src/client/models/forum";
 import React from "react";
 import SearchFeed from "../../../src/components/Feed/PostFeeds/CategoryPostFeed/SearchFeed/SearchFeed";
@@ -17,13 +17,13 @@ interface Props {
     text: string;
 }
 
-const SearchPage: NextPage<Next<Props>> = ({ componentProps }: Next<Props>) => {
+const SearchPage: NextPage<NextProps<Props>> = ({ componentProps }: NextProps<Props>) => {
     return (
         <>
-            <NextSeo title={`Search Results on ${componentProps?.forum.id}: ${componentProps?.text}`}/>
+            <NextSeo title={`Search Results: ${componentProps?.text}`}/>
             {componentProps ?
                 <>
-                    <Banner
+                    <TopBanner
                         title={componentProps.forum.id}
                         href={`/forum/${componentProps.forum.id}`}
                     />
@@ -33,13 +33,13 @@ const SearchPage: NextPage<Next<Props>> = ({ componentProps }: Next<Props>) => {
                     />
                 </>
                 :
-                <ErrorPage/>
+                <Error/>
             }
         </>
     );
 };
 
-export const getServerSideProps: GetServerSideProps<Next<Props>> = async ({ query }) => {
+export const getServerSideProps: GetServerSideProps<NextProps<Props>> = async ({ query }) => {
     const forumId = query.id as string | undefined;
 
     if (!forumId) {

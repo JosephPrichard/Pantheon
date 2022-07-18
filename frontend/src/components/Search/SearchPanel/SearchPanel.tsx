@@ -17,7 +17,7 @@ const SearchPanel = ({ text, resultCount }: Props) => (
                 Search: { text }
             </Title>
             <div className={styles.Content}>
-                Showing results from a search of the entire website.
+                Showing { resultCount } results.
             </div>
         </div>
     </Card>

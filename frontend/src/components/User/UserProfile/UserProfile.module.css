@@ -4,11 +4,11 @@
 
 .UserProfile {
     background-color: rgb(26, 27, 30);
-    height: 100%;
-    padding-left: 10%;
-    padding-right: 10%;
+    min-height: calc(100vh - 80px);
+    padding-left: 25%;
+    padding-right: 25%;
 }
 
 .ProfileContainer {
-    width: 70%;
+    width: 80%;
 }

@@ -11,12 +11,11 @@ import { AppLogger } from "src/loggers/applogger";
 import { PostService } from "../post/post.service";
 import { User } from "../user/user.dto";
 import { UserService } from "../user/user.service";
-import { CommentFilterDto, CommentTreeDto, CreateCommentNodeDto, CreateCommentRootDto, UpdateCommentDto } from "./comment.dto";
+import { CommentFilterDto, CreateCommentNodeDto, CreateCommentRootDto, UpdateCommentDto } from "./comment.dto";
 import { CommentEntity } from "./comment.entity";
 import { deserializeTree } from "./comment.utils";
 import { NotificationService } from "../notifications/notification.service";
-import { PostFilterDto } from "../post/post.dto";
-import { FilterQuery, QueryOrder, QueryOrderMap } from "mikro-orm";
+import { FilterQuery, ForeignKeyConstraintViolationException, QueryOrder, QueryOrderMap } from "mikro-orm";
 
 @Injectable()
 export class CommentService {
@@ -113,8 +112,12 @@ export class CommentService {
         return { comments, nextPage };
     }
 
-    async findTreesByFilter(filter: CommentTreeDto) {
-        const comments = await this.commentRepository.find({ post: filter.post }, ["commenter"]);
+    async findTreesByFilter(postId: number) {
+        const comments = await this.commentRepository.find(
+            { post: postId },
+            ["commenter"],
+            { id: QueryOrder.DESC }
+        );
         return deserializeTree(comments);
     }
 
@@ -146,25 +149,40 @@ export class CommentService {
             throw new CommentNotFoundException();
         }
 
+        // check if the user has permissions to perform this update
         const userMatches = comment.commenter?.id === user.id;
         if (!userMatches) {
             throw new ResourcePermissionsException();
         }
 
-        comment.commenter = null;
-        comment.content = "";
-        
-        await this.commentRepository.flush();
+        // start by deleting the notification for the comment
+        await this.notificationService.deleteByComment(comment);
+
+        try {
+            // attempts to perform a hard delete on the comment, includes decrementing comment count
+            comment.post.comments -= 1;
+            await this.commentRepository.remove(comment).flush();
+        } catch (ex) {
+            // key constraint violation exception means a child is already referencing this comment
+            if (ex instanceof ForeignKeyConstraintViolationException) {
+                // performs a "soft delete" instead on the comment by fetching and updating fields
+                comment.commenter = null;
+                comment.content = "";
+
+                await this.commentRepository.flush();
+            }
+        }
 
         this.logger.log(`User ${user.id} deleted comment ${comment.id}`);
         return comment;
     }
 
     async deleteAll(user: User) {
-        this.logger.log(`User ${user.id}'s comments were deleted`);
-        return await this.commentRepository.nativeUpdate(
+        const count = await this.commentRepository.nativeUpdate(
             { commenter: user.id },
             { commenter: null, content: "" }
         );
+        this.logger.log(`User ${user.id}'s comments were deleted`);
+        return count;
     }
 }

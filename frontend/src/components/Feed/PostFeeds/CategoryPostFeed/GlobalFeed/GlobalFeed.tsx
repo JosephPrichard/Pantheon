@@ -11,7 +11,7 @@ import { getAfterCursor, getBeforeCursor } from "../../../../../utils/cursor";
 import ForumPreviewList from "../../../../Forum/ForumPreviewList/ForumPreviewList";
 import FeedPanel from "../../../FeedPanel/FeedPanel";
 import { Space } from "@mantine/core";
-import { useFetch } from "../../../../../hooks/useFetch";
+import { useFetch } from "../../../../../client/hooks/fetch";
 
 interface Props {
     afterCursor?: number;
@@ -48,7 +48,7 @@ const GlobalFeed = ({ afterCursor, beforeCursor }: Props) => {
                         </div>
                         <Space h={10} w={1}/>
                         <div>
-                            Logged-in users can choose which forums they subscribe to and filter the posts they want to see.
+                            Logged-in users can filter the posts they want to see by choosing which forums they subscribe to.
                         </div>
                     </div>
                 }

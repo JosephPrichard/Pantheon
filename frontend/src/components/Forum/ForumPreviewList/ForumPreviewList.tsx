@@ -8,7 +8,8 @@ import ForumLink from "../ForumLink/ForumLink";
 import styles from "./ForumPreviewList.module.css";
 import React from "react";
 import Link from "next/link";
-import { useFetch } from "../../../hooks/useFetch";
+import { useFetch } from "../../../client/hooks/fetch";
+import WhiteButton from "../../Util/Widget/WhiteButton/WhiteButton";
 
 interface Props {
     limit?: number;
@@ -31,11 +32,11 @@ const ForumPreviewList = ({ limit }: Props) => {
                     })
                 }
             </div>
-            <Link href="/forums">
-                <div className={styles.ForumLink}>
-                    { "More..." }
-                </div>
-            </Link>
+            <div className={styles.ForumLink}>
+                <Link href="/forums">
+                    More...
+                </Link>
+            </div>
         </div>
     );
 }

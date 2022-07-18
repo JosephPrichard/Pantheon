@@ -14,7 +14,5 @@ export class AppLogger extends ConsoleLogger {
         } else {
             this.error(`{${req.path}, ${req.method}} ${exception.message} ${req.ip}`, exception.name);
         }
-        
     }
-
 }

@@ -3,16 +3,12 @@
  */
 
 import { Button, Space, Text } from "@mantine/core";
-import React, { FunctionComponent, useState } from "react";
+import React, { useState } from "react";
 import { sanitizeHTML } from "../../../../../utils/sanitize";
 import Markup from "../../Markup/Markup";
 import styles from "./EditableTextContent.module.css"
-import { usePermissions } from "../../../../../hooks/usePermissions";
-import { Id } from "../../../../../client/types";
 import TextEditor from "../../../Widget/TextEditor/TextEditor";
-import { Edit } from "react-feather";
-import { ORANGE, WHITE } from "../../../../colors";
-import WhiteButton from "../../../Widget/Button/WhiteButton";
+import WhiteButton from "../../../Widget/WhiteButton/WhiteButton";
 
 interface Props {
     text: string;

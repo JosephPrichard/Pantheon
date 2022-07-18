@@ -31,8 +31,6 @@ export class AccountController {
             throw new InvalidSessionException();
         }
 
-        console.log(user.name, body.password);
-
         const loginUser = await this.userService.findByLogin(user.name, body.password);
         if (!loginUser) {
             throw new NotFoundException("Incorrect login information.");

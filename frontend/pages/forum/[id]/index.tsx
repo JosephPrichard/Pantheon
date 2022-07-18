@@ -6,10 +6,10 @@ import axios from "axios";
 import { GetServerSideProps, NextPage } from "next";
 import { configNoCreds } from "../../../src/client/config";
 import { ForumEntity } from "../../../src/client/models/forum";
-import Banner from "../../../src/components/Banner/Banner";
-import ErrorPage from "../../../src/components/ErrorPage/ErrorPage";
+import TopBanner from "../../../src/components/Banner/TopBanner/TopBanner";
+import Error from "../../../src/components/Error/Error";
 import ForumFeed from "../../../src/components/Feed/PostFeeds/CategoryPostFeed/ForumFeed/ForumFeed";
-import { Next } from "../../../src/utils/next";
+import { NextProps } from "../../../src/utils/next";
 import { NextSeo } from "next-seo";
 import React from "react";
 
@@ -19,12 +19,12 @@ interface Props {
     before: number;
 }
 
-const ForumPage: NextPage<Next<Props>> = ({ componentProps }: Next<Props>) => (
+const ForumPage: NextPage<NextProps<Props>> = ({ componentProps }: NextProps<Props>) => (
     <>
         <NextSeo title={`Forum: ${componentProps?.forum.id}`}/>
         {componentProps ?
             <>
-                <Banner
+                <TopBanner
                     title={componentProps.forum.id}
                     href={`/forum/${componentProps.forum.id}`}
                 />
@@ -35,7 +35,7 @@ const ForumPage: NextPage<Next<Props>> = ({ componentProps }: Next<Props>) => (
                 />
             </>
             :
-            <ErrorPage/>
+            <Error/>
         }
     </>
 );

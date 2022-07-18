@@ -4,9 +4,9 @@
 
 import type { GetServerSideProps, NextPage } from "next";
 import React from "react";
-import Banner from "../src/components/Banner/Banner";
-import { Next } from "../src/utils/next";
-import ErrorPage from "../src/components/ErrorPage/ErrorPage";
+import TopBanner from "../src/components/Banner/TopBanner/TopBanner";
+import { NextProps } from "../src/utils/next";
+import Error from "../src/components/Error/Error";
 import HomeFeed from "../src/components/Feed/PostFeeds/CategoryPostFeed/HomeFeed/HomeFeed";
 import { NextSeo } from "next-seo";
 
@@ -15,26 +15,26 @@ interface Props {
     before: number;
 }
 
-const FeedPage: NextPage<Next<Props>> = ({ componentProps }: Next<Props>) => {
+const FeedPage: NextPage<NextProps<Props>> = ({ componentProps }: NextProps<Props>) => {
     return (
         <>
             <NextSeo title="Pantheon Home"/>
             {componentProps ?
                 <>
-                    <Banner/>
+                    <TopBanner/>
                     <HomeFeed
                         afterCursor={componentProps.after}
                         beforeCursor={componentProps.before}
                     />
                 </>
                 :
-                <ErrorPage/>
+                <Error/>
             } 
         </>
     );
 };
 
-export const getServerSideProps: GetServerSideProps<Next<Props>> = async ({ query }) => {
+export const getServerSideProps: GetServerSideProps<NextProps<Props>> = async ({ query }) => {
     const after = Number(query.after);
     const before = Number(query.before);
 

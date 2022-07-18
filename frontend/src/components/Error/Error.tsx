@@ -4,17 +4,17 @@
 
 import { Title } from "@mantine/core";
 import React, { FunctionComponent } from "react";
-import Banner from "../Banner/Banner";
-import styles from "./ErrorPage.module.css";
+import TopBanner from "../Banner/TopBanner/TopBanner";
+import styles from "./Error.module.css";
 
 interface Props {
     code?: number;
     message?: string;
 }
 
-const ErrorPage: FunctionComponent<Props> = ({ code, message }: Props) => (
+const Error: FunctionComponent<Props> = ({ code, message }: Props) => (
     <>
-        <Banner />
+        <TopBanner />
         <div className={styles.Wrapper}>
             <div className={styles.Error}>
                 <div>
@@ -32,9 +32,9 @@ const ErrorPage: FunctionComponent<Props> = ({ code, message }: Props) => (
     </>
 );
 
-ErrorPage.defaultProps = {
+Error.defaultProps = {
     code: 404,
     message: "We couldn't find the page you were looking for."
 }
 
-export default ErrorPage;
+export default Error;

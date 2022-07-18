@@ -36,9 +36,7 @@ export class PostController {
     }
 
     @Get("/:id")
-    async getById(
-        @Param("id") idParam: number
-    ) {
+    async getById(@Param("id") idParam: number) {
         const post = await this.postService.findById(idParam);
         if (!post) {
             throw new PostNotFoundException();

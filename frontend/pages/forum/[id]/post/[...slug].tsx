@@ -5,12 +5,12 @@
 import { GetServerSideProps, NextPage } from "next";
 import React from "react";
 import { PostEntity } from "../../../../src/client/models/post";
-import Banner from "../../../../src/components/Banner/Banner";
+import TopBanner from "../../../../src/components/Banner/TopBanner/TopBanner";
 import PostPanel from "../../../../src/components/Post/PostPanel/PostPanel";
-import ErrorPage from "../../../../src/components/ErrorPage/ErrorPage";
+import Error from "../../../../src/components/Error/Error";
 import ForumPanel from "../../../../src/components/Forum/ForumPanel/ForumPanel";
 import DoubleColumn from "../../../../src/components/Util/Layout/DoubleColumn/DoubleColumn";
-import { Next } from "../../../../src/utils/next";
+import { NextProps } from "../../../../src/utils/next";
 import { urlify } from "../../../../src/utils/url";
 import { CommentTreeEntity } from "../../../../src/client/models/comment";
 import { fetchCommentTreeByPost } from "../../../../src/client/api/comment";
@@ -22,12 +22,12 @@ interface Props {
     roots: CommentTreeEntity[];
 }
 
-const PostPage: NextPage<Next<Props>> = ({ componentProps }: Next<Props>) => (
+const PostPage: NextPage<NextProps<Props>> = ({ componentProps }: NextProps<Props>) => (
     <>
         <NextSeo title={componentProps?.post.title}/>
         {componentProps ?
             <>
-                <Banner
+                <TopBanner
                     title={componentProps.post.forum.id}
                     href={`/forum/${componentProps.post.forum.id}`}
                 />
@@ -49,12 +49,12 @@ const PostPage: NextPage<Next<Props>> = ({ componentProps }: Next<Props>) => (
                 />
             </>
             :
-            <ErrorPage/>
+            <Error/>
         }
     </>
 );
 
-export const getServerSideProps: GetServerSideProps<Next<Props>> = async ({ query }) => {
+export const getServerSideProps: GetServerSideProps<NextProps<Props>> = async ({ query }) => {
     const forumId = query.id as string | undefined;
     const slug = query.slug as string[] | undefined;
 

@@ -1,0 +1,33 @@
+/*
+ * Copyright (c) Joseph Prichard 2022.
+ */
+
+.ButtonWrapper {
+    display: flex;
+    margin-top: 30px;
+    margin-bottom: 40px;
+    float: left;
+    width: 100%;
+}
+
+.ButtonWrapperInner {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.Button {
+    color: rgb(193, 194, 197);
+    background-color: rgb(38,39,42);
+    padding-left: 100px;
+    padding-right: 100px;
+
+}
+
+.Button:hover {
+    background-color: rgb(48,49,52);
+}
+
+.NoFocus {
+    outline: none !important;
+    box-shadow: none !important;
+}

@@ -9,9 +9,12 @@
     overflow: hidden;
 }
 
-.Button {
-    margin: 10px 10px 0 0;
-    background-color: rgb(210,210,210);
-    color: black;
+.ButtonWrapper {
+    margin-top: 10px;
+    display: inline;
     float: left;
+}
+
+.Button {
+    margin-right: 10px;
 }

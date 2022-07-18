@@ -7,14 +7,14 @@ import React, { useCallback, useState } from "react";
 import { Button, Space } from "@mantine/core";
 import styles from "./CreateCommentRoot.module.css";
 import TextEditor from "../../Util/Widget/TextEditor/TextEditor";
-import { useUserName } from "../../../hooks/useUserCreds";
+import { useUserName } from "../../../client/hooks/creds";
 import { WHITE } from "../../colors";
 import { submitCommentRoot } from "../../../client/api/comment";
 import { CommentEntity } from "../../../client/models/comment";
 import { isValidError } from "../../../client/util";
 import { ErrorRes } from "../../../client/types";
-import Message from "../../Util/Message/Message/Message";
-import WhiteButton from "../../Util/Widget/Button/WhiteButton";
+import Message from "../../Util/Widget/Message/Message/Message";
+import WhiteButton from "../../Util/Widget/WhiteButton/WhiteButton";
 
 interface Props {
     post: PostEntity;
@@ -60,7 +60,9 @@ const CreateCommentRoot = ({ post, onCreate }: Props) => {
             />
             <Space h={5}/>
             <Message message={message}/>
-            <WhiteButton text="Comment" loading={loading} onClick={submit}/>
+            <div className={styles.Button}>
+                <WhiteButton text="Comment" loading={loading} onClick={submit}/>
+            </div>
             <Space h={50}/>
         </div>
     );

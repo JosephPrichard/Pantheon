@@ -3,7 +3,7 @@
  */
 
 import { NextPage } from "next";
-import Banner from "../src/components/Banner/Banner";
+import TopBanner from "../src/components/Banner/TopBanner/TopBanner";
 import React from "react";
 import ForumList from "../src/components/Forum/ForumList/ForumList";
 import { Head } from "next/document";
@@ -13,7 +13,7 @@ const ForumPage: NextPage = () => {
     return (
         <>
             <NextSeo title="Pantheon Forums"/>
-            <Banner/>
+            <TopBanner/>
             <ForumList/>
         </>
     );

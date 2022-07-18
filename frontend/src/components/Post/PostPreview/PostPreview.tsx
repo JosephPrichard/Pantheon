@@ -20,7 +20,7 @@ interface Props {
     lighter: boolean;
 }
     
-const PostPanel = ({ post, lighter }: Props) => {
+const PostPreview = ({ post, lighter }: Props) => {
 
     const [collapsed, setCollapsed] = useState(true);
 
@@ -81,4 +81,4 @@ const PostPanel = ({ post, lighter }: Props) => {
     );
 }
 
-export default PostPanel;
+export default PostPreview;

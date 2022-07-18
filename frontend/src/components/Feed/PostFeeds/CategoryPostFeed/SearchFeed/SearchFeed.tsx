@@ -4,9 +4,10 @@
 
 import { buildFetchSearchFeedUrl, PostsSearchRes } from "../../../../../client/api/feed";
 import PostFeed from "../../PostFeed/PostFeed";
-import React from "react";
+import React, { useMemo } from "react";
 import SearchPanel from "../../../../Search/SearchPanel/SearchPanel";
-import { useFetch } from "../../../../../hooks/useFetch";
+import { useFetch } from "../../../../../client/hooks/fetch";
+import { createPostVoteMap, PostVoteContext } from "../../../../Vote/Vote.context";
 
 interface Props {
     user?: number;
@@ -19,16 +20,20 @@ const SearchFeed = ({ text, user, forum }: Props) => {
 
     const resultCount = data?.posts?.length;
 
+    const map = useMemo(() => createPostVoteMap(data?.postVotes), [data?.postVotes]);
+
     return (
-        <PostFeed
-            posts={data?.posts}
-            postVotes={data?.postVotes}
-        >
-            <SearchPanel
-                text={text}
-                resultCount={resultCount ? resultCount : 0}
-            />
-        </PostFeed>
+        <PostVoteContext.Provider value={{ votes: map }}>
+            <PostFeed
+                posts={data?.posts}
+                postVotes={data?.postVotes}
+            >
+                <SearchPanel
+                    text={text}
+                    resultCount={resultCount ? resultCount : 0}
+                />
+            </PostFeed>
+        </PostVoteContext.Provider>
     );
 }
 

@@ -4,7 +4,7 @@
 
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityRepository, QueryOrder } from "mikro-orm";
+import { EntityRepository, FilterQuery, QueryOrder } from "mikro-orm";
 import { NotificationEntity } from "./notification.entity";
 import { User } from "../user/user.dto";
 import { AppLogger } from "../../loggers/applogger";
@@ -12,6 +12,7 @@ import { CommentEntity } from "../comment/comment.entity";
 import { UserEntity } from "../user/user.entity";
 import { ResourcePermissionsException } from "../../exception/permissions.exception";
 import { NotificationNotFound } from "../../exception/entityNotFound.exception";
+import { NotificationFilterDto } from "./notification.dto";
 
 @Injectable()
 export class NotificationService {
@@ -35,25 +36,41 @@ export class NotificationService {
         return notificationEntity;
     }
 
-    async findByUser(user: User) {
-        return await this.notificationRepository.find(
-            { recipient: user.id },
+    async findByFilter(filter: NotificationFilterDto) {
+        const where: FilterQuery<any> = { recipient: filter.recipient };
+
+        // check if we should use cursors to paginate
+        if (filter.afterCursor) {
+            where.id = { $lt: filter.afterCursor };
+        }
+
+        // fetch notifications from repository
+        const notifications = await this.notificationRepository.find(
+            where,
             ["comment", "comment.commenter", "comment.post"],
-            { id: QueryOrder.DESC }
+            { id: QueryOrder.DESC },
+            filter.perPage + 1
         );
+
+        // remove the extra element from the list
+        const nextPage = notifications.length >= filter.perPage + 1;
+        if (nextPage) {
+            notifications.pop();
+        }
+
+        return { notifications, nextPage };
     }
 
     async countUnread(user: User) {
         return await this.notificationRepository.count({ recipient: user.id, read: false });
     }
 
-    async markAsRead(user: User, notification: number) {
-        const notificationEntity = await this.notificationRepository.findOne({ id: notification });
+    async markAsRead(user: User, notificationId: number) {
+        const notificationEntity = await this.notificationRepository.findOne({ id: notificationId });
 
         if (!notificationEntity) {
             throw new NotificationNotFound();
         }
-
         if (notificationEntity.recipient.id != user.id) {
             throw new ResourcePermissionsException();
         }
@@ -62,10 +79,17 @@ export class NotificationService {
 
         await this.notificationRepository.flush();
 
+        this.logger.log(`Notification ${notificationEntity.id} was marked read`);
         return notificationEntity;
     }
 
     async markAllAsRead(user: User) {
-        return await this.notificationRepository.nativeUpdate({ recipient: user.id }, { read: true });
+        const count = await this.notificationRepository.nativeUpdate({ recipient: user.id }, { read: true });
+        this.logger.log(`User ${user.id} marked all notifications as read`);
+        return count;
+    }
+
+    async deleteByComment(comment: CommentEntity) {
+        return await this.notificationRepository.nativeDelete({ comment: comment });
     }
 }

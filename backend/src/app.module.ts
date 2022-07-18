@@ -6,7 +6,7 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { BadRequestException, MiddlewareConsumer, Module, RequestMethod, ValidationPipe } from '@nestjs/common';
 import { ormConfig } from './resource/orm.resource';
 import { SESSION_SECRET } from './resource/session.resource';
-import { SESSION_EXPIRY } from './global';
+import { SESSION_EXPIRY, SESSION_PRUNE_PERIOD } from './global';
 import { CommentModule } from './modules/comment/comment.module';
 import { PostModule } from './modules/post/post.module';
 import { UserModule } from './modules/user/user.module';
@@ -17,13 +17,13 @@ import { SubscriptionModule } from './modules/subscription/subscription.module';
 import { FeedModule } from './modules/feed/feed.module';
 import { NotificationModule } from "./modules/notifications/notification.module";
 import { SearchModule } from './modules/search/search.module';
+import { AccountModule } from "./modules/account/account.module";
 import { APP_PIPE } from '@nestjs/core';
 import { getErrorMsg } from './utils/errparse.utils';
 import session from "express-session";
-import connectPgSimple from 'connect-pg-simple';
-import { AccountModule } from "./modules/account/account.module";
+import store from "memorystore";
 
-const PgSession = connectPgSimple(session);
+const MemoryStore = store(session);
 
 @Module({
     imports: [
@@ -62,13 +62,12 @@ export class AppModule {
         consumer
             .apply(
                 session({
-                    // store: new PgSession({
-                    //     conString: "",
-                    //     tableName: "sessions"
-                    // }),
+                    store: new MemoryStore({
+                        checkPeriod: SESSION_PRUNE_PERIOD * 1000 // prune expired entries every 24h
+                    }),
                     secret: SESSION_SECRET,
                     saveUninitialized: false,
-                    resave: true,
+                    resave: false,
                     rolling: true,
                     cookie: {
                         secure: false,

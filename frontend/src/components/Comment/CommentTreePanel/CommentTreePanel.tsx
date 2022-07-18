@@ -10,11 +10,12 @@ import CreateCommentNode from "../CreateCommentNode/CreateCommentNode";
 import CommentVotePanel from "../../Vote/CommentVotePanel/CommentVotePanel";
 import { Space } from "@mantine/core";
 import EditableTextContent from "../../Util/Layout/Content/EditableTextContent/EditableTextContent";
-import { usePermissions } from "../../../hooks/usePermissions";
+import { usePermissions } from "../../../client/hooks/permissions";
 import { deleteComment, editComment } from "../../../client/api/comment";
 import CommentLinks from "../CommentLinks/CommentLinks";
 import { useHash } from "@mantine/hooks";
 import ConfirmModal from "../../Util/Layout/ConfirmModal/ConfirmModal";
+import { useCommentContext } from "../Comment.context";
 
 interface Props {
     tree: CommentTreeEntity;
@@ -25,7 +26,7 @@ const CommentTreePanel = ({ tree }: Props) => {
     const comment = tree.comment;
     const linkId = String(comment.id);
 
-    const hasPerms = usePermissions(comment.commenter?.id);
+    const hasPerms = usePermissions(comment.id, comment.commenter?.id);
     const [hash] = useHash();
 
     const [highlight, setHighlight] = useState<string>();
@@ -36,6 +37,8 @@ const CommentTreePanel = ({ tree }: Props) => {
 
     const [showReply, setShowReply] = useState(false);
     const [showDelete, setShowDelete] = useState(false);
+
+    const op = useCommentContext().op;
 
     useEffect(
         () => {
@@ -77,12 +80,9 @@ const CommentTreePanel = ({ tree }: Props) => {
         []
     );
 
-    if (!comment.commenter) {
-        return (<></>);
-    }
-
     return (
         <div key={tree.comment.id}>
+            <Space h={5}/>
             <div
                 className={styles.CommentDisplay}
                 id={linkId}
@@ -99,7 +99,14 @@ const CommentTreePanel = ({ tree }: Props) => {
                 />
                 <CommentVotePanel comment={comment}/>
                 <div className={styles.CommentContent}>
-                    { comment.commenter ? comment.commenter.name : "[deleted]" }
+                    { comment.commenter ?
+                        <>
+                            { comment.commenter.name }
+                            { op == comment.commenter.id ? <strong> (OP) </strong> : "" }
+                        </>
+                        :
+                        "[deleted]"
+                    }
                     <span className={styles.Date}>
                         { " • " + getDateDisplay(new Date(comment.createdAt)) }
                     </span>
@@ -120,19 +127,21 @@ const CommentTreePanel = ({ tree }: Props) => {
                     />
                 </div>
             </div>
-            <Space h={5}/>
             <div>
                 {!showReply ||
+                  <div>
                     <div className={styles.CommentTreeChild}>
-                        <CreateCommentNode
-                            parentComment={tree.comment}
-                            onCreate={onCreateReply}
-                            onCancel={() => setShowReply(false)}
-                        />
-                        <Space h={25}/>
+                      <CreateCommentNode
+                        parentComment={tree.comment}
+                        onCreate={onCreateReply}
+                        onCancel={() => setShowReply(false)}
+                      />
                     </div>
+                    <Space h={25}/>
+                  </div>
                 }
-                {createdNodes.map((tree, i) => {
+                {createdNodes
+                    .map((tree, i) => {
                         return (
                             <div key={i} className={styles.CommentTreeChild}>
                                 <CommentTreePanel tree={tree}/>

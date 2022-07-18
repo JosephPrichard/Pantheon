@@ -6,7 +6,7 @@ import { Title } from "@mantine/core";
 import { SubsRes } from "../../../client/api/subscription";
 import ForumLink from "../../Forum/ForumLink/ForumLink";
 import styles from "./SubList.module.css";
-import { useFetch } from "../../../hooks/useFetch";
+import { useFetch } from "../../../client/hooks/fetch";
 
 const SubList = () => {
     const { data } = useFetch<SubsRes>("/api/subscriptions");

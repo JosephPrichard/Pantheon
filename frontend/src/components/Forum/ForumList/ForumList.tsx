@@ -7,7 +7,7 @@ import { buildFetchForumsUrl, ForumsRes } from "../../../client/api/forum";
 import styles from "./ForumList.module.css";
 import DoubleColumn from "../../Util/Layout/DoubleColumn/DoubleColumn";
 import ForumLargeLink from "../ForumLargeLink/ForumLargeLink";
-import { useFetch } from "../../../hooks/useFetch";
+import { useFetch } from "../../../client/hooks/fetch";
 
 interface Props {
     limit?: number;

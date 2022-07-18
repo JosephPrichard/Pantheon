@@ -4,8 +4,8 @@
 
 import { Button, Modal, PasswordInput, Space, Title } from "@mantine/core";
 import React, { useCallback, useEffect, useState } from "react";
-import Message from "../../Util/Message/Message/Message";
-import WhiteButton from "../../Util/Widget/Button/WhiteButton";
+import Message from "../../Util/Widget/Message/Message/Message";
+import WhiteButton from "../../Util/Widget/WhiteButton/WhiteButton";
 import { deleteAccount } from "../../../client/api/user";
 import { isValidError } from "../../../client/util";
 import { ErrorRes } from "../../../client/types";
