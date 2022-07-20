@@ -7,11 +7,10 @@ import { Injectable } from "@nestjs/common";
 import { EntityRepository } from "mikro-orm";
 import { AppLogger } from "src/loggers/applogger";
 import { SubscriptionService } from "../subscription/subscription.service";
-import { User } from "../user/user.dto";
 import { UserService } from "../user/user.service";
 import { HighlightEntity } from "./highlight.entity";
-
-const REFRESH_THRESHOLD = 1000 * 60 * 60 * 4; // 4 hours in milliseconds
+import { User } from "../user/user.interface";
+import { REFRESH_THRESHOLD } from "../../global";
 
 @Injectable()
 export class HighlightService {
@@ -20,51 +19,48 @@ export class HighlightService {
 
     constructor(
         @InjectRepository(HighlightEntity)
-        private readonly subsetRepository: EntityRepository<HighlightEntity>,
+        private readonly highlightRepository: EntityRepository<HighlightEntity>,
 
         private readonly userService: UserService,
 
         private readonly subService: SubscriptionService
     ) {}
 
-    /**
-     * Responsible for refreshing the highlighted subs, ideally it should be called whenever we access the subset
-     * @param user that we're refreshing the susbet for
-     * @return an array of strings containing the forums
-     */
-    async refreshThenGet(user: User) {
-        const subset = await this.get(user);
+    // responsible for refreshing the highlighted subs, ideally it should be called whenever we access the highlights
+    async refreshThenGet(user: User): Promise<string[]> {
+        const highlight = await this.findHighlight(user);
 
-        if (!subset) {
-            // no subset (first time accessing the service for the user)
+        if (!highlight) {
+            // no highlights (first time accessing the service for the user)
             const subset = new HighlightEntity();
 
             subset.user = this.userService.getEntityReference(user.id);
             subset.forums = await this.generateForums(user);
 
-            await this.subsetRepository.persistAndFlush(subset);
+            await this.highlightRepository.persistAndFlush(subset);
 
             this.logger.log(`User ${user.id} highlights was created`);
 
             return subset.forums;
         } else {
             // check if we need to generate new forums or not
-            const timeDiff = new Date().getTime() - subset.updatedAt.getTime();
+            const timeDiff = new Date().getTime() - highlight.updatedAt.getTime();
 
             if (timeDiff >= REFRESH_THRESHOLD) {
-                subset.forums = await this.generateForums(user);
+                highlight.forums = await this.generateForums(user);
             }
-            subset.updatedAt = new Date();
+            highlight.updatedAt = new Date();
 
-            await this.subsetRepository.flush();
+            await this.highlightRepository.flush();
 
             this.logger.log(`User ${user.id} highlights was refreshed`);
 
-            return subset.forums;
+            return highlight.forums;
         }
     }
 
-    async generateForums(user: User) {
+    // generates new highlighted forums for a user
+    async generateForums(user: User): Promise<string[]> {
         const subscriptions = await this.subService.findByUserRandom(user, 50);
 
         let logStr = "";
@@ -80,7 +76,7 @@ export class HighlightService {
         return forums;
     }
 
-    async get(user: User) {
-        return await this.subsetRepository.findOne({ user: user.id });
+    async findHighlight(user: User): Promise<HighlightEntity | null> {
+        return await this.highlightRepository.findOne({ user: user.id });
     }
 }

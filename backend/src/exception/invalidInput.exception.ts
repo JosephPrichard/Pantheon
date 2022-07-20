@@ -15,10 +15,3 @@ export class DuplicateResourceException extends InvalidInputException {
         this.name = DuplicateResourceException.name;
     }
 }
-
-export class DuplicateForumException extends InvalidInputException {
-    constructor(name: string) {
-        super(`A forum with the name "${name}" already exists.`);
-        this.name = DuplicateForumException.name;
-    }
-}

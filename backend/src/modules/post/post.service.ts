@@ -3,18 +3,19 @@
  */
 
 import { PostEntity} from "./post.entity";
-import { CreatePostDto, PostFilterDto, UpdatePostDto } from "./post.dto";
+import { CreatePostDto, UpdatePostDto } from "./post.dto";
 import { FilterQuery, QueryOrder, QueryOrderMap } from "mikro-orm";
 import { Injectable } from "@nestjs/common";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { User } from "../user/user.dto";
 import { UserService } from "../user/user.service";
 import { ForumService } from "../forum/forum.service";
 import { ForumNotFoundException, PostNotFoundException } from "src/exception/entityNotFound.exception";
-import { ResourcePermissionsException } from "src/exception/permissions.exception";
+import { PermissionsException } from "src/exception/permissions.exception";
 import { AppLogger } from "src/loggers/applogger";
 import { InvalidInputException } from "src/exception/invalidInput.exception";
+import { PostFilter, PostFilterRo } from "./post.interface";
+import { User } from "../user/user.interface";
 
 @Injectable()
 export class PostService {
@@ -30,7 +31,7 @@ export class PostService {
         private readonly userService: UserService
     ) {}
 
-    async create(post: CreatePostDto, poster: User) {
+    async create(post: CreatePostDto, poster: User): Promise<PostEntity> {
         const forum = await this.forumService.findById(post.forum);
         if (!forum) {
             throw new ForumNotFoundException();
@@ -62,11 +63,11 @@ export class PostService {
         return postEntity;
     }
 
-    async findById(id: number) {
+    async findById(id: number): Promise<PostEntity | null> {
         return await this.postRepository.findOne({ id: id }, ["poster", "forum"]);
     }
 
-    async findByFilter(filter: PostFilterDto) {
+    async findByFilter(filter: PostFilter): Promise<PostFilterRo> {
         const where: FilterQuery<any> = {};
 
         // check if we want to filter poster
@@ -118,7 +119,7 @@ export class PostService {
         return { posts, nextPage };
     }
 
-    async update(update: UpdatePostDto, id: number, user: User) {
+    async update(update: UpdatePostDto, id: number, user: User): Promise<PostEntity> {
         const post = await this.findById(id);
         if (!post) {
             throw new PostNotFoundException();
@@ -126,7 +127,7 @@ export class PostService {
 
         const userMatches = post.poster?.id === user.id;
         if (!userMatches) {
-            throw new ResourcePermissionsException();
+            throw new PermissionsException();
         }
 
         if (post.content) {
@@ -139,7 +140,7 @@ export class PostService {
         return post;
     }
 
-    async delete(id: number, user: User) {
+    async delete(id: number, user: User): Promise<PostEntity> {
         const post = await this.findById(id);
         if (!post) {
             throw new PostNotFoundException();
@@ -147,7 +148,7 @@ export class PostService {
 
         const userMatches = post?.poster?.id === user.id;
         if (!userMatches) {
-            throw new ResourcePermissionsException();
+            throw new PermissionsException();
         }
 
         post.poster = null;
@@ -160,7 +161,7 @@ export class PostService {
         return post;
     }
 
-    async deleteAll(user: User) {
+    async deleteAll(user: User): Promise<number> {
         const count = await this.postRepository.nativeUpdate(
             { poster: user.id },
             { poster: null, content: "", images: [] }

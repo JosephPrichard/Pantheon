@@ -7,6 +7,7 @@ import { CreateSubDto, DeleteSubDto, UpdateSubDto } from "./subscription.dto";
 import { SubscriptionService as SubscriptionService } from "./subscription.service";
 import { Request } from "express";
 import { InvalidSessionException } from "src/exception/session.exception";
+import { IsSubbedRo, SubscriptionRo, SubscriptionsRo } from "./subscription.interface";
 
 @Controller("subscriptions")
 export class SubscriptionController {
@@ -14,10 +15,7 @@ export class SubscriptionController {
     constructor(private readonly subService: SubscriptionService) {}
 
     @Post()
-    async create(
-        @Body() body: CreateSubDto,
-        @Req() req: Request
-    ) {
+    async create(@Body() body: CreateSubDto, @Req() req: Request): Promise<SubscriptionRo> {
         const user = req.session.user;
         if (!user) {
             throw new InvalidSessionException();
@@ -28,9 +26,7 @@ export class SubscriptionController {
     }
 
     @Get()
-    async findAll(
-        @Req() req: Request
-    ) {
+    async findAll(@Req() req: Request): Promise<SubscriptionsRo> {
         const user = req.session.user;
         if (!user) {
             throw new InvalidSessionException();
@@ -41,13 +37,10 @@ export class SubscriptionController {
     }
 
     @Get("/isSubbed")
-    async isSubbed(
-        @Query("forum") forum: string,
-        @Req() req: Request
-    ) {
+    async isSubbed(@Query("forum") forum: string, @Req() req: Request): Promise<IsSubbedRo> {
         const user = req.session.user;
         if (!user) {
-            return new InvalidSessionException();
+            throw new InvalidSessionException();
         }
 
         const isSubbed = await this.subService.isSubbed(user, forum);
@@ -55,10 +48,7 @@ export class SubscriptionController {
     }
 
     @Put()
-    async update(
-        @Body() body: UpdateSubDto,
-        @Req() req: Request
-    ) {
+    async update(@Body() body: UpdateSubDto, @Req() req: Request): Promise<SubscriptionRo> {
         const user = req.session.user;
         if (!user) {
             throw new InvalidSessionException();
@@ -69,10 +59,7 @@ export class SubscriptionController {
     }
 
     @Delete()
-    async delete(
-        @Query() query: DeleteSubDto,
-        @Req() req: Request
-    ) {
+    async delete(@Query() query: DeleteSubDto, @Req() req: Request): Promise<SubscriptionRo> {
         const user = req.session.user;
         if (!user) {
             throw new InvalidSessionException();

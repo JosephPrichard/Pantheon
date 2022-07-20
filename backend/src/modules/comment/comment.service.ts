@@ -6,16 +6,17 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import { CommentNotFoundException, PostNotFoundException } from "src/exception/entityNotFound.exception";
-import { ResourcePermissionsException } from "src/exception/permissions.exception";
+import { PermissionsException } from "src/exception/permissions.exception";
 import { AppLogger } from "src/loggers/applogger";
 import { PostService } from "../post/post.service";
-import { User } from "../user/user.dto";
 import { UserService } from "../user/user.service";
-import { CommentFilterDto, CreateCommentNodeDto, CreateCommentRootDto, UpdateCommentDto } from "./comment.dto";
+import { CreateCommentNodeDto, CreateCommentRootDto, UpdateCommentDto } from "./comment.dto";
 import { CommentEntity } from "./comment.entity";
 import { deserializeTree } from "./comment.utils";
 import { NotificationService } from "../notifications/notification.service";
 import { FilterQuery, ForeignKeyConstraintViolationException, QueryOrder, QueryOrderMap } from "mikro-orm";
+import { CommentFilter, CommentFilterRo, CommentTree } from "./comment.interface";
+import { User } from "../user/user.interface";
 
 @Injectable()
 export class CommentService {
@@ -33,7 +34,7 @@ export class CommentService {
         private readonly notificationService: NotificationService
     ) {}
 
-    async createRoot(root: CreateCommentRootDto, commenter: User) {
+    async createRoot(root: CreateCommentRootDto, commenter: User): Promise<CommentEntity> {
         const post = await this.postService.findById(root.post);
         if (!post) {
             throw new PostNotFoundException();
@@ -55,7 +56,7 @@ export class CommentService {
         return commentEntity;
     }
 
-    async createNode(node: CreateCommentNodeDto, commenter: User) {
+    async createNode(node: CreateCommentNodeDto, commenter: User): Promise<CommentEntity> {
         const parent = await this.findById(node.parentComment);
         if (!parent) {
             throw new CommentNotFoundException();
@@ -79,11 +80,11 @@ export class CommentService {
         return commentEntity;
     }
 
-    async findById(id: number) {
+    async findById(id: number): Promise<CommentEntity | null> {
         return await this.commentRepository.findOne({ id: id }, ["commenter", "post"]);
     }
 
-    async findByFilter(filter: CommentFilterDto) {
+    async findByFilter(filter: CommentFilter): Promise<CommentFilterRo> {
         const where: FilterQuery<any> = {};
 
         // add filter commenter
@@ -112,7 +113,7 @@ export class CommentService {
         return { comments, nextPage };
     }
 
-    async findTreesByFilter(postId: number) {
+    async findTreesByFilter(postId: number): Promise<CommentTree[]> {
         const comments = await this.commentRepository.find(
             { post: postId },
             ["commenter"],
@@ -121,7 +122,7 @@ export class CommentService {
         return deserializeTree(comments);
     }
 
-    async update(update: UpdateCommentDto, id: number, user: User) {
+    async update(update: UpdateCommentDto, id: number, user: User): Promise<CommentEntity> {
         const comment = await this.findById(id);
         if (!comment) {
             throw new CommentNotFoundException();
@@ -129,7 +130,7 @@ export class CommentService {
 
         const userMatches = comment.commenter?.id === user.id;
         if (!userMatches) {
-            throw new ResourcePermissionsException();
+            throw new PermissionsException();
         }
 
         if (update.content) {
@@ -140,10 +141,9 @@ export class CommentService {
 
         this.logger.log(`User ${user.id} updated comment ${comment.id}`);
         return comment;
-        
     }
 
-    async delete(id: number, user: User) {
+    async delete(id: number, user: User): Promise<CommentEntity> {
         const comment = await this.commentRepository.findOne({ id: id }, ["commenter", "post"]);
         if (!comment) {
             throw new CommentNotFoundException();
@@ -152,7 +152,7 @@ export class CommentService {
         // check if the user has permissions to perform this update
         const userMatches = comment.commenter?.id === user.id;
         if (!userMatches) {
-            throw new ResourcePermissionsException();
+            throw new PermissionsException();
         }
 
         // start by deleting the notification for the comment
@@ -177,7 +177,7 @@ export class CommentService {
         return comment;
     }
 
-    async deleteAll(user: User) {
+    async deleteAll(user: User): Promise<number> {
         const count = await this.commentRepository.nativeUpdate(
             { commenter: user.id },
             { commenter: null, content: "" }

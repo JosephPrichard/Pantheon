@@ -10,6 +10,7 @@ import { Request } from "express";
 import { sanitizeString } from "../../utils/sanitize.utils";
 import { InvalidSessionException } from "src/exception/session.exception";
 import { PostNotFoundException } from "src/exception/entityNotFound.exception";
+import { PostRo } from "./post.interface";
 
 @Controller("posts")
 export class PostController {
@@ -17,10 +18,7 @@ export class PostController {
     constructor(private readonly postService: PostService) {}
 
     @Post()
-    async create(
-        @Body() body: CreatePostDto, 
-        @Req() req: Request
-    ) {
+    async create(@Body() body: CreatePostDto, @Req() req: Request): Promise<PostRo> {
         const user = req.session.user;
         if (!user) {
             throw new InvalidSessionException();
@@ -36,7 +34,7 @@ export class PostController {
     }
 
     @Get("/:id")
-    async getById(@Param("id") idParam: number) {
+    async getById(@Param("id") idParam: number): Promise<PostRo> {
         const post = await this.postService.findById(idParam);
         if (!post) {
             throw new PostNotFoundException();
@@ -45,11 +43,7 @@ export class PostController {
     }
 
     @Put("/:id")
-    async update(
-        @Body() body: UpdatePostDto, 
-        @Param("id") idParam: number,
-        @Req() req: Request
-    ) {
+    async update(@Body() body: UpdatePostDto, @Param("id") idParam: number, @Req() req: Request): Promise<PostRo> {
         const user = req.session.user;
         if (!user) {
             throw new InvalidSessionException();
@@ -65,10 +59,7 @@ export class PostController {
     }
 
     @Delete("/:id")
-    async delete(
-        @Param("id") idParam: number,
-        @Req() req: Request
-    ) {
+    async delete(@Param("id") idParam: number, @Req() req: Request): Promise<PostRo> {
         const user = req.session.user;
         if (!user) {
             throw new InvalidSessionException();

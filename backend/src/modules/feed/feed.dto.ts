@@ -4,10 +4,8 @@
 
 import { Type } from "class-transformer";
 import { IsOptional, IsNumber, IsString } from "class-validator";
-import { PostEntity } from "../post/post.entity";
-import { CommentEntity } from "../comment/comment.entity";
 
-export class FeedCursorDto {
+export class FeedDto {
     @IsOptional()
     @IsString()
     @Type(() => String)
@@ -29,7 +27,7 @@ export class FeedCursorDto {
     beforeCursor?: number;
 }
 
-export class HomeFeedCursorDto {
+export class HomeFeedDto {
     @IsOptional()
     @IsNumber()
     @Type(() => Number)
@@ -41,7 +39,7 @@ export class HomeFeedCursorDto {
     beforeCursor?: number;
 }
 
-export class ActivityFeedCursorDto {
+export class ActivityFeedDto {
     @IsOptional()
     @IsNumber()
     @Type(() => Number)
@@ -51,9 +49,9 @@ export class ActivityFeedCursorDto {
     @IsNumber()
     @Type(() => Number)
     postsAfterCursor?: number;
-}
 
-export interface ActivityDto {
-    isPost: boolean;
-    activity: PostEntity | CommentEntity;
+    @IsOptional()
+    @IsString()
+    @Type(() => String)
+    user!: string;
 }

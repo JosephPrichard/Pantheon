@@ -10,6 +10,7 @@ import { sanitizeString } from "../../utils/sanitize.utils";
 import { CreateCommentNodeDto, CreateCommentRootDto, UpdateCommentDto } from "./comment.dto";
 import { InvalidSessionException } from "src/exception/session.exception";
 import { CommentNotFoundException } from "src/exception/entityNotFound.exception";
+import { CommentRo } from "./comment.interface";
 
 @Controller("comments")
 export class CommentController {
@@ -17,10 +18,7 @@ export class CommentController {
     constructor(private readonly commentService: CommentService) {}
 
     @Post("/nodes")
-    async createNode(
-        @Body() body: CreateCommentNodeDto,
-        @Req() req: Request
-    ) {
+    async createNode(@Body() body: CreateCommentNodeDto, @Req() req: Request): Promise<CommentRo> {
         const user = req.session.user;
         if (!user) {
            throw new InvalidSessionException();
@@ -33,10 +31,7 @@ export class CommentController {
     }
 
     @Post("/roots")
-    async createRoot(
-        @Body() body: CreateCommentRootDto,
-        @Req() req: Request
-    ) {
+    async createRoot(@Body() body: CreateCommentRootDto, @Req() req: Request): Promise<CommentRo> {
         const user = req.session.user;
         if (!user) {
             throw new InvalidSessionException();
@@ -49,9 +44,7 @@ export class CommentController {
     }
 
     @Get("/:id")
-    async getById(
-        @Param("id") idParam: number
-    ) {
+    async getById(@Param("id") idParam: number): Promise<CommentRo> {
         const comment = await this.commentService.findById(idParam);
         if (!comment) {
             throw new CommentNotFoundException();
@@ -60,11 +53,7 @@ export class CommentController {
     }
 
     @Put("/:id")
-    async update(
-        @Body() body: UpdateCommentDto, 
-        @Param("id") idParam: number,
-        @Req() req: Request
-    ) {
+    async update(@Body() body: UpdateCommentDto, @Param("id") idParam: number, @Req() req: Request): Promise<CommentRo> {
         sanitize(body);
         body.content = sanitizeString(body.content);
 
@@ -78,10 +67,7 @@ export class CommentController {
     }
 
     @Delete("/:id")
-    async delete(
-        @Param("id") idParam: number,
-        @Req() req: Request
-    ) {
+    async delete(@Param("id") idParam: number, @Req() req: Request): Promise<CommentRo> {
         const user = req.session.user;
         if (!user) {
             throw new InvalidSessionException();

@@ -9,8 +9,8 @@ import { AppLogger } from "src/loggers/applogger";
 import { sql } from "src/utils/sql.utils";
 import { ForumEntity } from "../forum/forum.entity";
 import { UserEntity } from "../user/user.entity";
-import { PostSearchRow, SearchedPostDto, SearchFilterDto } from "./search.dto";
-import { PER_PAGE, PER_SEARCH_PAGE } from "../../global";
+import { PER_SEARCH_PAGE } from "../../global";
+import { SearchedPostRo, SearchedPostRow, SearchedPostsRo, SearchFilter } from "./search.interface";
 
 @Injectable()
 export class SearchService {
@@ -30,7 +30,7 @@ export class SearchService {
         this.em = orm.em;
     }
 
-    cleanSearchText(searchText: string) {
+    cleanSearchText(searchText: string): string {
         // remove all special characters
         let newSearchText = searchText.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "");
 
@@ -48,7 +48,7 @@ export class SearchService {
         return newSearchText;
     }
 
-    async searchPosts(search: SearchFilterDto) {
+    async searchPosts(search: SearchFilter): Promise<SearchedPostsRo> {
         const searchText = this.cleanSearchText(search.text);
 
         const params = [];
@@ -95,7 +95,7 @@ export class SearchService {
         `;
 
         // send the query with params to retrieve result and perform cast
-        const results = await this.em.getConnection().execute(query, params) as PostSearchRow[];
+        const results = await this.em.getConnection().execute(query, params) as SearchedPostRow[];
 
         // map each result from result set to a mapped searched post dto
         const posts = this.mapResultsToPosts(results);
@@ -103,8 +103,8 @@ export class SearchService {
         return { posts } ;
     }
 
-    mapResultsToPosts(results: PostSearchRow[]) {
-        const posts: SearchedPostDto[] = [];
+    mapResultsToPosts(results: SearchedPostRow[]): SearchedPostRo[] {
+        const posts: SearchedPostRo[] = [];
 
         for (const result of results) {
             posts.push({

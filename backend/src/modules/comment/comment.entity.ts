@@ -7,8 +7,6 @@ import { UserEntity } from "../user/user.entity";
 import { MAX_COMMENT_LEN } from "../../global";
 import { PostEntity } from "../post/post.entity";
 
-// uses the materialized paths way of storing a tree in a relational database
-
 @Entity({ tableName: "comments" })
 export class CommentEntity {
     @PrimaryKey({ type: Number })

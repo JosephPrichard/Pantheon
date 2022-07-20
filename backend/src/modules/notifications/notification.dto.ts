@@ -4,6 +4,7 @@
 
 import { IsNumber, IsOptional } from "class-validator";
 import { Type } from "class-transformer";
+import { NotificationEntity } from "./notification.entity";
 
 export class MarkNotificationDto {
     @IsNumber()
@@ -15,10 +16,4 @@ export class NotificationCursorDto {
     @IsNumber()
     @Type(() => Number)
     afterCursor?: number;
-}
-
-export interface NotificationFilterDto {
-    afterCursor? : number;
-    recipient: number;
-    perPage: number;
 }

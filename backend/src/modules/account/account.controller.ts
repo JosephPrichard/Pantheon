@@ -9,6 +9,7 @@ import { UserService } from "../user/user.service";
 import { Request } from "express";
 import { InvalidSessionException } from "../../exception/session.exception";
 import { DeleteAccountDto } from "./account.dto";
+import { DeleteAccountRo } from "./account.interface";
 
 @Controller("accounts")
 export class AccountController {
@@ -22,10 +23,7 @@ export class AccountController {
     ) {}
 
     @Post("/deactivate")
-    async deleteAccount(
-        @Body() body: DeleteAccountDto,
-        @Req() req: Request
-    ) {
+    async deleteAccount(@Body() body: DeleteAccountDto, @Req() req: Request): Promise<DeleteAccountRo> {
         const user = req.session.user;
         if (!user) {
             throw new InvalidSessionException();

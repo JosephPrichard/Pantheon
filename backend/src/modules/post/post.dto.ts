@@ -5,6 +5,8 @@
 import { Trim } from "class-sanitizer";
 import { IsArray, IsOptional, IsString, IsUrl, MaxLength, MinLength } from "class-validator";
 import { MAX_LINK_LEN, MAX_POST_LEN, MAX_TITLE_LEN, MIN_POST_LEN } from "../../global";
+import { NotificationEntity } from "../notifications/notification.entity";
+import { PostEntity } from "./post.entity";
 
 export class CreatePostDto {
     @IsString()
@@ -42,12 +44,4 @@ export class UpdatePostDto {
     @MinLength(MIN_POST_LEN, { message: `Text content must be at least ${MIN_POST_LEN} characters.`})
     @MaxLength(MAX_POST_LEN, { message: `Text content cannot exceed ${MAX_POST_LEN} characters.`})
     content!: string;
-}
-
-export interface PostFilterDto {
-    poster?: string;
-    forums?: string[];
-    afterCursor?: number;
-    beforeCursor?: number;
-    perPage: number;
 }

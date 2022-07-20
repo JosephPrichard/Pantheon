@@ -37,9 +37,3 @@ export class UpdateCommentDto {
     @MaxLength(MAX_COMMENT_LEN, { message: `Text content cannot exceed ${MAX_COMMENT_LEN} characters.`})
     content!: string;
 }
-
-export interface CommentFilterDto {
-    commenter: string;
-    afterCursor?: number;
-    perPage: number;
-}

@@ -8,6 +8,7 @@ import { SearchService } from "./search.service";
 import { PostVoteEntity } from "../vote/vote.entity";
 import { Request } from "express";
 import { VoteService } from "../vote/vote.service";
+import { SearchRo } from "./search.interface";
 
 @Controller("search")
 export class SearchController {
@@ -19,10 +20,7 @@ export class SearchController {
     ) {}
 
     @Get("/posts")
-    async searchPosts(
-        @Query() query: SearchPostsDto,
-        @Req() req: Request
-    ) {
+    async searchPosts(@Query() query: SearchPostsDto, @Req() req: Request): Promise<SearchRo> {
         const filter = {
             cursor: query.cursor,
             text: query.text,

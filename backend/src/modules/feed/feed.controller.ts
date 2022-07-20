@@ -7,13 +7,14 @@ import { PostService } from "../post/post.service";
 import { VoteService } from "../vote/vote.service";
 import { Request  } from "express";
 import { CommentVoteEntity, PostVoteEntity } from "../vote/vote.entity";
-import { ActivityFeedCursorDto, FeedCursorDto, HomeFeedCursorDto } from "./feed.dto";
+import { ActivityFeedDto, FeedDto, HomeFeedDto} from "./feed.dto";
 import { CommentService } from "../comment/comment.service";
 import { HighlightService } from "../highlight/highlight.service";
-import { PostFilterDto } from "../post/post.dto";
 import { PER_PAGE } from "../../global";
-import { CommentFilterDto } from "../comment/comment.dto";
 import { countActivities, mergeActivity } from "./feed.utils";
+import { ActivityFeedRo, CommentFeedRo, FeedRo } from "./feed.interface";
+import { CommentFilter } from "../comment/comment.interface";
+import { PostFilter } from "../post/post.interface";
 
 @Controller("feed")
 export class FeedController {
@@ -29,11 +30,8 @@ export class FeedController {
     ) {}
 
     @Get("global")
-    async getGlobalPosts(
-        @Query() query: FeedCursorDto,
-        @Req() req: Request
-    ) {
-        const filter: PostFilterDto = {
+    async getGlobalPosts(@Query() query: FeedDto, @Req() req: Request): Promise<FeedRo> {
+        const filter: PostFilter = {
             afterCursor: query.afterCursor,
             beforeCursor: query.beforeCursor,
             perPage: PER_PAGE
@@ -58,11 +56,8 @@ export class FeedController {
     }
 
     @Get("/home") 
-    async getHomePosts(
-        @Query() query: HomeFeedCursorDto,
-        @Req() req: Request
-    ) {
-        const filter: PostFilterDto = {
+    async getHomePosts(@Query() query: HomeFeedDto, @Req() req: Request): Promise<FeedRo> {
+        const filter: PostFilter = {
             afterCursor: query.afterCursor,
             beforeCursor: query.beforeCursor,
             perPage: PER_PAGE
@@ -87,25 +82,21 @@ export class FeedController {
     }
 
     @Get("/posts/:id/comments")
-    async getPostComments(@Param("id") idParam: number) {
+    async getPostComments(@Param("id") idParam: number): Promise<CommentFeedRo> {
         const commentTree = await this.commentService.findTreesByFilter(idParam);
         return { commentTree };
     }
 
-    @Get("/users/:user/activities")
-    async getUserActivity(
-        @Query() query: ActivityFeedCursorDto,
-        @Param("user") userParam: string,
-        @Req() req: Request
-    ) {
-        const postFilter: PostFilterDto = {
-            poster: userParam,
+    @Get("/activities")
+    async getUserActivity(@Query() query: ActivityFeedDto, @Req() req: Request): Promise<ActivityFeedRo> {
+        const postFilter: PostFilter = {
+            poster: query.user,
             afterCursor: query.postsAfterCursor,
             perPage: PER_PAGE * 2
         };
 
-        const commentFilter: CommentFilterDto = {
-            commenter: userParam,
+        const commentFilter: CommentFilter = {
+            commenter: query.user,
             afterCursor: query.commentsAfterCursor,
             perPage: PER_PAGE * 2
         };

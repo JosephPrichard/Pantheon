@@ -4,15 +4,17 @@
 
 import { ConsoleLogger } from "@nestjs/common";
 import { Request } from "express";
-import { User } from "src/modules/user/user.dto";
+import { User } from "../modules/user/user.interface";
 
 export class AppLogger extends ConsoleLogger {
 
     exception(req: Request, exception: Error, user?: User) {
+        const str = `{${req.path}, ${req.method}} ${exception.message} ${req.ip}`;
         if (user) {
-            this.error(`{${req.path}, ${req.method}} ${exception.message} ${req.ip} User ${user.id}`, exception.name);
+            this.error(`{${str} User ${user.id}`, exception.name);
         } else {
-            this.error(`{${req.path}, ${req.method}} ${exception.message} ${req.ip}`, exception.name);
+            this.error(`{${str}`, exception.name);
         }
     }
+
 }

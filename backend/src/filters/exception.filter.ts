@@ -6,10 +6,10 @@ import { ExceptionFilter, ArgumentsHost, HttpException } from "@nestjs/common";
 import { Catch } from "@nestjs/common/decorators/core/catch.decorator";
 import { EntityNotFoundException } from "../exception/entityNotFound.exception";
 import { InvalidInputException } from "../exception/invalidInput.exception";
-import { PermissionsException } from "../exception/permissions.exception";
 import { InvalidSessionException } from "../exception/session.exception";
 import { Request, Response } from 'express';
 import { AppLogger } from "src/loggers/applogger";
+import { PermissionsException } from "../exception/permissions.exception";
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {

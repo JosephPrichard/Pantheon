@@ -3,6 +3,7 @@
  */
 
 import { IsBoolean, IsString } from "class-validator";
+import { SubscriptionEntity } from "./subscription.entity";
 
 export class CreateSubDto {
     @IsString()

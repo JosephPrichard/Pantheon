@@ -9,6 +9,7 @@ import multer from "multer";
 import * as fs from "fs";
 import path from "path";
 import { uuid } from "../../utils/uuid.utils";
+import { FilesRo } from "./file.interface";
 
 @Controller("files")
 export class FileController {
@@ -35,7 +36,7 @@ export class FileController {
             }
         }
     ))
-    async uploadImages(@UploadedFiles() files?: Array<Express.Multer.File>) {
+    async uploadImages(@UploadedFiles() files?: Array<Express.Multer.File>): Promise<FilesRo> {
         if (!files || files.length < 1) {
             throw new BadRequestException("Need to upload at least 1 file.");
         }
@@ -50,10 +51,7 @@ export class FileController {
 
     @Get("/:id")
     @UseInterceptors()
-    async downloadImage(
-        @Res() res: Response,
-        @Param("id") idParam: string
-    ) {
+    async downloadImage(@Res() res: Response, @Param("id") idParam: string): Promise<void> {
         fs.readFile(`/tmp/images/${idParam}`, (err, data) => {
             if (data === null) {
                 throw new NotFoundException("Couldn't find that file.");

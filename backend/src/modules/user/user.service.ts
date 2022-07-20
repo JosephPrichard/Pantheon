@@ -8,11 +8,11 @@ import { Injectable } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 import { EntityRepository, expr } from "mikro-orm";
 import { AppLogger } from "src/loggers/applogger";
-import { CreateUserDto, ResetPasswordDto, UpdateUserDto, User } from "./user.dto";
+import { CreateUserDto, ResetPasswordDto, UpdateUserDto } from "./user.dto";
 import { UserCredsEntity, UserEntity } from "./user.entity";
-import { EntityNotFoundException } from "../../exception/entityNotFound.exception";
-
-const SALT_ROUNDS = 12;
+import { EntityNotFoundException, UserNotFoundException } from "../../exception/entityNotFound.exception";
+import { User } from "./user.interface";
+import { SALT_ROUNDS } from "../../global";
 
 @Injectable()
 export class UserService {
@@ -29,7 +29,7 @@ export class UserService {
         private readonly userCredsRepository: EntityRepository<UserCredsEntity>
     ) {}
 
-    async create(user: CreateUserDto) {
+    async create(user: CreateUserDto): Promise<number> {
         const salt = await bcrypt.genSalt(SALT_ROUNDS);
         const hashedPassword = await bcrypt.hash(user.password, salt);
 
@@ -49,22 +49,22 @@ export class UserService {
         return userEntity.id;
     }
 
-    getEntityReference(id: number) {
+    getEntityReference(id: number): UserEntity {
         return this.userRepository.getReference(id);
     }
 
-    async findUserById(id: number) {
+    async findUserById(id: number): Promise<UserEntity | null>  {
         return await this.userRepository.findOne({ id: id });
     }
 
-    async findUserByName(name: string) {
+    async findUserByName(name: string): Promise<UserEntity | null>  {
         return await this.userRepository.findOne(
             { [expr("upper(name)")]: this.em.getKnex().raw("upper(?)", name) },
             ["userCreds"]
         );
     }
 
-    async findByLogin(name: string, password: string) {
+    async findByLogin(name: string, password: string): Promise<UserEntity | undefined> {
         const userEntity = await this.findUserByName(name);
         if (userEntity) {
             const hashedPassword = await bcrypt.hash(password, userEntity.userCreds.salt);
@@ -74,20 +74,24 @@ export class UserService {
         }      
     }
 
-    async update(userUpdate: UpdateUserDto, user: User) {
+    async update(userUpdate: UpdateUserDto, user: User): Promise<UserEntity> {
         const userEntity = await this.findUserById(user.id);
 
-        if (userEntity && userUpdate.description) {
+        if (!userEntity) {
+            throw new UserNotFoundException();
+        }
+
+        if (userUpdate.description) {
             userEntity.description = userUpdate.description;
         }
         
         await this.userRepository.flush();
 
         this.logger.log(`User ${user.id} updated their profile`, userEntity);
-        return user;
+        return userEntity;
     }
 
-    async updatePassword(resetPassword: ResetPasswordDto, user: User) {
+    async updatePassword(resetPassword: ResetPasswordDto, user: User): Promise<number> {
         const userEntity = await this.findByLogin(user.name, resetPassword.password);
 
         if (!userEntity) {
@@ -102,7 +106,7 @@ export class UserService {
         return userEntity?.id;
     }
 
-    async delete(user: User) {
+    async delete(user: User): Promise<number> {
         const count = await this.userRepository.nativeUpdate(
             { id: user.id },
             { name: null, description: "" }

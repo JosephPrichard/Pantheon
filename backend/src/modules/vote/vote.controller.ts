@@ -7,6 +7,7 @@ import { VoteDto } from "./vote.dto";
 import { VoteService } from "./vote.service";
 import { Request } from "express";
 import { InvalidSessionException } from "src/exception/session.exception";
+import { CommentVoteRo, PostVoteRo, PostVotesRo } from "./vote.interface";
 
 @Controller("votes")
 export class VoteController {
@@ -14,10 +15,7 @@ export class VoteController {
     constructor(private readonly voteService: VoteService) {}
 
     @Post("/post")
-    async votePost(
-        @Body() body: VoteDto,
-        @Req() req: Request
-    ) {
+    async votePost(@Body() body: VoteDto, @Req() req: Request): Promise<PostVoteRo> {
         const user = req.session.user;
         if (!user) {
             throw new InvalidSessionException();
@@ -28,10 +26,7 @@ export class VoteController {
     }
 
     @Post("/comment")
-    async voteComment(
-        @Body() body: VoteDto,
-        @Req() req: Request
-    ) {
+    async voteComment(@Body() body: VoteDto, @Req() req: Request): Promise<CommentVoteRo> {
         const user = req.session.user;
         if (!user) {
             throw new InvalidSessionException();
@@ -42,10 +37,7 @@ export class VoteController {
     }
 
     @Get("/post/:id")
-    async getPostVotes(
-        @Param() idParam: number,
-        @Req() req: Request
-    ) {
+    async getPostVotes(@Param() idParam: number, @Req() req: Request): Promise<PostVotesRo> {
         const user = req.session.user;
         if (!user) {
             throw new InvalidSessionException();

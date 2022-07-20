@@ -7,11 +7,6 @@ import { MAX_PASSWORD_LEN, MAX_USER_NAME_LEN } from "../../global";
 import { PreventSpaces } from "src/decorators/preventSpaces.decorator";
 import { PreventSpecialCharacters } from "src/decorators/preventSpecialCharacters.decorator";
 
-export interface User {
-    id: number;
-    name: string;
-}
-
 export class CreateUserDto {
     @IsString()
     @PreventSpaces({ message: "Username doesn't allow spaces."})
@@ -47,4 +42,3 @@ export class ResetPasswordDto {
     @IsString()
     newPassword!: string;
 }
-

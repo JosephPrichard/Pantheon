@@ -10,11 +10,11 @@ import { PostService } from "../post/post.service";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "mikro-orm";
-import { User } from "../user/user.dto";
 import { UserService } from "../user/user.service";
 import { CommentNotFoundException, PostNotFoundException } from "src/exception/entityNotFound.exception";
 import { AppLogger } from "src/loggers/applogger";
 import { CommentEntity } from "../comment/comment.entity";
+import { User } from "../user/user.interface";
 
 @Injectable()
 export class VoteService {
@@ -35,7 +35,7 @@ export class VoteService {
         private readonly commentService: CommentService
     ) {}
 
-    async votePost(newVote: VoteDto, voter: User) {
+    async votePost(newVote: VoteDto, voter: User): Promise<PostVoteEntity> {
         const post = await this.postService.findById(newVote.resource);
         if (!post?.poster) {
             throw new PostNotFoundException();
@@ -73,7 +73,7 @@ export class VoteService {
         }
     }
 
-    async voteComment(newVote: VoteDto, voter: User) {
+    async voteComment(newVote: VoteDto, voter: User): Promise<CommentVoteEntity> {
         const comment = await this.commentService.findById(newVote.resource);
         if (!comment?.commenter) {
             throw new CommentNotFoundException();
@@ -112,27 +112,27 @@ export class VoteService {
         }
     }
 
-    async findPostVote(postId: number, voter: User) {
+    async findPostVote(postId: number, voter: User): Promise<PostVoteEntity | null> {
         return await this.postVoteRepository.findOne({ voter: voter.id, post: postId });
     }
 
-    async findPostVotes(posts: PostEntity[], voter: User) {
+    async findPostVotes(posts: PostEntity[], voter: User): Promise<PostVoteEntity[]> {
         return await this.postVoteRepository.find({ voter: voter.id, post: { $in: posts } });
     }
 
-    async findPostVotesFromIds(ids: number[], voter: User) {
+    async findPostVotesFromIds(ids: number[], voter: User): Promise<PostVoteEntity[]> {
         return await this.postVoteRepository.find({ voter: voter.id, post: { $in: ids } });
     }
 
-    async findCommentVotes(comments: CommentEntity[], voter: User) {
+    async findCommentVotes(comments: CommentEntity[], voter: User): Promise<CommentVoteEntity[]> {
         return await this.commentVoteRepository.find({ voter: voter.id, comment: { $in: comments } });
     }
 
-    async findCommentVotesFromIds(ids: number[], voter: User) {
+    async findCommentVotesFromIds(ids: number[], voter: User): Promise<CommentVoteEntity[]> {
         return await this.commentVoteRepository.find({ voter: voter.id, comment: { $in: ids } });
     }
 
-    async findPostCommentVotes(postId: number, voter: User) {
+    async findPostCommentVotes(postId: number, voter: User): Promise<CommentVoteEntity[]> {
         return await this.commentVoteRepository.find({ voter: voter.id, post: postId });
     }
 }

@@ -6,13 +6,13 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository, FilterQuery, QueryOrder } from "mikro-orm";
 import { NotificationEntity } from "./notification.entity";
-import { User } from "../user/user.dto";
 import { AppLogger } from "../../loggers/applogger";
 import { CommentEntity } from "../comment/comment.entity";
 import { UserEntity } from "../user/user.entity";
-import { ResourcePermissionsException } from "../../exception/permissions.exception";
+import { PermissionsException } from "../../exception/permissions.exception";
 import { NotificationNotFound } from "../../exception/entityNotFound.exception";
-import { NotificationFilterDto } from "./notification.dto";
+import { NotificationFilter, NotificationFilterRo } from "./notification.interface";
+import { User } from "../user/user.interface";
 
 @Injectable()
 export class NotificationService {
@@ -24,7 +24,7 @@ export class NotificationService {
         private readonly notificationRepository: EntityRepository<NotificationEntity>
     ) {}
 
-    async create(comment: CommentEntity, recipient: UserEntity) {
+    async create(comment: CommentEntity, recipient: UserEntity): Promise<NotificationEntity> {
         const notificationEntity = new NotificationEntity();
 
         notificationEntity.comment = comment;
@@ -36,7 +36,7 @@ export class NotificationService {
         return notificationEntity;
     }
 
-    async findByFilter(filter: NotificationFilterDto) {
+    async findByFilter(filter: NotificationFilter): Promise<NotificationFilterRo> {
         const where: FilterQuery<any> = { recipient: filter.recipient };
 
         // check if we should use cursors to paginate
@@ -61,18 +61,18 @@ export class NotificationService {
         return { notifications, nextPage };
     }
 
-    async countUnread(user: User) {
+    async countUnread(user: User): Promise<number> {
         return await this.notificationRepository.count({ recipient: user.id, read: false });
     }
 
-    async markAsRead(user: User, notificationId: number) {
+    async markAsRead(user: User, notificationId: number): Promise<NotificationEntity> {
         const notificationEntity = await this.notificationRepository.findOne({ id: notificationId });
 
         if (!notificationEntity) {
             throw new NotificationNotFound();
         }
         if (notificationEntity.recipient.id != user.id) {
-            throw new ResourcePermissionsException();
+            throw new PermissionsException();
         }
 
         notificationEntity.read = true;
@@ -83,13 +83,13 @@ export class NotificationService {
         return notificationEntity;
     }
 
-    async markAllAsRead(user: User) {
+    async markAllAsRead(user: User): Promise<number> {
         const count = await this.notificationRepository.nativeUpdate({ recipient: user.id }, { read: true });
         this.logger.log(`User ${user.id} marked all notifications as read`);
         return count;
     }
 
-    async deleteByComment(comment: CommentEntity) {
+    async deleteByComment(comment: CommentEntity): Promise<number> {
         return await this.notificationRepository.nativeDelete({ comment: comment });
     }
 }

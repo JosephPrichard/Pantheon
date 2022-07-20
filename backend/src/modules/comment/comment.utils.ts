@@ -3,25 +3,21 @@
  */
 
 import { CommentEntity } from "./comment.entity";
-
-export interface TreeObj {
-    comment?: CommentEntity;
-    children: TreeObj[];
-}
+import { CommentTree } from "./comment.interface";
 
 // makes a new tree node from a comment
-function makeNode(comment: CommentEntity): TreeObj {
+function makeNode(comment: CommentEntity): CommentTree {
     return { comment: comment, children: [] };
 }
 
 // makes a new tree node not knowing the comment
-function makeEmpty(): TreeObj {
+function makeEmpty(): CommentTree {
     return { children: [] };
 }
 
-export function deserializeTree(comments: CommentEntity[]) {
-    const roots: TreeObj[] = [];
-    const nodeMap: { [key: number]: TreeObj } = {};
+export function deserializeTree(comments: CommentEntity[]): CommentTree[] {
+    const roots: CommentTree[] = [];
+    const nodeMap: { [key: number]: CommentTree } = {};
 
     for (const comment of comments) {
 
@@ -56,8 +52,6 @@ export function deserializeTree(comments: CommentEntity[]) {
         // add the node as a child of the parent
         parentNode.children.push(node);
     }
-
-
 
     return roots;
 }

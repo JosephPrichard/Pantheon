@@ -4,6 +4,7 @@
 
 import { IsString, MaxLength, IsOptional, IsNumber } from "class-validator";
 import { MAX_ST_LEN } from "src/global";
+import { PostVoteEntity } from "../vote/vote.entity";
 
 export class SearchPostsDto {
     @IsOptional()
@@ -21,48 +22,4 @@ export class SearchPostsDto {
     @IsOptional()
     @IsString()
     poster?: string;
-}
-
-export interface SearchFilterDto {
-    cursor?: number;
-    text: string;
-    date?: Date;
-    poster?: string;
-    forum?: string;
-}
-
-export interface PostSearchRow {
-    id: string;
-    posterId: string | null;
-    forumId: string;
-    title: string;
-    votes: number;
-    comments: number;
-    content: string | null;
-    images: string[];
-    link: string | null;
-    createdAt: string;
-    count: number;
-    posterName: string;
-    searchRank: string;
-}
-
-export interface SearchedPostDto {
-    id: number;
-    poster: null | {
-        id: number;
-        name: string;
-    }
-    forum: {
-        id: string;
-    }
-    title: string;
-    votes: number;
-    comments: number;
-    content: string | null;
-    images: string[];
-    link: string | null;
-    createdAt: string;
-
-    searchRank: number;
 }

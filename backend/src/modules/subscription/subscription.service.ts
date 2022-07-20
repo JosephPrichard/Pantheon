@@ -10,10 +10,10 @@ import { ForumNotFoundException, SubscriptionNotFoundException } from "src/excep
 import { DuplicateResourceException } from "src/exception/invalidInput.exception";
 import { AppLogger } from "src/loggers/applogger";
 import { ForumService } from "../forum/forum.service";
-import { User } from "../user/user.dto";
 import { UserService } from "../user/user.service";
 import { CreateSubDto, DeleteSubDto, UpdateSubDto } from "./subscription.dto";
 import { SubscriptionEntity } from "./subscription.entity";
+import { User } from "../user/user.interface";
 
 @Injectable()
 export class SubscriptionService {
@@ -31,7 +31,7 @@ export class SubscriptionService {
         private readonly forumService: ForumService
     ) {}
 
-    async create(sub: CreateSubDto, user: User) {
+    async create(sub: CreateSubDto, user: User): Promise<SubscriptionEntity> {
         const oldSubEntity = await this.subRepository.findOne({ forum: sub.forum, user: user.id });
         if (oldSubEntity) {
             throw new DuplicateResourceException();
@@ -52,18 +52,19 @@ export class SubscriptionService {
         await this.subRepository.persistAndFlush(subEntity);
 
         this.logger.log(`User ${user.id} created a subscription to forum ${forum.id}`);
-        return sub;
+        return subEntity;
     }
 
-    async findByUser(user: User) {
+    async findByUser(user: User): Promise<SubscriptionEntity[]> {
         return await this.subRepository.find({ user: user.id }, ["forum"]);
     }
 
-    async isSubbed(user: User, forum: string) {
+    async isSubbed(user: User, forum: string): Promise<boolean> {
         return (await this.subRepository.find({ forum: forum })).length !== 0;
     }
 
-    async findByUserRandom(user: User, amount: number) {
+    // finds a number of random subscriptions for a user
+    async findByUserRandom(user: User, amount: number): Promise<SubscriptionEntity[]> {
         const qb = this.em.createQueryBuilder(SubscriptionEntity);
         qb.select("*").where({ user: user.id })
 
@@ -73,7 +74,7 @@ export class SubscriptionService {
         return subs.map((sub: any) => this.subRepository.map(sub)) as SubscriptionEntity[];
     }
 
-    async update(update: UpdateSubDto, user: User) {
+    async update(update: UpdateSubDto, user: User): Promise<SubscriptionEntity> {
         const sub = await this.subRepository.findOne({ forum: update.forum, user: user.id });
         if (!sub) {
             throw new SubscriptionNotFoundException();
@@ -87,7 +88,7 @@ export class SubscriptionService {
         return sub;
     }
 
-    async delete(del: DeleteSubDto, user: User) {
+    async delete(del: DeleteSubDto, user: User): Promise<SubscriptionEntity> {
         const sub = await this.subRepository.findOne({ forum: del.forum, user: user.id }, ["forum"]);
         if (!sub) {
             throw new SubscriptionNotFoundException();

@@ -9,6 +9,13 @@ export class EntityNotFoundException extends Error {
     }
 }
 
+export class UserNotFoundException extends EntityNotFoundException {
+    constructor() {
+        super("User not found.");
+        this.name = ForumNotFoundException.name;
+    }
+}
+
 export class PostNotFoundException extends EntityNotFoundException {
     constructor() {
         super("Post not found.");
@@ -34,13 +41,6 @@ export class NotificationNotFound extends EntityNotFoundException {
     constructor() {
         super("Notification not found.");
         this.name = NotificationNotFound.name;
-    }
-}
-
-export class FavoriteNotFoundException extends EntityNotFoundException {
-    constructor() {
-        super("You haven't favorite this post.");
-        this.name = FavoriteNotFoundException.name;
     }
 }
 
